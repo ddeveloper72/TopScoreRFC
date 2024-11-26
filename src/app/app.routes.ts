@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ScoreTrackerComponent } from './score-tracker/score-tracker.component';
 import { CalendarComponent } from './calendar/calendar.component';
+import { ScoreTrackerComponent } from './score-tracker/score-tracker.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'score-tracker', pathMatch: 'full' },
@@ -13,4 +13,5 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
+
 export class AppRoutingModule {}
