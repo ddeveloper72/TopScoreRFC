@@ -1,21 +1,15 @@
 import { Component } from '@angular/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+
 
 @Component({
   selector: 'app-header',
-  imports: [],
-  template: `
-  <header>
-    <nav>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </nav>
-    </header>
-    `,
-  styleUrl: './app-header.component.scss'
+  imports: [MatSlideToggleModule, MatListModule, MatIconModule],
+  templateUrl: './app-header.component.html',
+  styleUrl: './app-header.component.scss',
 })
 export class AppHeaderComponent {
-title='Header';
+  title = 'Header';
 }
