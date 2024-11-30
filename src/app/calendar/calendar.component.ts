@@ -3,11 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-calendar',
   imports: [],
-  template: `
-  <section>
-  <p>Calendar</p>
-  </section>
-  `,
+  templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss',
 })
 export class CalendarComponent {}
