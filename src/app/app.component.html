@@ -1,18 +1,33 @@
-<app-header></app-header>
-<section>
-  <h1>{{ title }}</h1>
-  <p>Welcome to the Rugby Score Card App</p>
 
-  <p>Use the navigation links above to get started</p>
 
-  <p>Click on the 'Home' link to return to this page</p>
-  <nav>
-    <ul>
-      <li><a routerLink="/calendar">Calendar</a></li>
-      <li><a routerLink="/score-tracker">Score Tracker</a></li>
-    </ul>
-  </nav>
-  <router-outlet />
-</section>
 
-<app-footer></app-footer>
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav role="navigation">
+      <app-sidenav-list (sidenavClose)="sidenav.close()"></app-sidenav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <app-header (sidenavToggle)="sidenav.toggle()"></app-header>
+      <main>
+        <section>
+          <h1>{{ title }}</h1>
+          <p>Welcome to the Rugby Score Card App</p>
+
+          <p>Use the navigation links above to get started</p>
+
+          <p>Click on the 'Home' link to return to this page</p>
+          <nav>
+            <ul>
+              <li><a routerLink="/calendar">Calendar</a></li>
+              <li><a routerLink="/score-tracker">Score Tracker</a></li>
+            </ul>
+          </nav>
+        </section>
+        <router-outlet></router-outlet>
+      </main>
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
+
+  <app-footer></app-footer>
+
