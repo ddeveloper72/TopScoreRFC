@@ -1,3 +1,49 @@
 <section>
   <p>Score Tracker Works!</p>
 </section>
+<section>
+  <h1>Rugby Score Tracker</h1>
+  <form>
+    <div>
+      <label for="matchName">Match Name:</label>
+      <input type="text" id="matchName" [(ngModel)]="matchName" name="matchName">
+    </div>
+    <div>
+      <label for="matchDate">Match Date:</label>
+      <input type="date" id="matchDate" [(ngModel)]="matchDate" name="matchDate">
+    </div>
+    <div>
+      <label for="isHomeGame">Home Game:</label>
+      <input type="checkbox" id="isHomeGame" [(ngModel)]="isHomeGame" name="isHomeGame">
+    </div>
+    <div>
+      <h2>Our Team Score</h2>
+      <label for="ourTries">Tries:</label>
+      <input type="number" id="ourTries" [(ngModel)]="ourTeamScore.tries" name="ourTries">
+      <label for="ourConversions">Conversions:</label>
+      <input type="number" id="ourConversions" [(ngModel)]="ourTeamScore.conversions" name="ourConversions">
+      <label for="ourPenalties">Penalties:</label>
+      <input type="number" id="ourPenalties" [(ngModel)]="ourTeamScore.penalties" name="ourPenalties">
+      <div>
+        <h3>Total Points: {{ ourTeamScore.tries * 5 + ourTeamScore.conversions * 2 + ourTeamScore.penalties * 3 }}</h3>
+      </div>
+    </div>
+    <div>
+      <h2>Opponent Team Score</h2>
+      <label for="opponentTries">Tries:</label>
+      <input type="number" id="opponentTries" [(ngModel)]="opponentTeamScore.tries" name="opponentTries">
+      <label for="opponentConversions">Conversions:</label>
+      <input type="number" id="opponentConversions" [(ngModel)]="opponentTeamScore.conversions" name="opponentConversions">
+      <label for="opponentPenalties">Penalties:</label>
+      <input type="number" id="opponentPenalties" [(ngModel)]="opponentTeamScore.penalties" name="opponentPenalties">
+      <div>
+        <h3>Total Points: {{ opponentTeamScore.tries * 5 + opponentTeamScore.conversions * 2 + opponentTeamScore.penalties * 3 }}</h3>
+      </div>
+    </div>
+    <button type="button" (click)="generatePointsReport()">Generate Report</button>
+  </form>
+  <section>
+    <h2>Match Report</h2>
+    <pre>{{ generatePointsReport() }}</pre>
+  </section>
+</section>
