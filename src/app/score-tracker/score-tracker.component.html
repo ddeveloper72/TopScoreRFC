@@ -2,82 +2,126 @@
   <p>Score Tracker Works!</p>
 </section>
 <section>
-  <h1>Rugby Score Tracker</h1>
-  <form>
+  <form onClickAway={handleClickAway}>
+
     <mat-card>
+      <h1>Rugby Score Tracker</h1>
       <mat-form-field appearance="fill">
-        <mat-label>Match Name</mat-label>
-        <input matInput type="text" id="matchName" [(ngModel)]="matchName" name="matchName"
-          placeholder="Enter match name">
+        <label>Match Name</label>
+        <input matInput type="text"
+        id="matchName"
+        [(ngModel)]="matchName"
+        name="matchName"
+        placeholder="Enter match name">
       </mat-form-field>
+
+      <br>
+
       <mat-form-field appearance="fill">
-        <mat-label>Match Date</mat-label>
-        <input matInput type="date" id="matchDate" [(ngModel)]="matchDate" name="matchDate"
-          placeholder="Enter match date">
+        <mat-label>Choose a date</mat-label>
+        <input matInput [matDatepicker]="picker"
+        placeholder="Choose a date"
+        [(ngModel)]="matchDate"
+        name="matchDate"
+        aria-haspopup="true"
+        aria-invalid="false"
+        aria-required="false">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-checkbox id="isHomeGame" [(ngModel)]="isHomeGame" name="isHomeGame" labelPosition="before">Home Game:</mat-checkbox>
-      </mat-form-field>
+
+      <br>
+
+      <mat-checkbox id="isHomeGame" [(ngModel)]="isHomeGame" name="isHomeGame" labelPosition="before">Home
+        Game:</mat-checkbox>
+
+      <br>
     </mat-card>
     <br>
-    <mat-divider></mat-divider>
+    <br>
     <mat-card>
+      
       <h2>Our Team Score</h2>
+
       <mat-form-field appearance="fill">
-        <mat-label>Tries</mat-label>
-        <input matInput type="number" id="ourTries" [(ngModel)]="ourTeamScore.tries" name="ourTries"
-          placeholder="Enter tries">
+        <label>Tries</label>
+        <input matInput type="number"
+        id="ourTries"
+        [(ngModel)]="ourTeamScore.tries"
+        name="ourTries"
+        placeholder="Enter tries">
       </mat-form-field>
+
       <mat-form-field appearance="fill">
-        <mat-label>Conversions</mat-label>
-        <input matInput type="number" id="ourConversions" [(ngModel)]="ourTeamScore.conversions" name="ourConversions"
-          placeholder="Enter conversions">
+        <label>Conversions</label>
+        <input matInput type="number"
+        id="ourConversions"
+        [(ngModel)]="ourTeamScore.conversions"
+        name="ourConversions"
+        placeholder="Enter conversions">
       </mat-form-field>
+
       <mat-form-field appearance="fill">
-        <mat-label>Penalties</mat-label>
-        <input matInput type="number" id="ourPenalties" [(ngModel)]="ourTeamScore.penalties" name="ourPenalties"
-          placeholder="Enter penalties">
+        <label>Penalties</label>
+        <input matInput type="number"
+        id="ourPenalties"
+        [(ngModel)]="ourTeamScore.penalties"
+        name="ourPenalties"
+        placeholder="Enter penalties">
       </mat-form-field>
+
       <div>
         <h3>Total Points: {{ ourTeamScore.tries * 5 + ourTeamScore.conversions * 2 + ourTeamScore.penalties * 3 }}</h3>
       </div>
-    </mat-card>
-    <br>
-    <mat-divider></mat-divider>
-    <mat-card>
+
+      <br>
+
+
       <h2>Opponent Team Score</h2>
       <mat-form-field appearance="fill">
-        <mat-label>Tries</mat-label>
-        <input matInput type="number" id="opponentTries" [(ngModel)]="opponentTeamScore.tries" name="opponentTries"
-          placeholder="Enter opponent tries">
+        <label>Tries</label>
+        <input matInput type="number"
+        id="opponentTries"
+        [(ngModel)]="opponentTeamScore.tries"
+        name="opponentTries"
+        placeholder="Enter opponent tries">
       </mat-form-field>
+
       <mat-form-field appearance="fill">
-        <mat-label>Conversions</mat-label>
-        <input matInput type="number" id="opponentConversions" [(ngModel)]="opponentTeamScore.conversions"
-          name="opponentConversions" placeholder="Enter opponent conversions">
+        <label>Conversions</label>
+        <input matInput type="number"
+        id="opponentConversions"
+        [(ngModel)]="opponentTeamScore.conversions"
+        name="opponentConversions"
+        placeholder="Enter opponent conversions">
       </mat-form-field>
+
       <mat-form-field appearance="fill">
-        <mat-label>Penalties</mat-label>
-        <input matInput type="number" id="opponentPenalties" [(ngModel)]="opponentTeamScore.penalties"
-          name="opponentPenalties" placeholder="Enter opponent penalties">
+        <label>Penalties</label>
+        <input matInput type="number"
+        id="opponentPenalties"
+        [(ngModel)]="opponentTeamScore.penalties"
+        name="opponentPenalties"
+        placeholder="Enter opponent penalties">
       </mat-form-field>
+
       <div>
         <h3>Total Points: {{ opponentTeamScore.tries * 5 + opponentTeamScore.conversions * 2 +
           opponentTeamScore.penalties * 3 }}</h3>
       </div>
       <br>
-      <div class="example-button-row">
-        <button mat-raised-button color="primary" type="button" (click)="generatePointsReport()">Generate
-          Report</button>
-      </div>
+
+      <button mat-raised-button color="primary" type="button" (click)="generatePointsReport()">Generate
+        Report</button>
+
       <br>
     </mat-card>
+
   </form>
+
   <br>
-  <section>
-    <mat-card>
-      <h2>Match Report</h2>
-      <pre>{{ generatePointsReport() }}</pre>
-    </mat-card>
-  </section>
+  <mat-card>
+    <h2>Match Report</h2>
+    <pre>{{ generatePointsReport() }}</pre>
+  </mat-card>
 </section>
