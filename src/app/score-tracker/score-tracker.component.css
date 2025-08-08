@@ -1,1 +1,332 @@
-/*# sourceMappingURL=score-tracker.component.css.map */
+.game-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.game-header .game-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+.game-header .spacer {
+  flex: 1 1 auto;
+}
+.game-header .game-time {
+  font-size: 1.4rem;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.game-controls {
+  display: flex;
+  gap: 8px;
+  padding: 16px;
+  background: #f5f5f5;
+  overflow-x: auto;
+}
+.game-controls button {
+  flex-shrink: 0;
+  min-width: 100px;
+}
+.game-controls button mat-icon {
+  margin-right: 4px;
+}
+
+.scoreboard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+.scoreboard .team-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+.scoreboard .team-card:hover {
+  transform: translateY(-2px);
+}
+.scoreboard .team-card.home-team {
+  border-left: 4px solid #1976d2;
+}
+.scoreboard .team-card.away-team {
+  border-left: 4px solid #388e3c;
+}
+.scoreboard .team-card mat-card-header {
+  padding-bottom: 8px;
+}
+.scoreboard .team-card mat-card-header .team-name {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+.scoreboard .team-card mat-card-header .team-name:hover {
+  color: #1976d2;
+}
+.scoreboard .team-card mat-card-header .team-name .edit-icon {
+  margin-left: 8px;
+  font-size: 18px;
+  opacity: 0.6;
+}
+.scoreboard .team-card .team-score {
+  font-size: 4rem;
+  font-weight: bold;
+  text-align: center;
+  color: #1976d2;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 16px 0;
+}
+.scoreboard .team-card.away-team .team-score {
+  color: #388e3c;
+}
+.scoreboard .team-card .score-breakdown {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 16px 0;
+}
+.scoreboard .team-card .score-breakdown .breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+.scoreboard .team-card .score-breakdown .breakdown-item .breakdown-label {
+  font-size: 0.9rem;
+  color: #666;
+}
+.scoreboard .team-card .score-breakdown .breakdown-item .breakdown-value {
+  font-weight: bold;
+  color: #333;
+}
+.scoreboard .team-card .scoring-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 16px;
+}
+.scoreboard .team-card .scoring-buttons button {
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 12px 8px;
+  border-radius: 8px;
+}
+.scoreboard .team-card .scoring-buttons button:disabled {
+  opacity: 0.5;
+}
+.scoreboard .vs-divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 16px 0;
+}
+.scoreboard .vs-divider .vs-icon {
+  font-size: 2rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+.scoreboard .vs-divider .vs-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #666;
+  background: #f5f5f5;
+  padding: 8px 16px;
+  border-radius: 20px;
+}
+
+.game-status {
+  padding: 0 16px 16px;
+}
+.game-status .status-card {
+  background: linear-gradient(45deg, #4caf50, #8bc34a);
+  color: white;
+  border-radius: 16px;
+}
+.game-status .status-card .winning-team {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+}
+.game-status .status-card .winning-team mat-icon {
+  margin-right: 8px;
+  font-size: 1.5rem;
+}
+
+.score-history {
+  padding: 0 16px 16px;
+}
+.score-history mat-card {
+  border-radius: 16px;
+}
+.score-history mat-card mat-card-header mat-card-title {
+  display: flex;
+  align-items: center;
+}
+.score-history mat-card mat-card-header mat-card-title mat-icon {
+  margin-right: 8px;
+}
+.score-history mat-card .history-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+.score-history mat-card .history-list .history-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+.score-history mat-card .history-list .history-item:last-child {
+  border-bottom: none;
+}
+.score-history mat-card .history-list .history-item .history-time {
+  font-size: 0.8rem;
+  color: #666;
+  min-width: 60px;
+}
+.score-history mat-card .history-list .history-item .history-description {
+  flex: 1;
+  margin: 0 12px;
+  font-size: 0.9rem;
+}
+.score-history mat-card .history-list .history-item .history-points {
+  font-weight: bold;
+  color: #4caf50;
+  min-width: 40px;
+  text-align: right;
+}
+.score-history mat-card .show-more {
+  text-align: center;
+  padding: 8px;
+  color: #666;
+}
+
+.rules-info {
+  padding: 0 16px 16px;
+}
+.rules-info mat-card {
+  border-radius: 16px;
+}
+.rules-info mat-card mat-card-header mat-card-title {
+  display: flex;
+  align-items: center;
+}
+.rules-info mat-card mat-card-header mat-card-title mat-icon {
+  margin-right: 8px;
+}
+.rules-info mat-card .rules-grid {
+  display: grid;
+  gap: 16px;
+}
+.rules-info mat-card .rules-grid .rule-item {
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border-left: 4px solid #1976d2;
+}
+.rules-info mat-card .rules-grid .rule-item strong {
+  color: #333;
+  font-size: 1rem;
+}
+.rules-info mat-card .rules-grid .rule-item small {
+  color: #666;
+  line-height: 1.4;
+}
+
+@media (min-width: 768px) {
+  .game-controls {
+    justify-content: center;
+  }
+  .game-controls button {
+    min-width: 120px;
+  }
+  .scoreboard {
+    flex-direction: row;
+    align-items: stretch;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .scoreboard .team-card {
+    flex: 1;
+  }
+  .scoreboard .team-card .scoring-buttons {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .scoreboard .vs-divider {
+    margin: 0 16px;
+    justify-content: center;
+    min-width: 100px;
+  }
+  .score-history,
+  .rules-info {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .rules-info .rules-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .game-header .game-title {
+    font-size: 1.5rem;
+  }
+  .game-header .game-time {
+    font-size: 1.6rem;
+  }
+  .scoreboard .team-card .team-score {
+    font-size: 5rem;
+  }
+  .scoreboard .team-card .score-breakdown {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .scoreboard .team-card .scoring-buttons {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .scoreboard .team-card .scoring-buttons button {
+    font-size: 1rem;
+  }
+  .rules-info .rules-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (min-width: 1400px) {
+  .scoreboard .team-card .team-score {
+    font-size: 6rem;
+  }
+  .rules-info .rules-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+.text-center {
+  text-align: center;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+
+@keyframes scoreChange {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.team-score.score-changed {
+  animation: scoreChange 0.5s ease;
+}/*# sourceMappingURL=score-tracker.component.css.map */

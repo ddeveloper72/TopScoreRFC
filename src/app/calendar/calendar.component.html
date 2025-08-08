@@ -1,3 +1,136 @@
-<section>
-  <p>Calendar Works!</p>
-</section>
+<!-- Rugby Match Calendar -->
+<div class="calendar-container">
+  <div class="calendar-header">
+    <h1>🗓️ Match Calendar</h1>
+    <button mat-raised-button color="primary" (click)="addNewMatch()">
+      <mat-icon>add</mat-icon>
+      Schedule Match
+    </button>
+  </div>
+
+  <!-- Quick Date Navigation -->
+  <div class="date-navigation">
+    <button mat-icon-button (click)="previousMonth()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <h2>{{ currentMonth | date:'MMMM yyyy' }}</h2>
+    <button mat-icon-button (click)="nextMonth()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <!-- Calendar View Options -->
+  <div class="view-options">
+    <mat-button-toggle-group [(value)]="currentView">
+      <mat-button-toggle value="month">Month</mat-button-toggle>
+      <mat-button-toggle value="list">List</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <!-- Calendar Grid (Month View) -->
+  <div class="calendar-grid" *ngIf="currentView === 'month'">
+    <!-- Calendar implementation would go here -->
+    <div class="calendar-placeholder">
+      <mat-icon>calendar_view_month</mat-icon>
+      <p>Calendar grid view coming soon</p>
+    </div>
+  </div>
+
+  <!-- List View -->
+  <div class="matches-list" *ngIf="currentView === 'list'">
+    <h3>Upcoming Matches</h3>
+
+    <mat-card class="match-card" *ngFor="let match of upcomingMatches">
+      <mat-card-content>
+        <div class="match-header">
+          <div class="match-date">
+            <mat-icon>schedule</mat-icon>
+            {{ match.date | date:'MMM dd, yyyy - HH:mm' }}
+          </div>
+          <div class="match-actions">
+            <button mat-icon-button [matMenuTriggerFor]="matchMenu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #matchMenu="matMenu">
+              <button mat-menu-item (click)="editMatch(match)">
+                <mat-icon>edit</mat-icon>
+                Edit
+              </button>
+              <button mat-menu-item (click)="startMatch(match)">
+                <mat-icon>sports_rugby</mat-icon>
+                Start Game
+              </button>
+              <button mat-menu-item (click)="deleteMatch(match)" class="danger">
+                <mat-icon>delete</mat-icon>
+                Delete
+              </button>
+            </mat-menu>
+          </div>
+        </div>
+
+        <div class="match-teams">
+          <div class="team home-team">
+            <span class="team-name">{{ match.homeTeam }}</span>
+            <small class="team-type">Home</small>
+          </div>
+          <div class="vs-section">
+            <span class="vs">VS</span>
+          </div>
+          <div class="team away-team">
+            <span class="team-name">{{ match.awayTeam }}</span>
+            <small class="team-type">Away</small>
+          </div>
+        </div>
+
+        <div class="match-details">
+          <div class="detail-item">
+            <mat-icon>location_on</mat-icon>
+            {{ match.venue }}
+          </div>
+          <div class="detail-item" *ngIf="match.competition">
+            <mat-icon>emoji_events</mat-icon>
+            {{ match.competition }}
+          </div>
+        </div>
+
+        <div class="match-status">
+          <span class="status-badge" [ngClass]="match.status">
+            {{ match.status | titlecase }}
+          </span>
+          <span class="days-until" *ngIf="getDaysUntil(match.date) >= 0">
+            {{ getDaysUntil(match.date) === 0 ? 'Today' : getDaysUntil(match.date) + ' days' }}
+          </span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- No matches message -->
+    <div class="no-matches" *ngIf="upcomingMatches.length === 0">
+      <mat-icon>event_busy</mat-icon>
+      <h3>No upcoming matches</h3>
+      <p>Schedule your first match to get started</p>
+      <button mat-raised-button color="primary" (click)="addNewMatch()">
+        <mat-icon>add</mat-icon>
+        Schedule Match
+      </button>
+    </div>
+  </div>
+
+  <!-- Past Matches Section -->
+  <div class="past-matches" *ngIf="pastMatches.length > 0">
+    <h3>Recent Results</h3>
+    <mat-card class="past-match-card" *ngFor="let match of pastMatches.slice(0, 5)">
+      <mat-card-content>
+        <div class="past-match-header">
+          <span class="past-match-date">{{ match.date | date:'MMM dd' }}</span>
+          <span class="result-badge" [ngClass]="getResultClass(match)">
+            {{ getMatchResult(match) }}
+          </span>
+        </div>
+        <div class="past-match-score">
+          {{ match.homeTeam }} {{ match.homeScore || 0 }} - {{ match.awayScore || 0 }} {{ match.awayTeam }}
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

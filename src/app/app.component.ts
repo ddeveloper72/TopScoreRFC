@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AppHeaderComponent } from './navigation/app-header/app-header.component';
 import { AppFooterComponent } from './app-footer/app-footer.component';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { MaterialModule } from './material/material.module';
 import { ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
@@ -13,10 +13,9 @@ import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.com
   imports: [
     AppHeaderComponent,
     AppFooterComponent,
-    RouterLink,
     RouterOutlet,
     MaterialModule,
-    SidenavListComponent
+    SidenavListComponent,
   ],
   styleUrl: './app.component.scss',
 })

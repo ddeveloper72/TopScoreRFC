@@ -1,33 +1,43 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { MatSidenav } from '@angular/material/sidenav';
+import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
+// Essential Material modules for the Rugby Score Tracker
+const MaterialComponents = [
+  MatSidenavModule,
+  MatToolbarModule,
+  MatButtonModule,
+  MatIconModule,
+  MatListModule,
+  MatCardModule,
+  MatMenuModule,
+  MatButtonToggleModule,
+  MatInputModule,
+  MatFormFieldModule,
+  MatSelectModule,
+  MatChipsModule,
+  MatTooltipModule,
+  MatDialogModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    MatTabsModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatListModule,
-    MatSidenav,
-  ],
-  exports: [
-    MatTabsModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatListModule,
-    MatSidenav,
-  ],
+  imports: MaterialComponents,
+  exports: MaterialComponents,
 })
 export class MaterialModule {}

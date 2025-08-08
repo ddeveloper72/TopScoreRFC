@@ -1,1 +1,307 @@
-/*# sourceMappingURL=calendar.component.css.map */
+.calendar-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  color: white;
+}
+.calendar-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.calendar-header button {
+  border-radius: 25px;
+  font-weight: 600;
+}
+.calendar-header button mat-icon {
+  margin-right: 0.5rem;
+}
+
+.date-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+.date-navigation h2 {
+  margin: 0 1rem;
+  font-size: 1.3rem;
+  min-width: 200px;
+  text-align: center;
+}
+.date-navigation button {
+  color: white;
+}
+.date-navigation button mat-icon {
+  font-size: 1.5rem;
+}
+
+.view-options {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+.view-options mat-button-toggle-group {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 25px;
+  overflow: hidden;
+}
+.view-options mat-button-toggle-group mat-button-toggle {
+  color: white;
+  border: none;
+}
+.view-options mat-button-toggle-group mat-button-toggle.mat-button-toggle-checked {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.calendar-grid .calendar-placeholder {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 3rem;
+  text-align: center;
+  color: white;
+}
+.calendar-grid .calendar-placeholder mat-icon {
+  font-size: 4rem;
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+.calendar-grid .calendar-placeholder p {
+  font-size: 1.1rem;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.matches-list h3 {
+  color: white;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+}
+.matches-list .match-card {
+  margin-bottom: 1rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+.matches-list .match-card:hover {
+  transform: translateY(-2px);
+}
+.matches-list .match-card .match-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+.matches-list .match-card .match-header .match-date {
+  display: flex;
+  align-items: center;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+.matches-list .match-card .match-header .match-date mat-icon {
+  font-size: 1rem;
+  margin-right: 0.5rem;
+}
+.matches-list .match-card .match-header .match-actions button {
+  color: #7f8c8d;
+}
+.matches-list .match-card .match-header .match-actions .danger {
+  color: #e74c3c;
+}
+.matches-list .match-card .match-teams {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.matches-list .match-card .match-teams .team {
+  display: flex;
+  flex-direction: column;
+}
+.matches-list .match-card .match-teams .team.home-team {
+  text-align: left;
+}
+.matches-list .match-card .match-teams .team.away-team {
+  text-align: right;
+}
+.matches-list .match-card .match-teams .team .team-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+.matches-list .match-card .match-teams .team .team-type {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  text-transform: uppercase;
+}
+.matches-list .match-card .match-teams .vs-section {
+  text-align: center;
+}
+.matches-list .match-card .match-teams .vs-section .vs {
+  background: #3498db;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.matches-list .match-card .match-details {
+  margin-bottom: 1rem;
+}
+.matches-list .match-card .match-details .detail-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+.matches-list .match-card .match-details .detail-item mat-icon {
+  font-size: 1rem;
+  margin-right: 0.5rem;
+  color: #3498db;
+}
+.matches-list .match-card .match-details .detail-item:last-child {
+  margin-bottom: 0;
+}
+.matches-list .match-card .match-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.matches-list .match-card .match-status .status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.matches-list .match-card .match-status .status-badge.scheduled {
+  background: #e8f5e8;
+  color: #27ae60;
+}
+.matches-list .match-card .match-status .status-badge.completed {
+  background: #e3f2fd;
+  color: #2196f3;
+}
+.matches-list .match-card .match-status .status-badge.cancelled {
+  background: #ffebee;
+  color: #f44336;
+}
+.matches-list .match-card .match-status .days-until {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  font-weight: 600;
+}
+.matches-list .no-matches {
+  text-align: center;
+  color: white;
+  padding: 3rem 1rem;
+}
+.matches-list .no-matches mat-icon {
+  font-size: 4rem;
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+.matches-list .no-matches h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+.matches-list .no-matches p {
+  opacity: 0.8;
+  margin-bottom: 2rem;
+}
+.matches-list .no-matches button {
+  border-radius: 25px;
+  font-weight: 600;
+}
+.matches-list .no-matches button mat-icon {
+  margin-right: 0.5rem;
+}
+
+.past-matches {
+  margin-top: 2rem;
+}
+.past-matches h3 {
+  color: white;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+.past-matches .past-match-card {
+  margin-bottom: 0.5rem;
+  border-radius: 10px;
+}
+.past-matches .past-match-card .past-match-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.past-matches .past-match-card .past-match-header .past-match-date {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+}
+.past-matches .past-match-card .past-match-header .result-badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+.past-matches .past-match-card .past-match-header .result-badge.win {
+  background: #d5f5d5;
+  color: #27ae60;
+}
+.past-matches .past-match-card .past-match-header .result-badge.loss {
+  background: #ffe6e6;
+  color: #e74c3c;
+}
+.past-matches .past-match-card .past-match-header .result-badge.draw {
+  background: #fff3cd;
+  color: #f39c12;
+}
+.past-matches .past-match-card .past-match-score {
+  font-size: 0.9rem;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+@media (min-width: 768px) {
+  .calendar-container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .calendar-header h1 {
+    font-size: 2rem;
+  }
+  .matches-list .match-card .match-teams .team .team-name {
+    font-size: 1.2rem;
+  }
+}
+@media (min-width: 1024px) {
+  .matches-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1rem;
+  }
+  .matches-list h3 {
+    grid-column: 1/-1;
+  }
+  .matches-list .no-matches {
+    grid-column: 1/-1;
+  }
+}/*# sourceMappingURL=calendar.component.css.map */

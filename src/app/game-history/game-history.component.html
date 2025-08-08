@@ -1,0 +1,240 @@
+<!-- Game History Component -->
+<div class="game-history-container">
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <h1>
+                <mat-icon>history</mat-icon>
+                Game History
+            </h1>
+            <p>Review and manage your rugby match history</p>
+        </div>
+    </div>
+
+    <!-- Statistics Overview -->
+    <div class="stats-section">
+        <div class="stats-grid">
+            <mat-card class="stat-card">
+                <mat-card-content>
+                    <div class="stat-icon">
+                        <mat-icon color="primary">sports_rugby</mat-icon>
+                    </div>
+                    <div class="stat-number">{{ statistics.totalGames || 0 }}</div>
+                    <div class="stat-label">Total Games</div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="stat-card">
+                <mat-card-content>
+                    <div class="stat-icon">
+                        <mat-icon color="accent">check_circle</mat-icon>
+                    </div>
+                    <div class="stat-number">{{ statistics.completedGames || 0 }}</div>
+                    <div class="stat-label">Completed</div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="stat-card">
+                <mat-card-content>
+                    <div class="stat-icon">
+                        <mat-icon color="warn">schedule</mat-icon>
+                    </div>
+                    <div class="stat-number">{{ statistics.activeGames || 0 }}</div>
+                    <div class="stat-label">Active Games</div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="stat-card">
+                <mat-card-content>
+                    <div class="stat-icon">
+                        <mat-icon>trending_up</mat-icon>
+                    </div>
+                    <div class="stat-number">{{ statistics.averageScore?.home || 0 }}</div>
+                    <div class="stat-label">Avg Score</div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+    <!-- Filter and Search Controls -->
+    <div class="controls-section">
+        <mat-card class="controls-card">
+            <mat-card-content>
+                <div class="controls-grid">
+
+                    <!-- Search -->
+                    <mat-form-field class="search-field" appearance="outline">
+                        <mat-label>Search teams</mat-label>
+                        <input matInput [(ngModel)]="filter.search" (input)="onFilterChange()"
+                            placeholder="Enter team name...">
+                        <mat-icon matSuffix *ngIf="!filter.search">search</mat-icon>
+                        <button mat-icon-button matSuffix *ngIf="filter.search" (click)="clearSearch()">
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                    </mat-form-field>
+
+                    <!-- Status Filter -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Status</mat-label>
+                        <mat-select [(ngModel)]="filter.status" (selectionChange)="onFilterChange()">
+                            <mat-option value="all">All Games</mat-option>
+                            <mat-option value="completed">Completed</mat-option>
+                            <mat-option value="active">Active</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- Sort By -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Sort by</mat-label>
+                        <mat-select [(ngModel)]="filter.sortBy" (selectionChange)="onFilterChange()">
+                            <mat-option value="date">Date</mat-option>
+                            <mat-option value="teams">Teams</mat-option>
+                            <mat-option value="score">Total Score</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- Sort Order -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Order</mat-label>
+                        <mat-select [(ngModel)]="filter.sortOrder" (selectionChange)="onFilterChange()">
+                            <mat-option value="desc">Newest First</mat-option>
+                            <mat-option value="asc">Oldest First</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button mat-raised-button color="primary" (click)="exportAllGames()"
+                        [disabled]="games.length === 0">
+                        <mat-icon>download</mat-icon>
+                        Export All
+                    </button>
+                    <button mat-raised-button color="warn" (click)="clearAllGames()" [disabled]="games.length === 0">
+                        <mat-icon>delete_sweep</mat-icon>
+                        Clear All
+                    </button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Games List -->
+    <div class="games-section">
+
+        <!-- No Games Message -->
+        <div class="no-games" *ngIf="filteredGames.length === 0 && games.length === 0">
+            <mat-card class="no-games-card">
+                <mat-card-content>
+                    <div class="no-games-content">
+                        <mat-icon class="no-games-icon">sports_rugby</mat-icon>
+                        <h3>No Games Yet</h3>
+                        <p>Start playing some rugby matches to see your game history here!</p>
+                        <button mat-raised-button color="primary" routerLink="/score-tracker">
+                            <mat-icon>play_arrow</mat-icon>
+                            Start New Game
+                        </button>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <!-- No Results Message -->
+        <div class="no-results" *ngIf="filteredGames.length === 0 && games.length > 0">
+            <mat-card class="no-results-card">
+                <mat-card-content>
+                    <div class="no-results-content">
+                        <mat-icon class="no-results-icon">search_off</mat-icon>
+                        <h3>No Games Found</h3>
+                        <p>Try adjusting your search or filter criteria.</p>
+                        <button mat-stroked-button (click)="clearSearch()">
+                            <mat-icon>clear_all</mat-icon>
+                            Clear Filters
+                        </button>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <!-- Games Grid -->
+        <div class="games-grid" *ngIf="filteredGames.length > 0">
+            <mat-card class="game-card" *ngFor="let game of filteredGames">
+                <mat-card-header>
+                    <div class="game-date">
+                        <mat-icon>schedule</mat-icon>
+                        {{ formatDate(game.timestamp) }}
+                    </div>
+                    <div class="game-status">
+                        <mat-chip [color]="getStatusColor(game.status)">
+                            <mat-icon>{{ getStatusIcon(game.status) }}</mat-icon>
+                            {{ game.status | titlecase }}
+                        </mat-chip>
+                    </div>
+                </mat-card-header>
+
+                <mat-card-content>
+                    <!-- Game Score -->
+                    <div class="game-score">
+                        <div class="team home-team">
+                            <div class="team-name">{{ game.homeTeam.name }}</div>
+                            <div class="team-score">{{ game.homeTeam.score }}</div>
+                        </div>
+
+                        <div class="vs-divider">
+                            <mat-icon class="vs-icon">sports_rugby</mat-icon>
+                            <div class="vs-text">VS</div>
+                        </div>
+
+                        <div class="team away-team">
+                            <div class="team-name">{{ game.awayTeam.name }}</div>
+                            <div class="team-score">{{ game.awayTeam.score }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Game Details -->
+                    <div class="game-details">
+                        <div class="detail-item">
+                            <mat-icon>timer</mat-icon>
+                            <span>Duration: {{ getGameDuration(game) }}</span>
+                        </div>
+
+                        <div class="detail-item" *ngIf="getWinner(game) !== 'Draw'">
+                            <mat-icon color="accent">emoji_events</mat-icon>
+                            <span>Winner: {{ getWinner(game) }} (+{{ getScoreDifference(game) }})</span>
+                        </div>
+
+                        <div class="detail-item" *ngIf="getWinner(game) === 'Draw'">
+                            <mat-icon>balance</mat-icon>
+                            <span>Match ended in a draw</span>
+                        </div>
+
+                        <div class="detail-item" *ngIf="game.scoreHistory?.length">
+                            <mat-icon>history</mat-icon>
+                            <span>{{ game.scoreHistory.length }} scoring events</span>
+                        </div>
+                    </div>
+                </mat-card-content>
+
+                <mat-card-actions>
+                    <button mat-icon-button [matMenuTriggerFor]="gameMenu" [matTooltip]="'Game options'">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+
+                    <mat-menu #gameMenu="matMenu">
+                        <button mat-menu-item (click)="exportGame(game)">
+                            <mat-icon>download</mat-icon>
+                            <span>Export Game</span>
+                        </button>
+                        <button mat-menu-item (click)="deleteGame(game.id)" class="danger-action">
+                            <mat-icon>delete</mat-icon>
+                            <span>Delete Game</span>
+                        </button>
+                    </mat-menu>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+
+</div>

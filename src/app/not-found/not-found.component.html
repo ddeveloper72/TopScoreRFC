@@ -1,0 +1,43 @@
+<div class="not-found-container">
+    <div class="not-found-card">
+        <mat-icon class="not-found-icon">sports_rugby</mat-icon>
+        <h1>Oops! Page Not Found</h1>
+        <p>The page you're looking for doesn't exist, but don't worry!</p>
+        <p class="redirect-message">Redirecting you to the dashboard in <span class="countdown">{{ countdown }}</span>
+            seconds...</p>
+
+        <div class="action-buttons">
+            <button mat-raised-button color="primary" (click)="goToDashboard()">
+                <mat-icon>dashboard</mat-icon>
+                Go to Dashboard Now
+            </button>
+
+            <button mat-stroked-button (click)="goToScoreTracker()" class="secondary-button">
+                <mat-icon>sports_score</mat-icon>
+                Start Tracking Scores
+            </button>
+        </div>
+
+        <div class="quick-links">
+            <h3>Quick Links:</h3>
+            <div class="link-buttons">
+                <button mat-button routerLink="/dashboard">
+                    <mat-icon>dashboard</mat-icon>
+                    Dashboard
+                </button>
+                <button mat-button routerLink="/score-tracker">
+                    <mat-icon>sports_rugby</mat-icon>
+                    Score Tracker
+                </button>
+                <button mat-button routerLink="/calendar">
+                    <mat-icon>calendar_today</mat-icon>
+                    Calendar
+                </button>
+                <button mat-button routerLink="/games-history">
+                    <mat-icon>history</mat-icon>
+                    Game History
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

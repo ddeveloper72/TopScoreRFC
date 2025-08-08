@@ -1,0 +1,152 @@
+<!-- Rugby Score Tracker Dashboard -->
+<div class="dashboard-container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1>🏈 Rugby Score Tracker</h1>
+            <p>Your complete rugby match management solution</p>
+            <button mat-raised-button color="primary" routerLink="/score-tracker" class="quick-start-btn">
+                <mat-icon>play_arrow</mat-icon>
+                Quick Start Game
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="stats-overview">
+        <mat-card class="stat-card">
+            <mat-card-content>
+                <div class="stat-number">{{ statistics.totalGames || 0 }}</div>
+                <div class="stat-label">Total Games</div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+            <mat-card-content>
+                <div class="stat-number">{{ statistics.completedGames || 0 }}</div>
+                <div class="stat-label">Completed</div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+            <mat-card-content>
+                <div class="stat-number">{{ statistics.activeGames || 0 }}</div>
+                <div class="stat-label">Active Games</div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="action-cards">
+            <mat-card class="action-card" routerLink="/score-tracker">
+                <mat-card-content>
+                    <mat-icon class="action-icon">sports_rugby</mat-icon>
+                    <h3>Start New Game</h3>
+                    <p>Begin tracking a new match</p>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="action-card" routerLink="/calendar">
+                <mat-card-content>
+                    <mat-icon class="action-icon">calendar_today</mat-icon>
+                    <h3>Match Calendar</h3>
+                    <p>View and schedule matches</p>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="action-card" routerLink="/games-history">
+                <mat-card-content>
+                    <mat-icon class="action-icon">history</mat-icon>
+                    <h3>Game History</h3>
+                    <p>Review past matches</p>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+    <!-- Recent Games -->
+    <div class="recent-section" *ngIf="recentGames.length > 0">
+        <h2>Recent Games</h2>
+        <div class="recent-games">
+            <mat-card class="game-card" *ngFor="let game of recentGames">
+                <mat-card-content>
+                    <div class="game-header">
+                        <span class="game-date">{{ game.timestamp | date:'MMM dd' }}</span>
+                        <span class="game-status" [ngClass]="game.status">{{ game.status }}</span>
+                    </div>
+                    <div class="game-score">
+                        <div class="team">
+                            <span class="team-name">{{ game.homeTeam.name }}</span>
+                            <span class="score">{{ game.homeTeam.score }}</span>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <span class="team-name">{{ game.awayTeam.name }}</span>
+                            <span class="score">{{ game.awayTeam.score }}</span>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+    <!-- Upcoming Matches -->
+    <div class="upcoming-section" *ngIf="upcomingMatches.length > 0">
+        <h2>Upcoming Matches</h2>
+        <div class="upcoming-matches">
+            <mat-card class="match-card" *ngFor="let match of upcomingMatches">
+                <mat-card-content>
+                    <div class="match-date">
+                        <mat-icon>schedule</mat-icon>
+                        {{ match.date | date:'MMM dd, yyyy' }}
+                    </div>
+                    <div class="match-teams">
+                        {{ match.homeTeam }} vs {{ match.awayTeam }}
+                    </div>
+                    <div class="match-venue">
+                        <mat-icon>location_on</mat-icon>
+                        {{ match.venue }}
+                    </div>
+                    <div class="match-actions">
+                        <button mat-stroked-button color="primary">
+                            <mat-icon>sports_rugby</mat-icon>
+                            Start Match
+                        </button>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+    <!-- App Features -->
+    <div class="features-section">
+        <h2>Features</h2>
+        <div class="features-grid">
+            <div class="feature-item">
+                <mat-icon>timer</mat-icon>
+                <h3>Real-time Scoring</h3>
+                <p>Track scores as they happen with built-in timer</p>
+            </div>
+
+            <div class="feature-item">
+                <mat-icon>phone_android</mat-icon>
+                <h3>Mobile Optimized</h3>
+                <p>Perfect for sideline use during matches</p>
+            </div>
+
+            <div class="feature-item">
+                <mat-icon>analytics</mat-icon>
+                <h3>Match Statistics</h3>
+                <p>Detailed breakdown of tries, penalties, and more</p>
+            </div>
+
+            <div class="feature-item">
+                <mat-icon>cloud_off</mat-icon>
+                <h3>Works Offline</h3>
+                <p>No internet required for basic functionality</p>
+            </div>
+        </div>
+    </div>
+</div>

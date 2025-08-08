@@ -1,12 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import { environment } from '../environments/environment';
-import { AppRoutingModule } from './app.routes';
-import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app.routes';
+import { RouterModule } from '@angular/router';
 
+// Comment out Firebase for now to avoid configuration issues
+// import { AngularFireModule } from '@angular/fire/compat';
+// import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+// import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [],
@@ -14,9 +15,10 @@ import { AppComponent } from './app.component';
     AppComponent,
     BrowserModule,
     AppRoutingModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule,
     RouterModule,
+    // Commented out Firebase until configuration is needed
+    // AngularFireModule.initializeApp(environment.firebase),
+    // AngularFirestoreModule,
   ],
   exports: [],
   providers: [],

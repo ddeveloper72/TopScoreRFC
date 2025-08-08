@@ -5,8 +5,17 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --configuration=production",
+    "build:ghpages": "ng build --configuration=production --base-href \"https://ddeveloper72.github.io/TopScoreRFC/\"",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "backend:install": "cd backend && npm install",
+    "backend:start": "cd backend && npm start",
+    "backend:dev": "cd backend && npm run dev",
+    "dev:full": "concurrently \"npm run backend:dev\" \"npm start\"",
+    "build:full": "npm run build && cd backend && npm install",
+    "deploy": "npm run build:ghpages && npx angular-cli-ghpages --dir=dist/rugby-score-card-app/browser",
+    "predeploy": "npm run build:ghpages"
   },
   "private": true,
   "dependencies": {
@@ -31,6 +40,8 @@
     "@angular/cli": "^19.0.2",
     "@angular/compiler-cli": "^19.0.0",
     "@types/jasmine": "~5.1.0",
+    "angular-cli-ghpages": "^2.0.3",
+    "concurrently": "^9.2.0",
     "firebase-tools": "^13.27.0",
     "jasmine-core": "~5.4.0",
     "karma": "~6.4.0",
