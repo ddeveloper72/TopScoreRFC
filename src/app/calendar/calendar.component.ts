@@ -14,6 +14,7 @@ import {
   slideInFromBottom,
   staggerAnimation,
 } from '../animations/route-animations';
+import { RugbyBallWhiteComponent, RugbyBallPrimaryComponent } from '../shared/rugby-ball-variants/rugby-ball-variants.component';
 
 export interface CalendarDay {
   date: Date;
@@ -26,7 +27,7 @@ export interface CalendarDay {
 
 @Component({
   selector: 'app-calendar',
-  imports: [CommonModule, MaterialModule],
+  imports: [CommonModule, MaterialModule, RugbyBallWhiteComponent, RugbyBallPrimaryComponent],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss',
   animations: [fadeInOut, slideInFromBottom, staggerAnimation],
@@ -181,48 +182,50 @@ export class CalendarComponent implements OnInit, OnDestroy {
   generateCalendar(): void {
     const year = this.currentMonth.getFullYear();
     const month = this.currentMonth.getMonth();
-    
+
     // Get first day of the month and last day
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
-    
+
     // Get first day to display (previous month's days if needed)
     const startDate = new Date(firstDay);
     startDate.setDate(firstDay.getDate() - firstDay.getDay());
-    
+
     // Get last day to display (next month's days if needed)
     const endDate = new Date(lastDay);
     endDate.setDate(lastDay.getDate() + (6 - lastDay.getDay()));
-    
+
     this.calendarDays = [];
     const currentDate = new Date(startDate);
     const today = new Date();
-    
+
     while (currentDate <= endDate) {
       const dayMatches = this.getMatchesForDate(currentDate);
-      
+
       this.calendarDays.push({
         date: new Date(currentDate),
         day: currentDate.getDate(),
         isCurrentMonth: currentDate.getMonth() === month,
         isToday: this.isSameDay(currentDate, today),
         matches: dayMatches,
-        hasMatches: dayMatches.length > 0
+        hasMatches: dayMatches.length > 0,
       });
-      
+
       currentDate.setDate(currentDate.getDate() + 1);
     }
   }
 
   getMatchesForDate(date: Date): Match[] {
     const allMatches = [...this.upcomingMatches, ...this.pastMatches];
-    return allMatches.filter(match => this.isSameDay(match.date, date));
+    return allMatches.filter((match) => this.isSameDay(match.date, date));
   }
 
   isSameDay(date1: Date, date2: Date): boolean {
-    return date1.getDate() === date2.getDate() &&
-           date1.getMonth() === date2.getMonth() &&
-           date1.getFullYear() === date2.getFullYear();
+    return (
+      date1.getDate() === date2.getDate() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getFullYear() === date2.getFullYear()
+    );
   }
 
   onDayClick(day: CalendarDay): void {

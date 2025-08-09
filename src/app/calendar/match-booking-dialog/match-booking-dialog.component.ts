@@ -9,6 +9,7 @@ import {
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MaterialModule } from '../../material/material.module';
 import { Match } from '../../services/match-storage.service';
+import { RugbyBallAccentComponent } from '../../shared/rugby-ball-variants/rugby-ball-variants.component';
 
 export interface MatchBookingData {
   match?: Match;
@@ -18,7 +19,7 @@ export interface MatchBookingData {
 @Component({
   selector: 'app-match-booking-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MaterialModule],
+  imports: [CommonModule, ReactiveFormsModule, MaterialModule, RugbyBallAccentComponent],
   templateUrl: './match-booking-dialog.component.html',
   styleUrls: ['./match-booking-dialog.component.scss'],
 })

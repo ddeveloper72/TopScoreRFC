@@ -18,7 +18,7 @@
             <mat-card class="stat-card">
                 <mat-card-content>
                     <div class="stat-icon">
-                        <mat-icon color="primary">sports_rugby</mat-icon>
+                        <app-rugby-ball-primary size="32"></app-rugby-ball-primary>
                     </div>
                     <div class="stat-number">{{ statistics.totalGames || 0 }}</div>
                     <div class="stat-label">Total Games</div>
@@ -129,7 +129,7 @@
             <mat-card class="no-games-card">
                 <mat-card-content>
                     <div class="no-games-content">
-                        <mat-icon class="no-games-icon">sports_rugby</mat-icon>
+                        <app-rugby-ball-gray size="64" class="no-games-icon"></app-rugby-ball-gray>
                         <h3>No Games Yet</h3>
                         <p>Start playing some rugby matches to see your game history here!</p>
                         <button mat-raised-button color="primary" routerLink="/score-tracker">
@@ -183,7 +183,7 @@
                         </div>
 
                         <div class="vs-divider">
-                            <mat-icon class="vs-icon">sports_rugby</mat-icon>
+                            <app-rugby-ball-accent size="24" [rotation]="45" class="vs-icon"></app-rugby-ball-accent>
                             <div class="vs-text">VS</div>
                         </div>
 

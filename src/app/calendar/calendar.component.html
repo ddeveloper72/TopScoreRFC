@@ -29,7 +29,7 @@
 
   <!-- Calendar Grid (Month View) -->
   <div class="calendar-grid" *ngIf="currentView === 'month'" [@fadeInOut]>
-    
+
     <!-- Week Days Header -->
     <div class="calendar-header-row">
       <div class="day-header" *ngFor="let day of weekDays">{{ day }}</div>
@@ -37,26 +37,17 @@
 
     <!-- Calendar Days -->
     <div class="calendar-body">
-      <div 
-        class="calendar-day" 
-        *ngFor="let day of calendarDays; let i = index"
-        [ngClass]="{
+      <div class="calendar-day" *ngFor="let day of calendarDays; let i = index" [ngClass]="{
           'other-month': !day.isCurrentMonth,
           'today': day.isToday,
           'has-matches': day.hasMatches
-        }"
-        (click)="onDayClick(day)"
-        [@fadeInOut]
-        [style.animation-delay]="(i * 20) + 'ms'">
-        
+        }" (click)="onDayClick(day)" [@fadeInOut] [style.animation-delay]="(i * 20) + 'ms'">
+
         <div class="day-number">{{ day.day }}</div>
-        
+
         <!-- Match indicators for this day -->
         <div class="match-indicators" *ngIf="day.hasMatches">
-          <div 
-            class="match-dot" 
-            *ngFor="let match of day.matches.slice(0, 3)"
-            [ngClass]="getMatchTypeClass(match)"
+          <div class="match-dot" *ngFor="let match of day.matches.slice(0, 3)" [ngClass]="getMatchTypeClass(match)"
             [title]="match.homeTeam + ' vs ' + match.awayTeam">
           </div>
           <div class="more-matches" *ngIf="day.matches.length > 3">
@@ -89,7 +80,7 @@
                 Edit
               </button>
               <button mat-menu-item (click)="startMatch(match)">
-                <mat-icon>sports_rugby</mat-icon>
+                <app-rugby-ball-white size="18"></app-rugby-ball-white>
                 Start Game
               </button>
               <button mat-menu-item (click)="deleteMatch(match)" class="danger">
