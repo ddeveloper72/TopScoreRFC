@@ -1,128 +1,163 @@
 <div class="match-booking-dialog">
-    <h2 mat-dialog-title>
-        <mat-icon>event</mat-icon>
-        {{ data.isEdit ? 'Edit Match' : 'Book New Match' }}
-    </h2>
+  <h2 mat-dialog-title>
+    <i class="fa-solid fa-calendar-plus"></i>
+    {{ data.isEdit ? 'Edit Match' : 'Book New Match' }}
+  </h2>
 
-    <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
-        <mat-dialog-content>
-            <div class="form-container">
-                <!-- Team Selection -->
-                <div class="team-section">
-                    <h3>Teams</h3>
-                    <div class="team-inputs">
-                        <mat-form-field appearance="outline" class="team-field">
-                            <mat-label>Home Team</mat-label>
-                            <input matInput formControlName="homeTeam" placeholder="Enter home team name"
-                                (blur)="teamsValidator()">
-                            <mat-icon matSuffix>home</mat-icon>
-                            <mat-error *ngIf="hasError('homeTeam')">
-                                {{ getErrorMessage('homeTeam') }}
-                            </mat-error>
-                        </mat-form-field>
+  <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+    <mat-dialog-content>
+      <div class="form-container">
+        <!-- Team Selection -->
+        <div class="team-section">
+          <h3>Teams</h3>
+          <div class="team-inputs">
+            <mat-form-field appearance="outline" class="team-field">
+              <mat-label>Home Team</mat-label>
+              <span matPrefix class="field-icon" aria-hidden="true"><i class="fa-solid fa-house-chimney"></i></span>
+              <input matInput formControlName="homeTeam" placeholder="Enter home team name" (blur)="teamsValidator()">
+              <mat-error *ngIf="hasError('homeTeam')">
+                {{ getErrorMessage('homeTeam') }}
+              </mat-error>
+            </mat-form-field>
 
-                        <div class="vs-divider">
-                            <app-rugby-ball-accent size="24" [rotation]="45"></app-rugby-ball-accent>
-                        </div>
-
-                        <mat-form-field appearance="outline" class="team-field">
-                            <mat-label>Away Team</mat-label>
-                            <input matInput formControlName="awayTeam" placeholder="Enter away team name"
-                                (blur)="teamsValidator()">
-                            <mat-icon matSuffix>flight_takeoff</mat-icon>
-                            <mat-error *ngIf="hasError('awayTeam')">
-                                {{ getErrorMessage('awayTeam') }}
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <!-- Date and Time Section -->
-                <div class="datetime-section">
-                    <h3>Match Schedule</h3>
-                    <div class="datetime-inputs">
-                        <mat-form-field appearance="outline" class="date-field">
-                            <mat-label>Match Date</mat-label>
-                            <input matInput [matDatepicker]="picker" formControlName="date" [min]="minDate"
-                                [max]="maxDate" placeholder="Select match date">
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker></mat-datepicker>
-                            <mat-error *ngIf="hasError('date')">
-                                {{ getErrorMessage('date') }}
-                            </mat-error>
-                        </mat-form-field>
-
-                        <mat-form-field appearance="outline" class="time-field">
-                            <mat-label>Kick-off Time</mat-label>
-                            <mat-select formControlName="time" placeholder="Select time">
-                                <mat-option *ngFor="let timeOption of timeOptions" [value]="timeOption.value"
-                                    [disabled]="timeOption.value === ''">
-                                    {{ timeOption.display }}
-                                </mat-option>
-                            </mat-select>
-                            <mat-icon matSuffix (click)="openTimePicker()" class="clickable-icon">schedule</mat-icon>
-                            <mat-error *ngIf="hasError('time')">
-                                {{ getErrorMessage('time') }}
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-
-                    <div class="date-info">
-                        <mat-icon class="info-icon">info</mat-icon>
-                        <span class="info-text">
-                            Matches can be booked from today up to 1 year in advance
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Match Details Section -->
-                <div class="details-section">
-                    <h3>Match Details</h3>
-
-                    <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Venue</mat-label>
-                        <input matInput formControlName="venue" placeholder="Enter match venue">
-                        <mat-icon matSuffix>location_on</mat-icon>
-                        <mat-error *ngIf="hasError('venue')">
-                            {{ getErrorMessage('venue') }}
-                        </mat-error>
-                    </mat-form-field>
-
-                    <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Competition</mat-label>
-                        <mat-select formControlName="competition">
-                            <mat-option *ngFor="let comp of competitions" [value]="comp">
-                                {{ comp }}
-                            </mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="hasError('competition')">
-                            {{ getErrorMessage('competition') }}
-                        </mat-error>
-                    </mat-form-field>
-
-                    <mat-form-field appearance="outline" class="full-width" *ngIf="data.isEdit">
-                        <mat-label>Status</mat-label>
-                        <mat-select formControlName="status">
-                            <mat-option value="scheduled">Scheduled</mat-option>
-                            <mat-option value="completed">Completed</mat-option>
-                            <mat-option value="cancelled">Cancelled</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
+            <div class="vs-divider">
+              <img src="assets/images/irish-rugby-ball.png" alt="Rugby ball" class="rugby-ball" />
             </div>
-        </mat-dialog-content>
 
-        <mat-dialog-actions align="end">
-            <button mat-button type="button" (click)="onCancel()" class="cancel-button">
-                <mat-icon>cancel</mat-icon>
-                Cancel
-            </button>
+            <mat-form-field appearance="outline" class="team-field">
+              <mat-label>Away Team</mat-label>
+              <input matInput formControlName="awayTeam" placeholder="Enter away team name" (blur)="teamsValidator()">
+              <span matSuffix class="field-icon" aria-hidden="true"><i class="fa-solid fa-plane-departure"></i></span>
+              <mat-error *ngIf="hasError('awayTeam')">
+                {{ getErrorMessage('awayTeam') }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
 
-            <button mat-raised-button color="primary" type="submit" [disabled]="bookingForm.invalid"
-                class="submit-button">
-                <mat-icon>{{ data.isEdit ? 'save' : 'add' }}</mat-icon>
-                {{ data.isEdit ? 'Update Match' : 'Book Match' }}
-            </button>
-        </mat-dialog-actions>
-    </form>
+        <!-- Date and Time Section -->
+        <div class="datetime-section">
+          <h3>Match Schedule</h3>
+          <div class="datetime-inputs">
+            <mat-form-field appearance="outline" class="date-field">
+              <mat-label>Match Date</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="date" [min]="minDate" [max]="maxDate"
+                placeholder="Select match date">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="hasError('date')">
+                {{ getErrorMessage('date') }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="time-field">
+              <mat-label>Kick-off Time</mat-label>
+              <mat-select formControlName="time" placeholder="Select time">
+                <mat-option *ngFor="let timeOption of timeOptions" [value]="timeOption.value"
+                  [disabled]="timeOption.value === ''">
+                  {{ timeOption.display }}
+                </mat-option>
+              </mat-select>
+              <mat-icon matSuffix (click)="openTimePicker()" class="clickable-icon">schedule</mat-icon>
+              <mat-error *ngIf="hasError('time')">
+                {{ getErrorMessage('time') }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="date-info">
+            <mat-icon class="info-icon">info</mat-icon>
+            <span class="info-text">
+              Matches can be booked from today up to 1 year in advance
+            </span>
+          </div>
+        </div>
+
+        <!-- Match Details Section -->
+        <div class="details-section">
+          <h3>Match Details</h3>
+
+          <!-- Enhanced Venue Search Section -->
+          <div class="venue-section">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Venue (Club Name or Eircode)</mat-label>
+              <input matInput formControlName="venue" placeholder="e.g. Aviva Stadium, Lansdowne RFC, or D04 V3N4"
+                (input)="onVenueSearch($event)" [matAutocomplete]="venueAutocomplete">
+              <button mat-icon-button matSuffix type="button" aria-label="Clear venue" *ngIf="selectedVenue"
+                (click)="clearVenue()">
+                <mat-icon>clear</mat-icon>
+              </button>
+              <mat-icon matSuffix *ngIf="!selectedVenue">search</mat-icon>
+              <mat-error *ngIf="hasError('venue')">
+                {{ getErrorMessage('venue') }}
+              </mat-error>
+
+              <!-- Autocomplete dropdown -->
+              <mat-autocomplete #venueAutocomplete="matAutocomplete" [displayWith]="displayVenue"
+                (optionSelected)="onVenueSelected($event)">
+                <mat-option *ngFor="let venue of venueSearchResults" [value]="venue">
+                  <div class="venue-option">
+                    <div class="venue-name">{{ venue.name }}</div>
+                    <div class="venue-address">{{ venue.address }}</div>
+                  </div>
+                </mat-option>
+                <mat-option *ngIf="isSearching" disabled>
+                  <div class="venue-option">
+                    <mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner>
+                    <span style="margin-left:8px;">Searching…</span>
+                  </div>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+
+            <!-- Map Preview -->
+            <div class="map-container" *ngIf="selectedVenue">
+              <div class="map-header">
+                <h4>{{ selectedVenue.name }}</h4>
+                <p class="venue-address">{{ selectedVenue.address }}</p>
+              </div>
+              <div #mapElement class="google-map" id="venue-map">
+                <div class="map-loading-overlay" *ngIf="mapLoading">
+                  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Competition</mat-label>
+            <mat-select formControlName="competition">
+              <mat-option *ngFor="let comp of competitions" [value]="comp">
+                {{ comp }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasError('competition')">
+              {{ getErrorMessage('competition') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width" *ngIf="data.isEdit">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="scheduled">Scheduled</mat-option>
+              <mat-option value="completed">Completed</mat-option>
+              <mat-option value="cancelled">Cancelled</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-button type="button" (click)="onCancel()" class="cancel-button">
+        <mat-icon>cancel</mat-icon>
+        Cancel
+      </button>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="bookingForm.invalid" class="submit-button">
+        <mat-icon>{{ data.isEdit ? 'save' : 'add' }}</mat-icon>
+        {{ data.isEdit ? 'Update Match' : 'Book Match' }}
+      </button>
+    </mat-dialog-actions>
+  </form>
 </div>
