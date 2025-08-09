@@ -15,6 +15,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Essential Material modules for the Rugby Score Tracker
 const MaterialComponents = [
@@ -34,6 +37,9 @@ const MaterialComponents = [
   MatDialogModule,
   MatDatepickerModule,
   MatNativeDateModule,
+  MatAutocompleteModule,
+  MatProgressSpinnerModule,
+  MatSnackBarModule,
 ];
 
 @NgModule({
