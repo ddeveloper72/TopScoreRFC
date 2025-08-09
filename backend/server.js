@@ -7,6 +7,7 @@ require('dotenv').config();
 
 const connectDB = require('./config/database');
 const gameRoutes = require('./routes/games');
+const matchRoutes = require('./routes/matches');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -53,6 +54,7 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/games', gameRoutes);
+app.use('/api/matches', matchRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
