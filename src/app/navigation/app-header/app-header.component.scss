@@ -1,11 +1,33 @@
 a {
   text-decoration: none;
   color: white;
+  display: flex;
+  align-items: center;
 }
 
 a:hover,
 a:active {
   color: lightgray;
+}
+
+.nav-title {
+  display: flex;
+  align-items: center;
+}
+
+.nav-title a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-logo {
+  margin-right: 8px !important;
+  vertical-align: middle;
+  padding: 0px;
+  flex-shrink: 0;
+  width: auto;
+  display: block;
 }
 
 .nav-bar {
@@ -17,8 +39,6 @@ a:active {
   align-items: center;
   padding: 0 20px;
 }
-
-
 
 .nav-items {
   display: flex;
@@ -36,7 +56,6 @@ a:active {
   margin: 0 10px;
   text-align: right;
 }
-
 
 .mat-mdc-icon-button {
   color: #ffff;
