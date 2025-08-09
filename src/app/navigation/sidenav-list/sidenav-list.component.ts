@@ -1,11 +1,10 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../../material/material.module';
-import { RugbyBallWhiteComponent } from '../../shared/rugby-ball-variants/rugby-ball-variants.component';
 
 @Component({
   selector: 'app-sidenav-list',
-  imports: [MaterialModule, RouterModule, RugbyBallWhiteComponent],
+  imports: [MaterialModule, RouterModule],
   templateUrl: './sidenav-list.component.html',
   styleUrl: './sidenav-list.component.scss',
 })
