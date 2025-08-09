@@ -6,7 +6,17 @@ export interface Match {
   homeTeam: string;
   awayTeam: string;
   date: Date;
-  venue: string;
+  venue: string; // Keep as string for backward compatibility, but can also store VenueLocation
+  venueDetails?: {
+    name: string;
+    address: string;
+    coordinates: {
+      lat: number;
+      lng: number;
+    };
+    placeId?: string;
+    formattedAddress?: string;
+  };
   competition?: string;
   status: 'scheduled' | 'completed' | 'cancelled';
   homeScore?: number;
@@ -138,6 +148,18 @@ export class MatchStorageService {
   clearAllMatches(): void {
     localStorage.removeItem(this.STORAGE_KEY);
     this.matchesSubject.next([]);
+  }
+
+  /**
+   * Replace all matches with a new list (e.g., after syncing from backend)
+   */
+  setAllMatches(matches: Match[]): void {
+    try {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(matches));
+      this.matchesSubject.next(matches);
+    } catch (error) {
+      console.error('Error setting matches:', error);
+    }
   }
 
   /**
