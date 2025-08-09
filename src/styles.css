@@ -1,4 +1,195 @@
 /* You can add global styles to this file, and also import other style files */
+/* FontAwesome Icon Styling */
+.fa-solid,
+.fa-regular,
+.fa-light,
+.fa-thin,
+.fa-duotone,
+.fa-brands {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 6px;
+  margin-left: 6px;
+}
+
+/* Global spacing for Angular Material form-field affixes (prefix/suffix) */
+.mat-mdc-form-field .mat-mdc-form-field-text-prefix,
+.mat-mdc-form-field .mat-mdc-form-field-icon-prefix {
+  margin-left: 8px !important;
+}
+
+.mat-mdc-form-field .mat-mdc-form-field-text-suffix,
+.mat-mdc-form-field .mat-mdc-form-field-icon-suffix {
+  margin-right: 8px !important;
+}
+
+/* Slight padding so input text doesn't collide with the prefix icon */
+.mat-mdc-form-field-has-prefix .mdc-text-field__input {
+  padding-left: 4px !important;
+}
+
+/* Stable spacing: add padding inside the infix box when affixes exist */
+.mat-mdc-form-field-has-prefix .mat-mdc-form-field-infix {
+  padding-left: 8px !important;
+}
+
+.mat-mdc-form-field-has-suffix .mat-mdc-form-field-infix {
+  padding-right: 8px !important;
+}
+
+/* Fix Material label offset when a prefix is present (prevents label shift into the border) */
+.mat-mdc-form-field-has-icon-prefix .mat-mdc-text-field-wrapper,
+.mat-mdc-form-field-has-text-prefix .mat-mdc-text-field-wrapper,
+.mat-mdc-form-field-has-prefix .mat-mdc-text-field-wrapper {
+  padding-left: 0 !important;
+  --mat-mdc-form-field-label-offset-x: 0px !important;
+}
+
+/* Global error wrapper spacing to avoid crowding next inputs */
+.mat-mdc-form-field-subscript-wrapper {
+  margin-top: 6px !important;
+}
+
+/* Rugby Ball Icon Styling - Matching Original SVG Colors */
+.fa-rugby-ball,
+.fa-football {
+  color: #8b4513; /* Brown leather color from original SVG */
+  text-shadow: 0 0 0 #ffffff, 1px 1px 0 #ffffff, -1px -1px 0 #ffffff, 1px -1px 0 #ffffff, -1px 1px 0 #ffffff; /* White outline to simulate stitching */
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+/* Larger rugby ball icons for headers and prominent displays */
+.fa-rugby-ball.fa-2x,
+.fa-rugby-ball.fa-3x,
+.fa-rugby-ball.fa-4x,
+.fa-football.fa-2x,
+.fa-football.fa-3x,
+.fa-football.fa-4x {
+  text-shadow: 0 0 1px #ffffff, 1px 1px 1px #ffffff, -1px -1px 1px #ffffff, 1px -1px 1px #ffffff, -1px 1px 1px #ffffff, 2px 2px 1px #ffffff, -2px -2px 1px #ffffff;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Small rugby ball icons for navigation and inline use */
+.fa-rugby-ball.fa-sm,
+.fa-football.fa-sm {
+  text-shadow: 0.5px 0.5px 0 #ffffff, -0.5px -0.5px 0 #ffffff, 0.5px -0.5px 0 #ffffff, -0.5px 0.5px 0 #ffffff;
+}
+
+/* Alternative rugby ball styling for light backgrounds */
+.fa-rugby-ball.light-bg,
+.fa-football.light-bg {
+  color: #8b4513;
+  text-shadow: 0 0 2px #ffffff, 1px 1px 2px #ffffff, -1px -1px 2px #ffffff;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+}
+
+/* Rugby ball for dark backgrounds */
+.fa-rugby-ball.dark-bg,
+.fa-football.dark-bg {
+  color: #a0622d; /* Slightly lighter brown for dark backgrounds */
+  text-shadow: 0 0 1px #ffffff, 1px 1px 1px #ffffff, -1px -1px 1px #ffffff;
+  filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.1));
+}
+
+/* Rugby ball in navigation contexts */
+.mat-sidenav-container .fa-rugby-ball,
+.mat-toolbar .fa-rugby-ball,
+.mat-sidenav-container .fa-football,
+.mat-toolbar .fa-football {
+  text-shadow: 0.5px 0.5px 0 #ffffff, -0.5px -0.5px 0 #ffffff, 0.5px -0.5px 0 #ffffff, -0.5px 0.5px 0 #ffffff;
+}
+
+/* Rugby ball in buttons */
+button .fa-rugby-ball,
+button .fa-football {
+  text-shadow: none; /* Clean look in buttons */
+  filter: none;
+}
+
+/* Rugby ball in cards and content areas */
+.mat-card .fa-rugby-ball,
+.mat-card .fa-football {
+  text-shadow: 0 0 1px #ffffff, 1px 1px 0 #ffffff, -1px -1px 0 #ffffff;
+}
+
+.fa-trophy {
+  color: #ffd700;
+}
+
+/* Sport and Game Icons */
+.fa-play {
+  color: #4caf50;
+}
+
+.fa-stop {
+  color: #f44336;
+}
+
+.fa-rotate-right {
+  color: #ff9800;
+}
+
+.fa-rotate-left {
+  color: #2196f3;
+}
+
+.fa-calendar-days {
+  color: #673ab7;
+}
+
+.fa-clock {
+  color: #607d8b;
+}
+
+.fa-location-dot {
+  color: #e91e63;
+}
+
+.fa-house {
+  color: #795548;
+}
+
+.fa-plane-departure {
+  color: #00bcd4;
+}
+
+.fa-chart-line {
+  color: #009688;
+}
+
+/* General icon colors for various contexts */
+.fa-pen {
+  color: #ff9800;
+}
+
+.fa-trash {
+  color: #f44336;
+}
+
+.fa-plus {
+  color: #4caf50;
+}
+
+.fa-gauge-high {
+  color: #2196f3;
+}
+
+.fa-bars {
+  color: #757575;
+}
+
+.fa-circle-info {
+  color: #2196f3;
+}
+
+.fa-chart-bar {
+  color: #795548;
+}
+
+.fa-ellipsis-vertical {
+  color: #757575;
+}
+
 html,
 body {
   height: 100%;

@@ -47,22 +47,89 @@
 
     .team-field {
       width: 100%;
+
+      .field-icon {
+        display: inline-flex;
+        align-items: center;
+        color: #8b4513;
+        i {
+          font-size: 16px;
+        }
+        margin-right: 6px;
+      }
+
+      // add spacing between the left outline and the prefix icon/text
+      .mat-mdc-form-field-text-prefix,
+      .mat-mdc-form-field-icon-prefix {
+        margin-left: 6px;
+      }
+
+      .mat-mdc-form-field-text-suffix,
+      .mat-mdc-form-field-icon-suffix {
+        margin-right: 6px;
+      }
+
+      // Stronger specificity to override Angular Material defaults
+      :host
+        ::ng-deep
+        .team-field
+        .mat-mdc-form-field
+        .mat-mdc-form-field-text-prefix,
+      :host
+        ::ng-deep
+        .team-field
+        .mat-mdc-form-field
+        .mat-mdc-form-field-icon-prefix {
+        margin-left: 8px !important;
+      }
+      :host
+        ::ng-deep
+        .team-field
+        .mat-mdc-form-field
+        .mat-mdc-form-field-text-suffix,
+      :host
+        ::ng-deep
+        .team-field
+        .mat-mdc-form-field
+        .mat-mdc-form-field-icon-suffix {
+        margin-right: 8px !important;
+      }
+
+      // Fallback for MDC internal affix elements
+      .mdc-text-field__affix--prefix {
+        margin-left: 6px;
+      }
+      .mdc-text-field__affix--suffix {
+        margin-right: 6px;
+      }
     }
 
     .vs-divider {
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #f5f5f5;
+      background: radial-gradient(circle at 30% 30%, #fff, #f0edea);
       border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      color: #666;
+      width: 44px;
+      height: 44px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      color: #8b4513;
 
       mat-icon {
         font-size: 24px;
         width: 24px;
         height: 24px;
+      }
+      i.fa-solid.fa-football {
+        font-size: 18px;
+      }
+
+      img.rugby-ball {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        transform: rotate(-30deg);
+        display: block;
       }
     }
   }
@@ -103,18 +170,25 @@
 
   // Form field styling
   mat-form-field {
+    margin-bottom: 12px; // ensure space below field (including when errors show)
     &.full-width {
       width: 100%;
     }
 
     .mat-mdc-form-field-subscript-wrapper {
-      margin-top: 4px;
+      margin-top: 6px; // a tad more breathing room between input and error text
     }
+  }
+
+  // Keep grid rows tight; spacing is handled by section gaps
+  .team-inputs mat-form-field,
+  .datetime-inputs mat-form-field {
+    margin-bottom: 0;
   }
 
   // Dialog actions styling
   mat-dialog-actions {
-    padding: 16px 0 8px 0;
+    padding: 16px 16px 8px 16px; // add horizontal padding so buttons aren’t flush to edges
     margin: 0;
     gap: 12px;
 
@@ -232,4 +306,113 @@
   .mat-mdc-form-field.mat-focused .mat-mdc-form-field-label {
     color: #1976d2;
   }
+}
+
+// Venue Search and Map Styling
+.venue-section {
+  .venue-option {
+    padding: 8px 0;
+
+    .venue-name {
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .venue-address {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.2;
+    }
+  }
+
+  .map-container {
+    margin-top: 16px;
+    margin-bottom: 20px; // add space between the map and the next input field
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .map-header {
+      background: linear-gradient(135deg, #8b4513, #a0522d);
+      color: white;
+      padding: 12px 16px;
+
+      h4 {
+        margin: 0 0 4px 0;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .venue-address {
+        margin: 0;
+        font-size: 12px;
+        opacity: 0.9;
+      }
+    }
+
+    .google-map {
+      width: 100%;
+      height: 200px;
+      background: #f5f5f5;
+      position: relative;
+
+      // Loading state
+      &:empty::before {
+        content: "Loading map...";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #666;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+// Enhanced autocomplete styling
+.mat-mdc-autocomplete-panel {
+  .mat-mdc-option {
+    height: auto;
+    min-height: 48px;
+    padding: 8px 16px;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+
+    &.mat-mdc-option-active {
+      background-color: rgba(139, 69, 19, 0.1);
+    }
+  }
+}
+
+// Responsive design for mobile
+@media (max-width: 768px) {
+  .match-booking-dialog {
+    min-width: 95vw;
+    max-width: 95vw;
+
+    .venue-section .map-container .google-map {
+      height: 150px;
+    }
+  }
+}
+
+// Deep overrides to ensure affix spacing applies (prefix/suffix) and text isn't cramped
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-form-field-text-prefix,
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-form-field-icon-prefix {
+  margin-left: 8px !important;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-form-field-text-suffix,
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-form-field-icon-suffix {
+  margin-right: 8px !important;
+}
+
+// When a prefix exists, add a bit of left padding to the input content
+:host ::ng-deep .mat-mdc-form-field-has-prefix .mdc-text-field__input {
+  padding-left: 4px !important;
 }
