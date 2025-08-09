@@ -3,10 +3,13 @@
     <!-- Hero Section -->
     <div class="hero-section">
         <div class="hero-content">
-            <h1>🏈 Rugby Score Tracker</h1>
+            <h1>
+                <img src="assets/images/irish-rugby-ball.png" alt="Irish Rugby Ball" class="dashboard-rugby-ball">
+                Rugby Score Tracker
+            </h1>
             <p>Your complete rugby match management solution</p>
             <button mat-raised-button color="primary" routerLink="/score-tracker" class="quick-start-btn">
-                <mat-icon>play_arrow</mat-icon>
+                <i class="fa-solid fa-play"></i>
                 Quick Start Game
             </button>
         </div>
@@ -42,7 +45,7 @@
         <div class="action-cards">
             <mat-card class="action-card" routerLink="/score-tracker">
                 <mat-card-content>
-                    <app-rugby-ball-primary size="48" class="action-icon"></app-rugby-ball-primary>
+                    <i class="fa-solid fa-football fa-3x action-icon"></i>
                     <h3>Start New Game</h3>
                     <p>Begin tracking a new match</p>
                 </mat-card-content>
@@ -50,7 +53,7 @@
 
             <mat-card class="action-card" routerLink="/calendar">
                 <mat-card-content>
-                    <mat-icon class="action-icon">calendar_today</mat-icon>
+                    <i class="fa-solid fa-calendar-days action-icon"></i>
                     <h3>Match Calendar</h3>
                     <p>View and schedule matches</p>
                 </mat-card-content>
@@ -58,7 +61,7 @@
 
             <mat-card class="action-card" routerLink="/games-history">
                 <mat-card-content>
-                    <mat-icon class="action-icon">history</mat-icon>
+                    <i class="fa-solid fa-clock-rotate-left action-icon"></i>
                     <h3>Game History</h3>
                     <p>Review past matches</p>
                 </mat-card-content>
@@ -99,19 +102,19 @@
             <mat-card class="match-card" *ngFor="let match of upcomingMatches">
                 <mat-card-content>
                     <div class="match-date">
-                        <mat-icon>schedule</mat-icon>
+                        <i class="fa-solid fa-clock"></i>
                         {{ match.date | date:'MMM dd, yyyy' }}
                     </div>
                     <div class="match-teams">
                         {{ match.homeTeam }} vs {{ match.awayTeam }}
                     </div>
                     <div class="match-venue">
-                        <mat-icon>location_on</mat-icon>
+                        <i class="fa-solid fa-location-dot"></i>
                         {{ match.venue }}
                     </div>
                     <div class="match-actions">
                         <button mat-stroked-button color="primary">
-                            <app-rugby-ball-white size="18"></app-rugby-ball-white>
+                            <i class="fa-solid fa-football fa-sm"></i>
                             Start Match
                         </button>
                     </div>
@@ -125,25 +128,25 @@
         <h2>Features</h2>
         <div class="features-grid">
             <div class="feature-item">
-                <mat-icon>timer</mat-icon>
+                <i class="fa-solid fa-stopwatch"></i>
                 <h3>Real-time Scoring</h3>
                 <p>Track scores as they happen with built-in timer</p>
             </div>
 
             <div class="feature-item">
-                <mat-icon>phone_android</mat-icon>
+                <i class="fa-solid fa-mobile-screen"></i>
                 <h3>Mobile Optimized</h3>
                 <p>Perfect for sideline use during matches</p>
             </div>
 
             <div class="feature-item">
-                <mat-icon>analytics</mat-icon>
+                <i class="fa-solid fa-chart-line"></i>
                 <h3>Match Statistics</h3>
                 <p>Detailed breakdown of tries, penalties, and more</p>
             </div>
 
             <div class="feature-item">
-                <mat-icon>cloud_off</mat-icon>
+                <i class="fa-solid fa-wifi-slash"></i>
                 <h3>Works Offline</h3>
                 <p>No internet required for basic functionality</p>
             </div>
