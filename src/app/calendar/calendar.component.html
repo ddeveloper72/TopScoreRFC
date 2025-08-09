@@ -1,9 +1,9 @@
 <!-- Rugby Match Calendar -->
 <div class="calendar-container">
   <div class="calendar-header">
-    <h1>🗓️ Match Calendar</h1>
+    <h1><i class="fa-solid fa-calendar-days"></i> Match Calendar</h1>
     <button mat-raised-button color="primary" (click)="addNewMatch()">
-      <mat-icon>add</mat-icon>
+      <i class="fa-solid fa-plus"></i>
       Schedule Match
     </button>
   </div>
@@ -11,11 +11,11 @@
   <!-- Quick Date Navigation -->
   <div class="date-navigation">
     <button mat-icon-button (click)="previousMonth()">
-      <mat-icon>chevron_left</mat-icon>
+      <i class="fa-solid fa-chevron-left"></i>
     </button>
     <h2>{{ currentMonth | date:'MMMM yyyy' }}</h2>
     <button mat-icon-button (click)="nextMonth()">
-      <mat-icon>chevron_right</mat-icon>
+      <i class="fa-solid fa-chevron-right"></i>
     </button>
   </div>
 
@@ -67,24 +67,24 @@
       <mat-card-content>
         <div class="match-header">
           <div class="match-date">
-            <mat-icon>schedule</mat-icon>
+            <i class="fa-solid fa-clock"></i>
             {{ match.date | date:'MMM dd, yyyy - HH:mm' }}
           </div>
           <div class="match-actions">
             <button mat-icon-button [matMenuTriggerFor]="matchMenu">
-              <mat-icon>more_vert</mat-icon>
+              <i class="fa-solid fa-ellipsis-vertical"></i>
             </button>
             <mat-menu #matchMenu="matMenu">
               <button mat-menu-item (click)="editMatch(match)">
-                <mat-icon>edit</mat-icon>
+                <i class="fa-solid fa-pen"></i>
                 Edit
               </button>
               <button mat-menu-item (click)="startMatch(match)">
-                <app-rugby-ball-white size="18"></app-rugby-ball-white>
+                <i class="fa-solid fa-football"></i>
                 Start Game
               </button>
               <button mat-menu-item (click)="deleteMatch(match)" class="danger">
-                <mat-icon>delete</mat-icon>
+                <i class="fa-solid fa-trash"></i>
                 Delete
               </button>
             </mat-menu>
@@ -107,11 +107,11 @@
 
         <div class="match-details">
           <div class="detail-item">
-            <mat-icon>location_on</mat-icon>
+            <i class="fa-solid fa-location-dot"></i>
             {{ match.venue }}
           </div>
           <div class="detail-item" *ngIf="match.competition">
-            <mat-icon>emoji_events</mat-icon>
+            <i class="fa-solid fa-trophy"></i>
             {{ match.competition }}
           </div>
         </div>
@@ -129,11 +129,11 @@
 
     <!-- No matches message -->
     <div class="no-matches" *ngIf="upcomingMatches.length === 0">
-      <mat-icon>event_busy</mat-icon>
+      <i class="fa-solid fa-calendar-xmark"></i>
       <h3>No upcoming matches</h3>
       <p>Schedule your first match to get started</p>
       <button mat-raised-button color="primary" (click)="addNewMatch()">
-        <mat-icon>add</mat-icon>
+        <i class="fa-solid fa-plus"></i>
         Schedule Match
       </button>
     </div>
