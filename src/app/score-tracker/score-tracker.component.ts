@@ -51,7 +51,7 @@ export interface ScoreEvent {
   ],
   templateUrl: './score-tracker.component.html',
   styleUrl: './score-tracker.component.scss',
-  animations: [fadeInOut, slideInFromBottom]
+  animations: [fadeInOut, slideInFromBottom],
 })
 export class ScoreTrackerComponent implements OnInit, OnDestroy {
   homeTeam: Team = {

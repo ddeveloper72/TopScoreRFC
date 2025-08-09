@@ -40,10 +40,7 @@
   <div class="matches-list" *ngIf="currentView === 'list'" [@fadeInOut]>
     <h3 [@slideInFromBottom]>Upcoming Matches</h3>
 
-    <mat-card 
-      class="match-card" 
-      *ngFor="let match of upcomingMatches; let i = index" 
-      [@fadeInOut]
+    <mat-card class="match-card" *ngFor="let match of upcomingMatches; let i = index" [@fadeInOut]
       [style.animation-delay]="(i * 100) + 'ms'">
       <mat-card-content>
         <div class="match-header">
@@ -123,10 +120,7 @@
   <!-- Past Matches Section -->
   <div class="past-matches" *ngIf="pastMatches.length > 0" [@fadeInOut]>
     <h3 [@slideInFromBottom]>Recent Results</h3>
-    <mat-card 
-      class="past-match-card" 
-      *ngFor="let match of pastMatches.slice(0, 5); let i = index"
-      [@fadeInOut]
+    <mat-card class="past-match-card" *ngFor="let match of pastMatches.slice(0, 5); let i = index" [@fadeInOut]
       [style.animation-delay]="(i * 100) + 'ms'">
       <mat-card-content>
         <div class="past-match-header">

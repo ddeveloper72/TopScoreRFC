@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LoadingService {
   private loadingSubject = new BehaviorSubject<boolean>(false);
@@ -29,9 +29,7 @@ export class LoadingService {
 
   wrapWithLoading<T>(observable: Observable<T>): Observable<T> {
     this.show();
-    return observable.pipe(
-      finalize(() => this.hide())
-    );
+    return observable.pipe(finalize(() => this.hide()));
   }
 
   isLoading(): boolean {
