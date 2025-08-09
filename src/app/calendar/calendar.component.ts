@@ -37,10 +37,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
         const sortedMatches = matches.sort(
           (a, b) => a.date.getTime() - b.date.getTime()
         );
-        
+
         // Separate into upcoming and past matches
-        this.upcomingMatches = sortedMatches.filter(match => match.date >= now);
-        this.pastMatches = sortedMatches.filter(match => match.date < now);
+        this.upcomingMatches = sortedMatches.filter(
+          (match) => match.date >= now
+        );
+        this.pastMatches = sortedMatches.filter((match) => match.date < now);
       })
     );
   }
