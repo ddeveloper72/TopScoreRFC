@@ -1,0 +1,12 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Rugby Ball -->
+  <ellipse cx="16" cy="16" rx="14" ry="8" fill="#8B4513" stroke="#654321" stroke-width="1"/>
+  
+  <!-- Rugby Ball Seam Lines -->
+  <path d="M 5 16 Q 16 11 27 16 Q 16 21 5 16" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+  <path d="M 8 16 Q 16 13 24 16" fill="none" stroke="#FFFFFF" stroke-width="1"/>
+  <path d="M 8 16 Q 16 19 24 16" fill="none" stroke="#FFFFFF" stroke-width="1"/>
+  
+  <!-- Center Line -->
+  <line x1="16" y1="9" x2="16" y2="23" stroke="#FFFFFF" stroke-width="1.5"/>
+</svg>
