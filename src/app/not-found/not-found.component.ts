@@ -5,7 +5,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
-import { RugbyBallGrayComponent, RugbyBallWhiteComponent } from '../shared/rugby-ball-variants/rugby-ball-variants.component';
+import {
+  RugbyBallGrayComponent,
+  RugbyBallWhiteComponent,
+} from '../shared/rugby-ball-variants/rugby-ball-variants.component';
 
 @Component({
   selector: 'app-not-found',
