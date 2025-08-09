@@ -1,11 +1,15 @@
 <mat-toolbar class="nav-bar">
   <div class="nav-button">
     <button mat-icon-button (click)="onToggleSidenav()">
-      <mat-icon>menu</mat-icon>
+      <i class="fa-solid fa-bars"></i>
     </button>
   </div>
-  <div>
-    <a routerLink="/dashboard">🏈 {{ title }}</a>
+  <div class="nav-title">
+    <a routerLink="/dashboard">
+      <img src="assets/images/irish-rugby-ball.png" alt="Irish Rugby Ball" class="header-logo" width="24" height="24"
+        style="margin-right: 8px;">
+      <span>{{ title }}</span>
+    </a>
   </div>
   <div class="nav-menu">
     <ul class="nav-items">
