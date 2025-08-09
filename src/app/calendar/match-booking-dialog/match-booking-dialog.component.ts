@@ -1,4 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -7,9 +14,16 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MaterialModule } from '../../material/material.module';
 import { Match } from '../../services/match-storage.service';
-import { RugbyBallAccentComponent } from '../../shared/rugby-ball-variants/rugby-ball-variants.component';
+import {
+  GoogleMapsService,
+  VenueLocation,
+} from '../../services/google-maps.service';
+import { Subject } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 export interface MatchBookingData {
   match?: Match;
@@ -19,15 +33,35 @@ export interface MatchBookingData {
 @Component({
   selector: 'app-match-booking-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MaterialModule, RugbyBallAccentComponent],
+  imports: [CommonModule, ReactiveFormsModule, MaterialModule],
   templateUrl: './match-booking-dialog.component.html',
   styleUrls: ['./match-booking-dialog.component.scss'],
 })
-export class MatchBookingDialogComponent implements OnInit {
+export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
+  @ViewChild('mapElement', { static: false })
+  mapElement!: ElementRef<HTMLDivElement>;
+
   bookingForm: FormGroup;
   minDate: Date;
   maxDate: Date;
   timeOptions: { value: string; display: string }[] = [];
+
+  // Google Maps related properties
+  venueSearchResults: VenueLocation[] = [];
+  selectedVenue: VenueLocation | null = null;
+  map: google.maps.Map | null = null;
+  marker: google.maps.Marker | null = null;
+  private searchSubject = new Subject<string>();
+  isSearching = false;
+  mapLoading = false;
+
+  // Display function for mat-autocomplete
+  displayVenue = (venue?: VenueLocation | string): string => {
+    if (!venue) return '';
+    if (typeof venue === 'string') return venue;
+    return venue.name || venue.formattedAddress || '';
+  };
+
   competitions = [
     'League Championship',
     'Cup Quarter-Final',
@@ -41,6 +75,8 @@ export class MatchBookingDialogComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private googleMapsService: GoogleMapsService,
+    private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<MatchBookingDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: MatchBookingData
   ) {
@@ -61,6 +97,17 @@ export class MatchBookingDialogComponent implements OnInit {
       competition: ['', Validators.required],
       status: ['scheduled', Validators.required],
     });
+
+    // Set up venue search with debouncing
+    this.searchSubject
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((searchTerm) => {
+        if (searchTerm && searchTerm.length >= 2) {
+          this.searchVenues(searchTerm);
+        } else {
+          this.venueSearchResults = [];
+        }
+      });
   }
 
   /**
@@ -127,6 +174,116 @@ export class MatchBookingDialogComponent implements OnInit {
         status: match.status,
       });
     }
+  }
+
+  ngAfterViewInit(): void {
+    // Initialize map if a venue is already selected
+    if (this.selectedVenue && this.mapElement) {
+      setTimeout(() => {
+        this.initializeMap();
+      }, 100);
+    }
+  }
+
+  // Google Maps and Venue Search Methods
+  onVenueSearch(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const searchTerm = input.value;
+    this.searchSubject.next(searchTerm);
+  }
+
+  async searchVenues(searchTerm: string): Promise<void> {
+    try {
+      this.isSearching = true;
+      this.venueSearchResults = await this.googleMapsService.searchPlaces(
+        searchTerm
+      );
+
+      // If this is an Eircode and we got exactly one precise result, auto-select it
+      if (
+        this.googleMapsService.isEircode(searchTerm) &&
+        this.venueSearchResults.length === 1
+      ) {
+        this.selectVenue(this.venueSearchResults[0]);
+      }
+    } catch (error) {
+      console.error('Error searching venues:', error);
+      this.venueSearchResults = [];
+      this.snackBar.open(
+        'Error searching venues. Please try again.',
+        'Dismiss',
+        { duration: 3000 }
+      );
+    } finally {
+      this.isSearching = false;
+    }
+  }
+
+  onVenueSelected(event: MatAutocompleteSelectedEvent): void {
+    const venue: VenueLocation = event.option.value as VenueLocation;
+    this.selectVenue(venue);
+  }
+
+  // Helper to select a venue programmatically or from autocomplete
+  private selectVenue(venue: VenueLocation): void {
+    this.selectedVenue = venue;
+    this.bookingForm.patchValue({ venue: venue.name });
+    setTimeout(() => this.initializeMap(), 50);
+  }
+
+  private async initializeMap(): Promise<void> {
+    if (!this.selectedVenue || !this.mapElement) return;
+
+    try {
+      this.mapLoading = true;
+      // Create the map
+      this.map = (await this.googleMapsService.createMap(
+        this.mapElement.nativeElement,
+        this.selectedVenue.coordinates
+      )) as any;
+      if (!this.map) return;
+
+      // Add marker
+      this.marker = (await this.googleMapsService.addMarker(
+        this.map as any,
+        this.selectedVenue
+      )) as any;
+
+      // Add click listener to marker
+      if (this.marker && this.map) {
+        this.marker.addListener('click', () => {
+          const infoWindow = new google.maps.InfoWindow({
+            content: `
+              <div style="padding: 8px;">
+                <h3 style="margin: 0 0 8px 0; color: #8b4513;">${this.selectedVenue?.name}</h3>
+                <p style="margin: 0; color: #666;">${this.selectedVenue?.address}</p>
+              </div>
+            `,
+          });
+          infoWindow.open(this.map as any, this.marker as any);
+        });
+      }
+
+      // Fit map to show the venue
+      if (this.map) {
+        this.map.setCenter(this.selectedVenue.coordinates);
+        this.map.setZoom(15);
+      }
+    } catch (error) {
+      console.error('Error initializing map:', error);
+      this.snackBar.open('Error loading map preview.', 'Dismiss', {
+        duration: 3000,
+      });
+    } finally {
+      this.mapLoading = false;
+    }
+  }
+
+  clearVenue(): void {
+    this.selectedVenue = null;
+    this.bookingForm.patchValue({ venue: '' });
+    this.venueSearchResults = [];
+    this.snackBar.open('Venue cleared.', undefined, { duration: 2000 });
   }
 
   /**
@@ -273,6 +430,17 @@ export class MatchBookingDialogComponent implements OnInit {
           competition: formValue.competition,
           status: formValue.status,
         };
+
+        // Add venueDetails if a venue was selected from Google Maps
+        if (this.selectedVenue) {
+          matchData.venueDetails = {
+            name: this.selectedVenue.name,
+            address: this.selectedVenue.address,
+            coordinates: this.selectedVenue.coordinates,
+            placeId: this.selectedVenue.placeId,
+            formattedAddress: this.selectedVenue.formattedAddress,
+          };
+        }
 
         // If editing, include the ID
         if (this.data?.isEdit && this.data.match?.id) {
