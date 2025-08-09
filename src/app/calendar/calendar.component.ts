@@ -20,6 +20,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   currentMonth = new Date();
   currentView: 'month' | 'list' = 'list';
   upcomingMatches: Match[] = [];
+  pastMatches: Match[] = [];
   private subscription = new Subscription();
 
   constructor(
@@ -32,9 +33,14 @@ export class CalendarComponent implements OnInit, OnDestroy {
     // Subscribe to matches changes
     this.subscription.add(
       this.matchStorageService.matches$.subscribe((matches) => {
-        this.upcomingMatches = matches.sort(
+        const now = new Date();
+        const sortedMatches = matches.sort(
           (a, b) => a.date.getTime() - b.date.getTime()
         );
+        
+        // Separate into upcoming and past matches
+        this.upcomingMatches = sortedMatches.filter(match => match.date >= now);
+        this.pastMatches = sortedMatches.filter(match => match.date < now);
       })
     );
   }
