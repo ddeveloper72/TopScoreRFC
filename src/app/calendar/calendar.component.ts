@@ -4,6 +4,8 @@ import { MaterialModule } from '../material/material.module';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatchApiService } from '../services/match-api.service';
 import {
   MatchBookingDialogComponent,
   MatchBookingData,
@@ -14,7 +16,10 @@ import {
   slideInFromBottom,
   staggerAnimation,
 } from '../animations/route-animations';
-import { RugbyBallWhiteComponent, RugbyBallPrimaryComponent } from '../shared/rugby-ball-variants/rugby-ball-variants.component';
+import {
+  RugbyBallWhiteComponent,
+  RugbyBallPrimaryComponent,
+} from '../shared/rugby-ball-variants/rugby-ball-variants.component';
 
 export interface CalendarDay {
   date: Date;
@@ -27,7 +32,12 @@ export interface CalendarDay {
 
 @Component({
   selector: 'app-calendar',
-  imports: [CommonModule, MaterialModule, RugbyBallWhiteComponent, RugbyBallPrimaryComponent],
+  imports: [
+    CommonModule,
+    MaterialModule,
+    RugbyBallWhiteComponent,
+    RugbyBallPrimaryComponent,
+  ],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss',
   animations: [fadeInOut, slideInFromBottom, staggerAnimation],
@@ -44,7 +54,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private dialog: MatDialog,
-    private matchStorageService: MatchStorageService
+    private matchStorageService: MatchStorageService,
+    private matchApi: MatchApiService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +77,21 @@ export class CalendarComponent implements OnInit, OnDestroy {
       })
     );
     this.generateCalendar();
+
+    // On startup, try to sync from backend and replace local copy
+    this.matchApi.getAllMatches().subscribe({
+      next: (serverMatches) => {
+        if (serverMatches && serverMatches.length) {
+          this.matchStorageService.setAllMatches(serverMatches as any);
+          this.snackBar.open('Matches synced from server.', undefined, {
+            duration: 2000,
+          });
+        }
+      },
+      error: () => {
+        // Non-blocking: keep local data if server unavailable
+      },
+    });
   }
 
   ngOnDestroy(): void {
@@ -81,7 +108,22 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.matchStorageService.saveMatch(result);
+        const id = this.matchStorageService.saveMatch(result);
+        this.snackBar.open('Match saved locally.', undefined, {
+          duration: 2000,
+        });
+        this.matchApi.createMatch({ ...result, id }).subscribe({
+          next: () =>
+            this.snackBar.open('Match synced to server.', undefined, {
+              duration: 2000,
+            }),
+          error: () =>
+            this.snackBar.open(
+              'Match saved locally. Server sync failed.',
+              'Dismiss',
+              { duration: 4000 }
+            ),
+        });
       }
     });
   }
@@ -97,6 +139,21 @@ export class CalendarComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.matchStorageService.updateMatch(match.id, result);
+        this.snackBar.open('Match updated locally.', undefined, {
+          duration: 2000,
+        });
+        this.matchApi.updateMatch(match.id, result).subscribe({
+          next: () =>
+            this.snackBar.open('Match update synced to server.', undefined, {
+              duration: 2000,
+            }),
+          error: () =>
+            this.snackBar.open(
+              'Update saved locally. Server sync failed.',
+              'Dismiss',
+              { duration: 4000 }
+            ),
+        });
       }
     });
   }
