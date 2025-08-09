@@ -14,7 +14,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { GameStorageService } from '../services/game-storage.service';
 import { fadeInOut, slideInFromBottom } from '../animations/route-animations';
-import { RugbyBallWhiteComponent, RugbyBallAccentComponent } from '../shared/rugby-ball-variants/rugby-ball-variants.component';
+import {
+  RugbyBallWhiteComponent,
+  RugbyBallAccentComponent,
+} from '../shared/rugby-ball-variants/rugby-ball-variants.component';
 
 export interface Team {
   name: string;
