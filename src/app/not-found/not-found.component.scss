@@ -19,11 +19,15 @@
 }
 
 .not-found-icon {
-  font-size: 4rem !important;
-  height: 4rem !important;
-  width: 4rem !important;
-  color: #667eea;
+  opacity: 0.7;
   margin-bottom: 1rem;
+
+  &.fa-rugby-ball,
+  &.fa-football {
+    // Rugby ball specific styling for 404 page
+    color: #8b4513;
+    opacity: 0.6;
+  }
 }
 
 h1 {
