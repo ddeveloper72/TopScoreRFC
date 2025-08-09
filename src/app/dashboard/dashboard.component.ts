@@ -5,7 +5,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { GameStorageService } from '../services/game-storage.service';
-import { RugbyBallPrimaryComponent, RugbyBallWhiteComponent } from '../shared/rugby-ball-variants/rugby-ball-variants.component';
+import {
+  RugbyBallPrimaryComponent,
+  RugbyBallWhiteComponent,
+} from '../shared/rugby-ball-variants/rugby-ball-variants.component';
 
 @Component({
   selector: 'app-dashboard',
