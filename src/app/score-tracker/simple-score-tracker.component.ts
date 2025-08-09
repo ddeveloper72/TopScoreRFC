@@ -98,7 +98,7 @@ export class SimpleScoreTrackerComponent {
       penaltyTries: 0,
     };
 
-    this.showNotification('Game Reset! 🔄');
+    this.showNotification('Game Reset!');
   }
 
   private startTimer() {
@@ -159,7 +159,7 @@ export class SimpleScoreTrackerComponent {
       description: description,
     });
 
-    this.showNotification(`${description} (+${points} pts) 🎯`);
+    this.showNotification(`${description} (+${points} pts)`);
   }
 
   undoLastScore() {
@@ -205,7 +205,7 @@ export class SimpleScoreTrackerComponent {
     );
     if (newName && newName.trim()) {
       targetTeam.name = newName.trim();
-      this.showNotification(`Team renamed to ${targetTeam.name} ✏️`);
+      this.showNotification(`Team renamed to ${targetTeam.name}`);
     }
   }
 
