@@ -125,6 +125,18 @@
   align-items: center;
   margin: 16px 0;
 }
+.scoreboard .vs-divider .rugby-ball {
+  margin-bottom: 8px;
+}
+.scoreboard .vs-divider .vs-rugby-ball {
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  transform: rotate(-15deg);
+  transition: transform 0.3s ease;
+}
+.scoreboard .vs-divider .vs-rugby-ball:hover {
+  transform: rotate(-15deg) scale(1.1);
+}
 .scoreboard .vs-divider .vs-icon {
   font-size: 2rem;
   color: #666;
