@@ -14,10 +14,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { GameStorageService } from '../services/game-storage.service';
 import { fadeInOut, slideInFromBottom } from '../animations/route-animations';
-import {
-  RugbyBallWhiteComponent,
-  RugbyBallAccentComponent,
-} from '../shared/rugby-ball-variants/rugby-ball-variants.component';
 
 export interface Team {
   name: string;
@@ -52,8 +48,6 @@ export interface ScoreEvent {
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    RugbyBallWhiteComponent,
-    RugbyBallAccentComponent,
   ],
   templateUrl: './score-tracker.component.html',
   styleUrl: './score-tracker.component.scss',

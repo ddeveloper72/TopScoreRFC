@@ -16,10 +16,6 @@ import {
   slideInFromBottom,
   staggerAnimation,
 } from '../animations/route-animations';
-import {
-  RugbyBallWhiteComponent,
-  RugbyBallPrimaryComponent,
-} from '../shared/rugby-ball-variants/rugby-ball-variants.component';
 
 export interface CalendarDay {
   date: Date;
@@ -32,12 +28,7 @@ export interface CalendarDay {
 
 @Component({
   selector: 'app-calendar',
-  imports: [
-    CommonModule,
-    MaterialModule,
-    RugbyBallWhiteComponent,
-    RugbyBallPrimaryComponent,
-  ],
+  imports: [CommonModule, MaterialModule],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss',
   animations: [fadeInOut, slideInFromBottom, staggerAnimation],
