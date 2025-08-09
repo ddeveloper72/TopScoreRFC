@@ -9,12 +9,14 @@ import {
   MatchBookingData,
 } from './match-booking-dialog/match-booking-dialog.component';
 import { MatchStorageService, Match } from '../services/match-storage.service';
+import { fadeInOut, slideInFromBottom, staggerAnimation } from '../animations/route-animations';
 
 @Component({
   selector: 'app-calendar',
   imports: [CommonModule, MaterialModule],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss',
+  animations: [fadeInOut, slideInFromBottom, staggerAnimation]
 })
 export class CalendarComponent implements OnInit, OnDestroy {
   currentMonth = new Date();

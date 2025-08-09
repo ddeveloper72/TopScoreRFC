@@ -2,8 +2,19 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 1rem;
+  animation: fadeIn 0.6s ease-in-out;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .calendar-header {
   display: flex;
   justify-content: space-between;
@@ -15,15 +26,46 @@
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
+  animation: slideInLeft 0.8s ease-out;
 }
 .calendar-header button {
   border-radius: 25px;
   font-weight: 600;
+  transition: all 0.3s ease;
+  animation: slideInRight 0.8s ease-out;
+}
+.calendar-header button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 .calendar-header button mat-icon {
   margin-right: 0.5rem;
+  transition: transform 0.2s ease;
+}
+.calendar-header button:hover mat-icon {
+  transform: rotate(90deg);
 }
 
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 .date-navigation {
   display: flex;
   justify-content: center;
@@ -36,9 +78,16 @@
   font-size: 1.3rem;
   min-width: 200px;
   text-align: center;
+  transition: all 0.3s ease;
 }
 .date-navigation button {
   color: white;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+}
+.date-navigation button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
 }
 .date-navigation button mat-icon {
   font-size: 1.5rem;
@@ -93,10 +142,18 @@
   margin-bottom: 1rem;
   border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .matches-list .match-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.matches-list .match-card:active {
+  transform: translateY(-2px) scale(1.01);
 }
 .matches-list .match-card .match-header {
   display: flex;

@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { GameStorageService } from '../services/game-storage.service';
+import { fadeInOut, slideInFromBottom } from '../animations/route-animations';
 
 export interface Team {
   name: string;
@@ -50,6 +51,7 @@ export interface ScoreEvent {
   ],
   templateUrl: './score-tracker.component.html',
   styleUrl: './score-tracker.component.scss',
+  animations: [fadeInOut, slideInFromBottom]
 })
 export class ScoreTrackerComponent implements OnInit, OnDestroy {
   homeTeam: Team = {

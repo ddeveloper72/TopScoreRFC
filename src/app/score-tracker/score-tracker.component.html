@@ -26,9 +26,9 @@
 </div>
 
 <!-- Scoreboard -->
-<div class="scoreboard">
+<div class="scoreboard" [@fadeInOut]>
   <!-- Home Team -->
-  <mat-card class="team-card home-team">
+  <mat-card class="team-card home-team" [@slideInFromBottom]>
     <mat-card-header>
       <mat-card-title class="team-name" (click)="editTeamName('home')">
         {{ homeTeam.name }}
@@ -90,7 +90,7 @@
   </div>
 
   <!-- Away Team -->
-  <mat-card class="team-card away-team">
+  <mat-card class="team-card away-team" [@slideInFromBottom]>
     <mat-card-header>
       <mat-card-title class="team-name" (click)="editTeamName('away')">
         {{ awayTeam.name }}

@@ -5,7 +5,7 @@
 
   <mat-sidenav-content>
     <app-header (sidenavToggle)="sidenav.toggle()"></app-header>
-    <main>
+    <main [@routeAnimations]="getRouteAnimationData()">
       <router-outlet></router-outlet>
     </main>
   </mat-sidenav-content>
@@ -13,3 +13,4 @@
 </mat-sidenav-container>
 
 <app-footer></app-footer>
+<app-global-loading></app-global-loading>
