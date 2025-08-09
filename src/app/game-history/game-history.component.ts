@@ -4,7 +4,11 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
 import { GameStorageService, GameData } from '../services/game-storage.service';
-import { RugbyBallPrimaryComponent, RugbyBallGrayComponent, RugbyBallAccentComponent } from '../shared/rugby-ball-variants/rugby-ball-variants.component';
+import {
+  RugbyBallPrimaryComponent,
+  RugbyBallGrayComponent,
+  RugbyBallAccentComponent,
+} from '../shared/rugby-ball-variants/rugby-ball-variants.component';
 
 interface GameFilter {
   search: string;
@@ -16,7 +20,15 @@ interface GameFilter {
 @Component({
   selector: 'app-game-history',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, MaterialModule, RugbyBallPrimaryComponent, RugbyBallGrayComponent, RugbyBallAccentComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    MaterialModule,
+    RugbyBallPrimaryComponent,
+    RugbyBallGrayComponent,
+    RugbyBallAccentComponent,
+  ],
   templateUrl: './game-history.component.html',
   styleUrls: ['./game-history.component.scss'],
 })
