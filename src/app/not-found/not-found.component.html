@@ -1,6 +1,6 @@
 <div class="not-found-container">
     <div class="not-found-card">
-        <app-rugby-ball-gray size="96" class="not-found-icon"></app-rugby-ball-gray>
+        <i class="fa-solid fa-football fa-6x not-found-icon"></i>
         <h1>Oops! Page Not Found</h1>
         <p>The page you're looking for doesn't exist, but don't worry!</p>
         <p class="redirect-message">Redirecting you to the dashboard in <span class="countdown">{{ countdown }}</span>
@@ -8,12 +8,12 @@
 
         <div class="action-buttons">
             <button mat-raised-button color="primary" (click)="goToDashboard()">
-                <mat-icon>dashboard</mat-icon>
+                <i class="fa-solid fa-gauge-high"></i>
                 Go to Dashboard Now
             </button>
 
             <button mat-stroked-button (click)="goToScoreTracker()" class="secondary-button">
-                <mat-icon>sports_score</mat-icon>
+                <i class="fa-solid fa-football"></i>
                 Start Tracking Scores
             </button>
         </div>
@@ -22,19 +22,19 @@
             <h3>Quick Links:</h3>
             <div class="link-buttons">
                 <button mat-button routerLink="/dashboard">
-                    <mat-icon>dashboard</mat-icon>
+                    <i class="fa-solid fa-gauge-high"></i>
                     Dashboard
                 </button>
                 <button mat-button routerLink="/score-tracker">
-                    <app-rugby-ball-white size="20"></app-rugby-ball-white>
+                    <i class="fa-solid fa-football"></i>
                     Score Tracker
                 </button>
                 <button mat-button routerLink="/calendar">
-                    <mat-icon>calendar_today</mat-icon>
+                    <i class="fa-solid fa-calendar-days"></i>
                     Calendar
                 </button>
                 <button mat-button routerLink="/games-history">
-                    <mat-icon>history</mat-icon>
+                    <i class="fa-solid fa-clock-rotate-left"></i>
                     Game History
                 </button>
             </div>
