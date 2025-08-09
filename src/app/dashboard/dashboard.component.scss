@@ -18,6 +18,51 @@
       font-size: 2rem;
       margin-bottom: 0.5rem;
       font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: transparent !important;
+      border: none;
+      outline: none;
+    }
+
+    h1:hover {
+      background: transparent !important;
+      border: none;
+      outline: none;
+      box-shadow: none;
+    }
+
+    .dashboard-rugby-ball {
+      width: 63px;
+      height: 45px;
+      filter: brightness(1.1) contrast(1.1) saturate(1.2)
+        drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
+      transition: all 0.3s ease-in-out;
+      flex-shrink: 0;
+      scale: 1;
+      padding-right: 5px;
+      rotate: -35deg;
+      background: transparent !important;
+      mix-blend-mode: normal;
+      border: none;
+      outline: none;
+    }
+
+    .dashboard-rugby-ball:hover,
+    .dashboard-rugby-ball:focus {
+      transform: scale(1.1) rotate(5deg) translateY(-4px);
+      filter: brightness(1.3) contrast(1.3)
+        drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+      background: transparent !important;
+      border: none;
+      outline: none;
+    }
+
+    .dashboard-rugby-ball:hover {
+      transform: scale(1.1) rotate(5deg);
+      filter: brightness(1.3) contrast(1.3);
     }
 
     p {
