@@ -11,9 +11,10 @@ import { RugbyBallIconComponent } from '../rugby-ball-icon/rugby-ball-icon.compo
       color="#8B4513"
       lineColor="#FFFFFF"
       [lineWidth]="lineWidth"
-      [rotation]="rotation">
+      [rotation]="rotation"
+    >
     </app-rugby-ball-icon>
-  `
+  `,
 })
 export class RugbyBallPrimaryComponent {
   @Input() size: string = '24';
@@ -33,9 +34,10 @@ export class RugbyBallPrimaryComponent {
       strokeWidth="1"
       lineColor="#333333"
       [lineWidth]="lineWidth"
-      [rotation]="rotation">
+      [rotation]="rotation"
+    >
     </app-rugby-ball-icon>
-  `
+  `,
 })
 export class RugbyBallWhiteComponent {
   @Input() size: string = '24';
@@ -53,9 +55,10 @@ export class RugbyBallWhiteComponent {
       color="#000000"
       lineColor="#FFFFFF"
       [lineWidth]="lineWidth"
-      [rotation]="rotation">
+      [rotation]="rotation"
+    >
     </app-rugby-ball-icon>
-  `
+  `,
 })
 export class RugbyBallBlackComponent {
   @Input() size: string = '24';
@@ -73,9 +76,10 @@ export class RugbyBallBlackComponent {
       color="#666666"
       lineColor="#CCCCCC"
       [lineWidth]="lineWidth"
-      [rotation]="rotation">
+      [rotation]="rotation"
+    >
     </app-rugby-ball-icon>
-  `
+  `,
 })
 export class RugbyBallGrayComponent {
   @Input() size: string = '24';
@@ -93,9 +97,10 @@ export class RugbyBallGrayComponent {
       color="#1976d2"
       lineColor="#FFFFFF"
       [lineWidth]="lineWidth"
-      [rotation]="rotation">
+      [rotation]="rotation"
+    >
     </app-rugby-ball-icon>
-  `
+  `,
 })
 export class RugbyBallAccentComponent {
   @Input() size: string = '24';
