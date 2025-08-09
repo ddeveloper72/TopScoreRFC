@@ -15,6 +15,15 @@ import {
   staggerAnimation,
 } from '../animations/route-animations';
 
+export interface CalendarDay {
+  date: Date;
+  day: number;
+  isCurrentMonth: boolean;
+  isToday: boolean;
+  matches: Match[];
+  hasMatches: boolean;
+}
+
 @Component({
   selector: 'app-calendar',
   imports: [CommonModule, MaterialModule],
@@ -27,6 +36,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
   currentView: 'month' | 'list' = 'list';
   upcomingMatches: Match[] = [];
   pastMatches: Match[] = [];
+  calendarDays: CalendarDay[] = [];
+  weekDays: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   private subscription = new Subscription();
 
   constructor(
@@ -49,8 +60,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
           (match) => match.date >= now
         );
         this.pastMatches = sortedMatches.filter((match) => match.date < now);
+        this.generateCalendar();
       })
     );
+    this.generateCalendar();
   }
 
   ngOnDestroy(): void {
@@ -114,6 +127,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
       this.currentMonth.getMonth() - 1,
       1
     );
+    this.generateCalendar();
   }
 
   nextMonth() {
@@ -122,6 +136,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
       this.currentMonth.getMonth() + 1,
       1
     );
+    this.generateCalendar();
   }
 
   getDaysUntil(date: Date): number {
@@ -159,6 +174,70 @@ export class CalendarComponent implements OnInit, OnDestroy {
         return 'draw';
       default:
         return '';
+    }
+  }
+
+  // Calendar Grid Methods
+  generateCalendar(): void {
+    const year = this.currentMonth.getFullYear();
+    const month = this.currentMonth.getMonth();
+    
+    // Get first day of the month and last day
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    
+    // Get first day to display (previous month's days if needed)
+    const startDate = new Date(firstDay);
+    startDate.setDate(firstDay.getDate() - firstDay.getDay());
+    
+    // Get last day to display (next month's days if needed)
+    const endDate = new Date(lastDay);
+    endDate.setDate(lastDay.getDate() + (6 - lastDay.getDay()));
+    
+    this.calendarDays = [];
+    const currentDate = new Date(startDate);
+    const today = new Date();
+    
+    while (currentDate <= endDate) {
+      const dayMatches = this.getMatchesForDate(currentDate);
+      
+      this.calendarDays.push({
+        date: new Date(currentDate),
+        day: currentDate.getDate(),
+        isCurrentMonth: currentDate.getMonth() === month,
+        isToday: this.isSameDay(currentDate, today),
+        matches: dayMatches,
+        hasMatches: dayMatches.length > 0
+      });
+      
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+  }
+
+  getMatchesForDate(date: Date): Match[] {
+    const allMatches = [...this.upcomingMatches, ...this.pastMatches];
+    return allMatches.filter(match => this.isSameDay(match.date, date));
+  }
+
+  isSameDay(date1: Date, date2: Date): boolean {
+    return date1.getDate() === date2.getDate() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getFullYear() === date2.getFullYear();
+  }
+
+  onDayClick(day: CalendarDay): void {
+    if (day.hasMatches) {
+      // Show matches for this day in a dialog or expand view
+      console.log('Matches for', day.date, ':', day.matches);
+    }
+  }
+
+  getMatchTypeClass(match: Match): string {
+    const now = new Date();
+    if (match.date < now) {
+      return 'past-match';
+    } else {
+      return 'upcoming-match';
     }
   }
 }

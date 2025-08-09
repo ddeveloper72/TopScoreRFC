@@ -28,11 +28,42 @@
   </div>
 
   <!-- Calendar Grid (Month View) -->
-  <div class="calendar-grid" *ngIf="currentView === 'month'">
-    <!-- Calendar implementation would go here -->
-    <div class="calendar-placeholder">
-      <mat-icon>calendar_view_month</mat-icon>
-      <p>Calendar grid view coming soon</p>
+  <div class="calendar-grid" *ngIf="currentView === 'month'" [@fadeInOut]>
+    
+    <!-- Week Days Header -->
+    <div class="calendar-header-row">
+      <div class="day-header" *ngFor="let day of weekDays">{{ day }}</div>
+    </div>
+
+    <!-- Calendar Days -->
+    <div class="calendar-body">
+      <div 
+        class="calendar-day" 
+        *ngFor="let day of calendarDays; let i = index"
+        [ngClass]="{
+          'other-month': !day.isCurrentMonth,
+          'today': day.isToday,
+          'has-matches': day.hasMatches
+        }"
+        (click)="onDayClick(day)"
+        [@fadeInOut]
+        [style.animation-delay]="(i * 20) + 'ms'">
+        
+        <div class="day-number">{{ day.day }}</div>
+        
+        <!-- Match indicators for this day -->
+        <div class="match-indicators" *ngIf="day.hasMatches">
+          <div 
+            class="match-dot" 
+            *ngFor="let match of day.matches.slice(0, 3)"
+            [ngClass]="getMatchTypeClass(match)"
+            [title]="match.homeTeam + ' vs ' + match.awayTeam">
+          </div>
+          <div class="more-matches" *ngIf="day.matches.length > 3">
+            +{{ day.matches.length - 3 }}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
