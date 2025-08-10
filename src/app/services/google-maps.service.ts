@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
 import { AppConfigService } from './app-config.service';
 
 export interface VenueLocation {
@@ -45,7 +44,7 @@ export class GoogleMapsService {
         script.setAttribute('data-google-maps-loader', 'true');
         const libs = ['places', 'geometry', 'marker'];
         const params = new URLSearchParams({
-          key: this.cfg.googleMapsApiKey || environment.googleMaps.apiKey || '',
+          key: this.cfg.googleMapsApiKey || '',
           libraries: libs.join(','),
           v: 'weekly',
         });

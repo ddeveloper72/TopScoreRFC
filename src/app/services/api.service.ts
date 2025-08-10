@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
+import { AppConfigService } from './app-config.service';
 
 export interface GameData {
   _id?: string;
@@ -42,14 +42,16 @@ export interface GameStats {
   providedIn: 'root',
 })
 export class ApiService {
-  private apiUrl = environment.apiUrl || 'http://localhost:3000/api';
+  private apiUrl: string;
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
     }),
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, cfg: AppConfigService) {
+    this.apiUrl = cfg.apiUrl || 'http://localhost:3000/api';
+  }
 
   // Game CRUD operations
   getAllGames(): Observable<GameData[]> {

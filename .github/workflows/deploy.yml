@@ -48,7 +48,7 @@ jobs:
       - name: Show env.js (masked)
         run: |
           echo "----- src/assets/env.js -----"
-          sed -e 's/apiUrl.*/apiUrl: [masked]/' -e 's/apiKey.*/apiKey: [masked]/' src/assets/env.js | sed -e 's/\r$//' | sed -e 's/\t/  /g' || true
+          sed -E "s|(apiUrl\\s*=\\s*)'[^']*'|\\1'[masked]'|; s|(apiKey\\s*:\\s*)'[^']*'|\\1'[masked]'|; s|(mapId\\s*:\\s*)'[^']*'|\\1'[masked]'|" src/assets/env.js | sed -e 's/\r$//' | sed -e 's/\t/  /g' || true
 
       - name: Build Angular app for GitHub Pages
         run: npm run build:ghpages
@@ -68,7 +68,7 @@ jobs:
         run: |
           test -f dist/rugby-score-card-app/browser/assets/env.js || (echo "env.js missing in build output" && exit 1)
           echo "----- dist/assets/env.js (masked) -----"
-          sed -e 's/apiUrl.*/apiUrl: [masked]/' -e 's/apiKey.*/apiKey: [masked]/' dist/rugby-score-card-app/browser/assets/env.js | sed -e 's/\r$//' | sed -e 's/\t/  /g' || true
+          sed -E "s|(apiUrl\\s*=\\s*)'[^']*'|\\1'[masked]'|; s|(apiKey\\s*:\\s*)'[^']*'|\\1'[masked]'|; s|(mapId\\s*:\\s*)'[^']*'|\\1'[masked]'|" dist/rugby-score-card-app/browser/assets/env.js | sed -e 's/\r$//' | sed -e 's/\t/  /g' || true
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

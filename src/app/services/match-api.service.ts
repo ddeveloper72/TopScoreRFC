@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
 import { AppConfigService } from './app-config.service';
 import { Match } from './match-storage.service';
 
@@ -14,8 +13,7 @@ export class MatchApiService {
   };
 
   constructor(private http: HttpClient, private cfg: AppConfigService) {
-    this.apiUrl =
-      this.cfg.apiUrl || environment.apiUrl || 'http://localhost:3000/api';
+    this.apiUrl = this.cfg.apiUrl || 'http://localhost:3000/api';
   }
 
   getAllMatches(): Observable<Match[]> {

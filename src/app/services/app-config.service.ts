@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
 
 type AnyRecord = Record<string, any>;
 
@@ -30,22 +29,14 @@ export class AppConfigService {
   }
 
   get apiUrl(): string {
-    return (this.get<string>('apiUrl') || environment.apiUrl || '').toString();
+    return (this.get<string>('apiUrl') || '').toString();
   }
 
   get googleMapsApiKey(): string {
-    return (
-      this.get<string>('googleMaps.apiKey') ||
-      environment.googleMaps?.apiKey ||
-      ''
-    );
+    return this.get<string>('googleMaps.apiKey') || '';
   }
 
   get googleMapId(): string | undefined {
-    return (
-      this.get<string>('googleMaps.mapId') ||
-      environment.googleMaps?.mapId ||
-      undefined
-    );
+    return this.get<string>('googleMaps.mapId') || undefined;
   }
 }
