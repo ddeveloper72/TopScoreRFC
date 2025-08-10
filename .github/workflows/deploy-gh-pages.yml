@@ -1,0 +1,63 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'angular.json'
+      - 'package.json'
+      - 'tsconfig*.json'
+      - '.github/workflows/deploy-gh-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gh-pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Write runtime env.js from GitHub Secrets
+        run: |
+          mkdir -p src/assets
+          cat > src/assets/env.js << 'EOF'
+          (function (window) {
+            window.__env = window.__env || {};
+            window.__env.apiUrl = '${{ secrets.API_URL }}';
+            window.__env.googleMaps = { apiKey: '${{ secrets.GOOGLE_MAPS_API_KEY }}', mapId: '${{ secrets.GOOGLE_MAPS_MAP_ID }}' };
+          })(this);
+          EOF
+
+      - name: Build Angular app
+        run: |
+          npx ng build --configuration=production --base-href "/TopScoreRFC/"
+
+      - name: Verify build output
+        run: |
+          ls -la dist/rugby-score-card-app || true
+          ls -la dist/rugby-score-card-app/browser || true
+          test -f dist/rugby-score-card-app/browser/assets/env.js
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: dist/rugby-score-card-app/browser
