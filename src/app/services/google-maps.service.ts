@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { AppConfigService } from './app-config.service';
 
 export interface VenueLocation {
   name: string;
@@ -23,7 +24,7 @@ export class GoogleMapsService {
   private predictionCache = new Map<string, VenueLocation[]>();
   private detailsCache = new Map<string, VenueLocation>();
 
-  constructor() {}
+  constructor(private cfg: AppConfigService) {}
 
   async loadGoogleMaps(): Promise<any> {
     if (this.googleGlobal) {
@@ -44,7 +45,7 @@ export class GoogleMapsService {
         script.setAttribute('data-google-maps-loader', 'true');
         const libs = ['places', 'geometry', 'marker'];
         const params = new URLSearchParams({
-          key: environment.googleMaps.apiKey || '',
+          key: this.cfg.googleMapsApiKey || environment.googleMaps.apiKey || '',
           libraries: libs.join(','),
           v: 'weekly',
         });
@@ -351,7 +352,8 @@ export class GoogleMapsService {
     };
 
     // If a Map ID is configured, include it to enable Advanced Markers and vector maps
-    const mapId = (environment as any)?.googleMaps?.mapId;
+    const mapId =
+      this.cfg.googleMapId || (environment as any)?.googleMaps?.mapId;
     if (mapId) {
       options.mapId = mapId;
     }
@@ -365,7 +367,8 @@ export class GoogleMapsService {
 
     // Prefer AdvancedMarkerElement if available and a Map ID is configured
     const advanced = (google as any).maps?.marker?.AdvancedMarkerElement;
-    const mapId = (environment as any)?.googleMaps?.mapId;
+    const mapId =
+      this.cfg.googleMapId || (environment as any)?.googleMaps?.mapId;
     if (advanced && mapId) {
       const img = document.createElement('img');
       img.src = 'assets/images/irish-rugby-ball.png';
