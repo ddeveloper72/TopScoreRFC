@@ -1,5 +1,7 @@
 # Rugby Score Tracker - TopScoreRFC
 
+[![Deploy to GitHub Pages](https://github.com/ddeveloper72/TopScoreRFC/actions/workflows/deploy.yml/badge.svg)](https://github.com/ddeveloper72/TopScoreRFC/actions/workflows/deploy.yml)
+
 A mobile-first Rugby score tracking application with MongoDB database integration, built with Angular 19, Node.js, and Express.
 
 **🌐 Live Demo**: [https://ddeveloper72.github.io/TopScoreRFC/](https://ddeveloper72.github.io/TopScoreRFC/)
