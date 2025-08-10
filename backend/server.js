@@ -29,15 +29,35 @@ app.use(helmet());
 app.use(compression());
 app.use(limiter);
 
-// CORS configuration
-const corsOptions = {
-    origin: process.env.CLIENT_URL || 'http://localhost:4200',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
+// CORS configuration (supports multiple origins)
+const parseOrigins = () => {
+    const list = process.env.CLIENT_URLS || process.env.CLIENT_URL || '';
+    const items = list
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+    // Always include localhost defaults for dev convenience
+    const defaults = ['http://localhost:4200', 'http://127.0.0.1:4200'];
+    for (const d of defaults) {
+        if (!items.includes(d)) items.push(d);
+    }
+    return items;
 };
 
-app.use(cors(corsOptions));
+const allowedOrigins = new Set(parseOrigins());
+
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            if (!origin) return callback(null, true); // non-browser or same-origin
+            if (allowedOrigins.has(origin)) return callback(null, true);
+            return callback(new Error(`CORS blocked for origin: ${origin}`));
+        },
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        credentials: true,
+    })
+);
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));

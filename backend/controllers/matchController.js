@@ -2,6 +2,15 @@ const Match = require('../models/Match');
 
 exports.createMatch = async (req, res) => {
     try {
+        // Basic request log for diagnostics (avoid logging secrets)
+        console.log('createMatch payload:', {
+            body: req.body,
+            headers: {
+                origin: req.headers.origin,
+                referer: req.headers.referer,
+                'content-type': req.headers['content-type'],
+            },
+        });
         const match = new Match(req.body);
         const saved = await match.save();
         res.status(201).json(saved);
