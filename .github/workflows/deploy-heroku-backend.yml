@@ -2,10 +2,10 @@ name: Deploy Backend to Heroku
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
     paths:
-      - 'backend/**'
-      - '.github/workflows/deploy-heroku-backend.yml'
+      - "backend/**"
+      - ".github/workflows/deploy-heroku-backend.yml"
   workflow_dispatch:
 
 permissions:
