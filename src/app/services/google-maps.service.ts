@@ -351,8 +351,7 @@ export class GoogleMapsService {
     };
 
     // If a Map ID is configured, include it to enable Advanced Markers and vector maps
-    const mapId =
-      this.cfg.googleMapId || (environment as any)?.googleMaps?.mapId;
+    const mapId = this.cfg.googleMapId;
     if (mapId) {
       options.mapId = mapId;
     }
@@ -366,8 +365,7 @@ export class GoogleMapsService {
 
     // Prefer AdvancedMarkerElement if available and a Map ID is configured
     const advanced = (google as any).maps?.marker?.AdvancedMarkerElement;
-    const mapId =
-      this.cfg.googleMapId || (environment as any)?.googleMaps?.mapId;
+    const mapId = this.cfg.googleMapId;
     if (advanced && mapId) {
       const img = document.createElement('img');
       img.src = 'assets/images/irish-rugby-ball.png';
