@@ -8,6 +8,8 @@ require('dotenv').config();
 const connectDB = require('./config/database');
 const gameRoutes = require('./routes/games');
 const matchRoutes = require('./routes/matches');
+const mongoose = require('mongoose');
+const Match = require('./models/Match');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -68,8 +70,37 @@ app.get('/health', (req, res) => {
     res.json({
         status: 'OK',
         timestamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV || 'development'
+        environment: process.env.NODE_ENV || 'development',
+        apiBase: '/api',
     });
+});
+
+// Health: database connection status
+app.get('/health/db', async (req, res) => {
+    const stateMap = {
+        0: 'disconnected',
+        1: 'connected',
+        2: 'connecting',
+        3: 'disconnecting',
+        99: 'uninitialized',
+    };
+    const conn = mongoose.connection;
+    res.json({
+        connected: conn.readyState === 1,
+        state: stateMap[conn.readyState] || conn.readyState,
+        host: conn.host,
+        dbName: conn.name,
+    });
+});
+
+// Health: simple query
+app.get('/health/matches', async (req, res) => {
+    try {
+        const count = await Match.estimatedDocumentCount();
+        res.json({ ok: true, count });
+    } catch (e) {
+        res.status(500).json({ ok: false, error: e.message });
+    }
 });
 
 // API routes
