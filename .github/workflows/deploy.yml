@@ -38,22 +38,34 @@ jobs:
           (function (window) {
             window.__env = window.__env || {};
             window.__env.apiUrl = '${{ secrets.API_URL }}';
+            window.__env.googleMaps = { apiKey: '${{ secrets.GOOGLE_MAPS_API_KEY }}', mapId: '${{ secrets.GOOGLE_MAPS_MAP_ID }}' };
           })(this);
           EOF
 
       - name: Show env.js (masked)
         run: |
           echo "----- src/assets/env.js -----"
-          sed -e 's/apiUrl.*/apiUrl: [masked]/' src/assets/env.js | sed -e 's/\r$//' | sed -e 's/\t/  /g' || true
+          sed -e 's/apiUrl.*/apiUrl: [masked]/' -e 's/apiKey.*/apiKey: [masked]/' src/assets/env.js | sed -e 's/\r$//' | sed -e 's/\t/  /g' || true
 
       - name: Build Angular app for GitHub Pages
         run: npm run build:ghpages
+
+      - name: Cache-bust env.js reference in built index.html
+        run: |
+          INDEX="dist/rugby-score-card-app/browser/index.html"
+          if [ -f "$INDEX" ]; then
+            sed -i.bak "s|src=\"assets/env.js\"|src=\"assets/env.js?v=${GITHUB_SHA}\"|" "$INDEX"
+            echo "Patched env.js reference with cache buster: ?v=${GITHUB_SHA}"
+            head -n 50 "$INDEX" | sed -n '1,120p'
+          else
+            echo "index.html not found at $INDEX" && exit 1
+          fi
 
       - name: Verify env.js in build output
         run: |
           test -f dist/rugby-score-card-app/browser/assets/env.js || (echo "env.js missing in build output" && exit 1)
           echo "----- dist/assets/env.js (masked) -----"
-          sed -e 's/apiUrl.*/apiUrl: [masked]/' dist/rugby-score-card-app/browser/assets/env.js | sed -e 's/\r$//' | sed -e 's/\t/  /g' || true
+          sed -e 's/apiUrl.*/apiUrl: [masked]/' -e 's/apiKey.*/apiKey: [masked]/' dist/rugby-score-card-app/browser/assets/env.js | sed -e 's/\r$//' | sed -e 's/\t/  /g' || true
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
