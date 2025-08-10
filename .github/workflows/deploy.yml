@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -17,11 +18,21 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "20"
           cache: "npm"
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Write runtime env.js from GitHub Secrets
+        run: |
+          mkdir -p src/assets
+          cat > src/assets/env.js << EOF
+          (function (window) {
+            window.__env = window.__env || {};
+            window.__env.apiUrl = '${{ secrets.API_URL }}';
+          })(this);
+          EOF
 
       - name: Build Angular app for GitHub Pages
         run: npm run build:ghpages
