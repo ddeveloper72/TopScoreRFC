@@ -36,6 +36,11 @@ export class GoogleMapsService {
     ) as HTMLScriptElement | null;
 
     if (!existing) {
+      // Guard: if no API key configured, surface a clear warning and fail fast
+      if (!this.cfg.googleMapsApiKey) {
+        console.warn('[GoogleMapsService] Missing GOOGLE_MAPS_API_KEY. Set it as a GitHub Actions secret so env.js can populate at runtime. Search and map features will be disabled.');
+        throw new Error('Missing Google Maps API key');
+      }
       await new Promise<void>((resolve, reject) => {
         const script = document.createElement('script');
         script.type = 'text/javascript';
