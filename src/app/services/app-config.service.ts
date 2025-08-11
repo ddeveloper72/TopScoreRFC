@@ -32,7 +32,7 @@ export class AppConfigService {
     // Use runtime configuration from env.js
     const runtimeVal = (this.get<string>('apiUrl') || '').toString().trim();
     if (!runtimeVal) return '';
-    
+
     let url = runtimeVal.replace(/\s+$/, '');
     try {
       const u = new URL(url);
