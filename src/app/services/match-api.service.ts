@@ -13,8 +13,8 @@ export class MatchApiService {
   };
 
   constructor(private http: HttpClient, private cfg: AppConfigService) {
-  const base = this.cfg.apiUrl || 'http://localhost:3000/api';
-  this.apiUrl = base.replace(/\/$/, '');
+    const base = this.cfg.apiUrl || 'http://localhost:3000/api';
+    this.apiUrl = base.replace(/\/$/, '');
   }
 
   getAllMatches(): Observable<Match[]> {
