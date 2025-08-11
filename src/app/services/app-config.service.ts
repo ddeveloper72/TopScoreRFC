@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { environment as ngEnvironment } from '../../environments/environment';
 
 type AnyRecord = Record<string, any>;
 
 @Injectable({ providedIn: 'root' })
 export class AppConfigService {
   private readonly runtime: AnyRecord;
-  private readonly env = ngEnvironment as AnyRecord;
 
   constructor() {
     // Read window.__env if present (provided by assets/env.js at runtime)
@@ -31,12 +29,11 @@ export class AppConfigService {
   }
 
   get apiUrl(): string {
-    // Prefer runtime (env.js) first, then fall back to Angular environment for local dev
+    // Use runtime configuration from env.js
     const runtimeVal = (this.get<string>('apiUrl') || '').toString().trim();
-    const raw =
-      runtimeVal || ((this.env && this.env['apiUrl']) || '').toString().trim();
-    if (!raw) return '';
-    let url = raw.replace(/\s+$/, '');
+    if (!runtimeVal) return '';
+    
+    let url = runtimeVal.replace(/\s+$/, '');
     try {
       const u = new URL(url);
       if (!u.pathname || u.pathname === '/' || u.pathname === '') {
@@ -54,21 +51,10 @@ export class AppConfigService {
   }
 
   get googleMapsApiKey(): string {
-    return (
-      this.get<string>('googleMaps.apiKey') ||
-      ((this.env &&
-        this.env['googleMaps'] &&
-        this.env['googleMaps']['apiKey']) as string) ||
-      ''
-    );
+    return this.get<string>('googleMaps.apiKey') || '';
   }
 
   get googleMapId(): string | undefined {
-    const rt = this.get<string>('googleMaps.mapId');
-    if (rt) return rt;
-    if (this.env && this.env['googleMaps']) {
-      return this.env['googleMaps']['mapId'] as string;
-    }
-    return undefined;
+    return this.get<string>('googleMaps.mapId');
   }
 }
