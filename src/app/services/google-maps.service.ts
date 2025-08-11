@@ -25,6 +25,11 @@ export class GoogleMapsService {
 
   constructor(private cfg: AppConfigService) {}
 
+  // Expose whether Maps API is configured at runtime
+  public get hasApiKey(): boolean {
+    return !!this.cfg.googleMapsApiKey;
+  }
+
   async loadGoogleMaps(): Promise<any> {
     if (this.googleGlobal) {
       return this.googleGlobal;
