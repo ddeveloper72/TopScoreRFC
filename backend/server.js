@@ -39,7 +39,7 @@ const parseOrigins = () => {
     .map((s) => s.trim())
     .filter(Boolean);
   // Always include localhost defaults for dev convenience
-  const defaults = ['http://localhost:4200', 'http://127.0.0.1:4200'];
+  const defaults = ['http://localhost:4200', 'http://127.0.0.1:4200', 'http://localhost:4201', 'http://127.0.0.1:4201'];
   for (const d of defaults) {
     if (!items.includes(d)) items.push(d);
   }
