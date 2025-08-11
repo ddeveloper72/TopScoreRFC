@@ -87,7 +87,7 @@
                 (click)="clearVenue()">
                 <mat-icon>clear</mat-icon>
               </button>
-              <mat-icon matSuffix *ngIf="!selectedVenue">search</mat-icon>
+              <mat-icon matSuffix *ngIf="!selectedVenue && mapsConfigured">search</mat-icon>
               <mat-error *ngIf="hasError('venue')">
                 {{ getErrorMessage('venue') }}
               </mat-error>
@@ -101,17 +101,21 @@
                     <div class="venue-address">{{ venue.address }}</div>
                   </div>
                 </mat-option>
-                <mat-option *ngIf="isSearching" disabled>
+                <mat-option *ngIf="isSearching && mapsConfigured" disabled>
                   <div class="venue-option">
                     <mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner>
-                    <span style="margin-left:8px;">Searching…</span>
+                    <span class="searching-label">Searching…</span>
                   </div>
                 </mat-option>
               </mat-autocomplete>
+              <mat-hint *ngIf="!mapsConfigured">
+                Google Maps search is not configured. Add GOOGLE_MAPS_API_KEY (and optional GOOGLE_MAPS_MAP_ID) to your
+                deployment settings.
+              </mat-hint>
             </mat-form-field>
 
             <!-- Map Preview -->
-            <div class="map-container" *ngIf="selectedVenue">
+            <div class="map-container" *ngIf="selectedVenue && mapsConfigured">
               <div class="map-header">
                 <h4>{{ selectedVenue.name }}</h4>
                 <p class="venue-address">{{ selectedVenue.address }}</p>
