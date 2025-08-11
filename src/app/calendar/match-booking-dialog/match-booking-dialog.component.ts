@@ -54,6 +54,7 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
   private searchSubject = new Subject<string>();
   isSearching = false;
   mapLoading = false;
+  mapsConfigured = false;
 
   // Display function for mat-autocomplete
   displayVenue = (venue?: VenueLocation | string): string => {
@@ -159,6 +160,8 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    // Detect Maps configuration
+    this.mapsConfigured = this.googleMapsService.hasApiKey;
     // If editing an existing match, populate the form
     if (this.data?.isEdit && this.data.match) {
       const match = this.data.match;
@@ -187,12 +190,14 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
 
   // Google Maps and Venue Search Methods
   onVenueSearch(event: Event): void {
+    if (!this.mapsConfigured) return;
     const input = event.target as HTMLInputElement;
     const searchTerm = input.value;
     this.searchSubject.next(searchTerm);
   }
 
   async searchVenues(searchTerm: string): Promise<void> {
+    if (!this.mapsConfigured) return;
     try {
       this.isSearching = true;
       this.venueSearchResults = await this.googleMapsService.searchPlaces(
@@ -233,6 +238,7 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
 
   private async initializeMap(): Promise<void> {
     if (!this.selectedVenue || !this.mapElement) return;
+    if (!this.mapsConfigured) return;
 
     try {
       this.mapLoading = true;
