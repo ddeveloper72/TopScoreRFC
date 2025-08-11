@@ -45,6 +45,8 @@ Thumbs.db
 .env
 .env.local
 .env.production
+src/assets/env.local.js
+src/assets/env.*.local.js
 
 # Environment files with actual API keys
 src/environments/environment.ts
