@@ -50,7 +50,8 @@ export class ApiService {
   };
 
   constructor(private http: HttpClient, cfg: AppConfigService) {
-    this.apiUrl = cfg.apiUrl || 'http://localhost:3000/api';
+    const base = cfg.apiUrl || 'http://localhost:3000/api';
+    this.apiUrl = base.replace(/\/$/, '');
   }
 
   // Game CRUD operations
