@@ -48,6 +48,6 @@ Thumbs.db
 src/assets/env.local.js
 src/assets/env.*.local.js
 
-# Environment files with actual API keys
+# Keep actual environment files (with secrets) local only
 src/environments/environment.ts
 src/environments/environment.prod.ts
