@@ -48,6 +48,6 @@ Thumbs.db
 src/assets/env.local.js
 src/assets/env.*.local.js
 
-# Keep actual environment files (with secrets) local only
-src/environments/environment.ts
-src/environments/environment.prod.ts
+# Keep local environment files with actual secrets from being committed
+src/environments/environment.local.ts
+src/environments/environment.prod.local.ts
