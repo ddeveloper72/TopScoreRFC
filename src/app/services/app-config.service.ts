@@ -29,7 +29,23 @@ export class AppConfigService {
   }
 
   get apiUrl(): string {
-    return (this.get<string>('apiUrl') || '').toString();
+    const raw = (this.get<string>('apiUrl') || '').toString().trim();
+    if (!raw) return '';
+    let url = raw.replace(/\s+$/, '');
+    try {
+      const u = new URL(url);
+      if (!u.pathname || u.pathname === '/' || u.pathname === '') {
+        u.pathname = '/api';
+      }
+      url = u.toString();
+    } catch {
+      // Not an absolute URL; just ensure it includes '/api'
+      if (!/\/api(\/|$)/i.test(url)) {
+        url = url.replace(/\/+$/, '') + '/api';
+      }
+    }
+    // Trim any trailing slash for stable concatenation
+    return url.replace(/\/+$/, '');
   }
 
   get googleMapsApiKey(): string {
