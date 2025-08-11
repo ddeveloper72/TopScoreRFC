@@ -27,12 +27,17 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Check API_URL secret is present (masked)
+      - name: Check required secrets (masked)
         run: |
           if [ -z "${{ secrets.API_URL }}" ]; then
             echo "API_URL secret is not set. Please add it in Repo Settings > Secrets and rerun." && exit 1
           fi
           echo "API_URL is set (length only): $(echo -n '${{ secrets.API_URL }}' | wc -c) chars"
+          if [ -z "${{ secrets.GOOGLE_MAPS_API_KEY }}" ]; then
+            echo "::warning title=Missing GOOGLE_MAPS_API_KEY::Google Maps search will be disabled on the site. Set this secret in Repo Settings > Secrets to enable venue search and map preview."
+          else
+            echo "GOOGLE_MAPS_API_KEY is set (masked)."
+          fi
 
       - name: Write runtime env.js from GitHub Secrets
         run: |
