@@ -93,7 +93,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(MatchBookingDialogComponent, {
       width: '700px',
       maxWidth: '90vw',
-      disableClose: false,
+      disableClose: true,
       data: { isEdit: false } as MatchBookingData,
     });
 
@@ -123,7 +123,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(MatchBookingDialogComponent, {
       width: '700px',
       maxWidth: '90vw',
-      disableClose: false,
+      disableClose: true,
       data: { match, isEdit: true } as MatchBookingData,
     });
 
