@@ -1,5 +1,5 @@
 // Production environment configuration template
-// IMPORTANT: This is a template file with no secrets. 
+// IMPORTANT: This is a template file with no secrets.
 // All configuration is handled via runtime env.js files.
 
 export const environment = {
