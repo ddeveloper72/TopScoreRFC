@@ -5,6 +5,7 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
+  HostListener,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -13,7 +14,11 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialog,
+} from '@angular/material/dialog';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MaterialModule } from '../../material/material.module';
 import { Match } from '../../services/match-storage.service';
@@ -24,6 +29,10 @@ import {
 import { Subject } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import {
+  ConfirmationDialogComponent,
+  ConfirmationDialogData,
+} from '../../shared/confirmation-dialog/confirmation-dialog.component';
 
 export interface MatchBookingData {
   match?: Match;
@@ -78,6 +87,7 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private googleMapsService: GoogleMapsService,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     public dialogRef: MatDialogRef<MatchBookingDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: MatchBookingData
   ) {
@@ -464,10 +474,49 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
   }
 
   /**
+   * Handle ESC key press to close dialog with confirmation
+   */
+  @HostListener('keydown.escape', ['$event'])
+  async onEscapeKey(event: KeyboardEvent): Promise<void> {
+    event.preventDefault();
+    await this.onCancel();
+  }
+
+  /**
+   * Confirm if user wants to close the dialog with unsaved changes
+   */
+  private async confirmClose(): Promise<boolean> {
+    const confirmData: ConfirmationDialogData = {
+      title: 'Unsaved Changes',
+      message:
+        'You have unsaved changes. Are you sure you want to close without saving?',
+      confirmText: 'Discard Changes',
+      cancelText: 'Continue Editing',
+    };
+
+    const confirmDialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400px',
+      disableClose: true,
+      data: confirmData,
+    });
+
+    return confirmDialogRef.afterClosed().toPromise();
+  }
+
+  /**
    * Cancel and close dialog
    */
-  onCancel(): void {
-    this.dialogRef.close();
+  async onCancel(): Promise<void> {
+    // If the form has been touched/modified, show confirmation
+    if (this.bookingForm.dirty) {
+      const shouldClose = await this.confirmClose();
+      if (shouldClose) {
+        this.dialogRef.close();
+      }
+    } else {
+      // No changes, close directly
+      this.dialogRef.close();
+    }
   }
 
   /**
