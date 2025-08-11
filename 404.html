@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>TopScore RFC - Rugby Match Tracker</title>
+  <script type="text/javascript">
+    // GitHub Pages 404 redirect for SPA
+    // This script takes the current page and redirects to the root with the path as a query parameter
+    var pathSegmentsToKeep = 1; // Change this if you use a custom domain
+
+    var l = window.location;
+    l.replace(
+      l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+      l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') +
+      '/?' +
+      l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('&') +
+      (l.search ? '&' + l.search.slice(1) : '') +
+      l.hash
+    );
+  </script>
+</head>
+
+<body>
+  <noscript>
+    <h1>TopScore RFC - Rugby Match Tracker</h1>
+    <p>This app requires JavaScript to run. Please enable JavaScript and <a href="/">return to the main page</a>.</p>
+  </noscript>
+</body>
+
+</html>
