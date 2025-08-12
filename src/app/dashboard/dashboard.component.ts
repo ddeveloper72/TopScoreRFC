@@ -40,8 +40,11 @@ export class DashboardComponent implements OnInit {
 
     // Get upcoming matches from MatchStorageService
     const now = new Date();
-    this.upcomingMatches = this.matchStorage.getMatches()
-      .filter(match => new Date(match.date) >= now && match.status === 'scheduled')
+    this.upcomingMatches = this.matchStorage
+      .getMatches()
+      .filter(
+        (match) => new Date(match.date) >= now && match.status === 'scheduled'
+      )
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
       .slice(0, 4); // Show up to 4 upcoming matches
   }
@@ -49,7 +52,7 @@ export class DashboardComponent implements OnInit {
   // Format match type for display
   formatMatchType(matchType: string | undefined): string {
     if (!matchType) return '';
-    
+
     switch (matchType) {
       case 'boys':
         return "Boys' Teams";
@@ -62,10 +65,10 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  // Format team category for display  
+  // Format team category for display
   formatTeamCategory(category: string | undefined): string {
     if (!category) return '';
-    
+
     switch (category) {
       case 'minis':
         return 'Minis';
@@ -108,6 +111,33 @@ export class DashboardComponent implements OnInit {
       default:
         return 'groups';
     }
+  }
+
+  // Date helper methods
+  isToday(date: Date): boolean {
+    const today = new Date();
+    return date.toDateString() === today.toDateString();
+  }
+
+  getDaysUntilMatch(matchDate: Date): number {
+    const today = new Date();
+    const diffTime = matchDate.getTime() - today.getTime();
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  }
+
+  getMatchDateDisplay(date: Date): string {
+    if (this.isToday(date)) {
+      return 'Today';
+    }
+    return date.toLocaleDateString('en-US', { weekday: 'short' });
+  }
+
+  getCountdownDisplay(date: Date): string {
+    if (this.isToday(date)) {
+      return 'Today';
+    }
+    const days = this.getDaysUntilMatch(date);
+    return days === 1 ? '1 day' : `${days} days`;
   }
 
   quickStartGame() {
