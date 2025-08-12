@@ -84,6 +84,28 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
     'Other',
   ];
 
+  // Team categories and age levels based on Clane RFC structure
+  teamCategories = [
+    { value: 'minis', label: 'Minis (Boys & Girls)' },
+    { value: 'youths-boys', label: 'Youths (Boys)' },
+    { value: 'girls', label: 'Girls (Wolves Amalgamation)' },
+    { value: 'seniors', label: 'Seniors' },
+    { value: 'womens-tag', label: "Women's Tag Rugby" },
+  ];
+
+  ageLevels = {
+    minis: ['U7', 'U8', 'U9', 'U10', 'U11', 'U12'],
+    'youths-boys': ['U13', 'U14', 'U15', 'U16', 'U17', 'U18'],
+    girls: ['U14', 'U16', 'U18'],
+    seniors: ['Adults'],
+    'womens-tag': ['Adults'],
+  };
+
+  // Get available age levels based on selected category
+  getAgeLevelsForCategory(category: string): string[] {
+    return this.ageLevels[category as keyof typeof this.ageLevels] || [];
+  }
+
   constructor(
     private fb: FormBuilder,
     private googleMapsService: GoogleMapsService,
@@ -102,7 +124,11 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
 
     this.bookingForm = this.fb.group({
       homeTeam: ['', [Validators.required, Validators.minLength(2)]],
+      homeTeamCategory: ['', Validators.required],
+      homeTeamAgeLevel: ['', Validators.required],
       awayTeam: ['', [Validators.required, Validators.minLength(2)]],
+      awayTeamCategory: ['', Validators.required],
+      awayTeamAgeLevel: ['', Validators.required],
       date: ['', [Validators.required, this.dateRangeValidator.bind(this)]],
       time: ['', [Validators.required]],
       venue: ['', [Validators.required, Validators.minLength(2)]],
@@ -181,7 +207,11 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
 
       this.bookingForm.patchValue({
         homeTeam: match.homeTeam,
+        homeTeamCategory: match.homeTeamCategory || '',
+        homeTeamAgeLevel: match.homeTeamAgeLevel || '',
         awayTeam: match.awayTeam,
+        awayTeamCategory: match.awayTeamCategory || '',
+        awayTeamAgeLevel: match.awayTeamAgeLevel || '',
         date: matchDate,
         time: this.formatTimeForInput(matchDate),
         venue: match.venue,
@@ -255,6 +285,19 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
     this.selectedVenue = venue;
     this.bookingForm.patchValue({ venue: venue.name });
     setTimeout(() => this.initializeMap(), 50);
+  }
+
+  // Handle team category changes and reset age level
+  onTeamCategoryChange(teamType: 'home' | 'away'): void {
+    const categoryField =
+      teamType === 'home' ? 'homeTeamCategory' : 'awayTeamCategory';
+    const ageLevelField =
+      teamType === 'home' ? 'homeTeamAgeLevel' : 'awayTeamAgeLevel';
+
+    // Reset age level when category changes
+    this.bookingForm.patchValue({
+      [ageLevelField]: '',
+    });
   }
 
   private async initializeMap(): Promise<void> {
@@ -484,7 +527,11 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
         const formValue = this.bookingForm.value;
         const matchData: Partial<Match> = {
           homeTeam: formValue.homeTeam,
+          homeTeamCategory: formValue.homeTeamCategory,
+          homeTeamAgeLevel: formValue.homeTeamAgeLevel,
           awayTeam: formValue.awayTeam,
+          awayTeamCategory: formValue.awayTeamCategory,
+          awayTeamAgeLevel: formValue.awayTeamAgeLevel,
           date: this.combineDateTime(),
           venue: formValue.venue,
           competition: formValue.competition,
@@ -592,37 +639,6 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
     }
     // For new matches, enable if form is valid
     return this.bookingForm.valid;
-  }
-
-  /**
-   * Debug method to check form validation status
-   */
-  debugFormValidation(): void {
-    console.log('=== FORM DEBUG INFO ===');
-    console.log('Form valid:', this.bookingForm.valid);
-    console.log('Form dirty:', this.bookingForm.dirty);
-    console.log('Form touched:', this.bookingForm.touched);
-    console.log('Form errors:', this.bookingForm.errors);
-    console.log('Button enabled:', this.isSubmitButtonEnabled());
-    console.log('Edit mode:', this.data?.isEdit);
-
-    console.log('=== INDIVIDUAL FIELD VALIDATION ===');
-    Object.keys(this.bookingForm.controls).forEach((key) => {
-      const control = this.bookingForm.get(key);
-      console.log(`${key}:`, {
-        value: control?.value,
-        valid: control?.valid,
-        invalid: control?.invalid,
-        dirty: control?.dirty,
-        touched: control?.touched,
-        errors: control?.errors,
-      });
-    });
-
-    // Run teams validator to check if it's causing issues
-    console.log('=== RUNNING TEAMS VALIDATOR ===');
-    this.teamsValidator();
-    console.log('Form valid after teams validator:', this.bookingForm.valid);
   }
 
   /**
