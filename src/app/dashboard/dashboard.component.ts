@@ -40,13 +40,29 @@ export class DashboardComponent implements OnInit {
 
     // Get upcoming matches from MatchStorageService
     const now = new Date();
+    const todayStart = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    ); // Start of today
+
     this.upcomingMatches = this.matchStorage
       .getMatches()
       .filter(
-        (match) => new Date(match.date) >= now && match.status === 'scheduled'
+        (match) =>
+          new Date(match.date) >= todayStart && match.status === 'scheduled'
       )
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
       .slice(0, 4); // Show up to 4 upcoming matches
+
+    // Debug: Log the upcoming matches
+    console.log('Current date:', now);
+    console.log('Today start:', todayStart);
+    console.log('All matches:', this.matchStorage.getMatches());
+    console.log('Upcoming matches:', this.upcomingMatches);
+    if (this.upcomingMatches.length > 0) {
+      console.log('First match details:', this.upcomingMatches[0]);
+    }
   }
 
   // Format match type for display
@@ -99,17 +115,31 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  // Get match type CSS class
+  getMatchTypeClass(matchType: string | undefined): string {
+    switch (matchType) {
+      case 'boys':
+        return 'boys-teams';
+      case 'girls':
+        return 'girls-teams';
+      case 'mixed':
+        return 'mixed-adults';
+      default:
+        return '';
+    }
+  }
+
   // Get match type icon
   getMatchTypeIcon(matchType: string | undefined): string {
     switch (matchType) {
       case 'boys':
-        return 'male';
+        return 'sports_rugby';
       case 'girls':
-        return 'female';
+        return 'sports_handball';
       case 'mixed':
         return 'groups';
       default:
-        return 'groups';
+        return 'sports';
     }
   }
 
