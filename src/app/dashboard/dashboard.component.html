@@ -107,8 +107,7 @@
                             {{ match.date | date:'MMM dd, yyyy - HH:mm' }}
                         </div>
                         <div class="match-countdown">
-                            {{ (match.date | date:'mediumDate') === (new Date() | date:'mediumDate') ? 'Today' : 
-                                 (match.date | date:'fullDate') | slice:0:3 }}
+                            {{ getMatchDateDisplay(match.date) }}
                         </div>
                     </div>
 
@@ -127,7 +126,8 @@
                             <span class="team-age" *ngIf="match.homeTeamAgeLevel">
                                 {{ match.homeTeamAgeLevel }}
                             </span>
-                            <span class="vs-age" *ngIf="match.awayTeamAgeLevel && match.homeTeamAgeLevel !== match.awayTeamAgeLevel">
+                            <span class="vs-age"
+                                *ngIf="match.awayTeamAgeLevel && match.homeTeamAgeLevel !== match.awayTeamAgeLevel">
                                 vs {{ match.awayTeamAgeLevel }}
                             </span>
                         </div>
@@ -158,8 +158,7 @@
                     <div class="match-status">
                         <span class="status-badge" [ngClass]="match.status">{{ match.status | titlecase }}</span>
                         <div class="days-until" *ngIf="match.date">
-                            {{ ((match.date | date:'yyyy-MM-dd') === (new Date() | date:'yyyy-MM-dd')) ? 'Today' : 
-                                 (Math.ceil((match.date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))) + ' days' }}
+                            {{ getCountdownDisplay(match.date) }}
                         </div>
                     </div>
 
