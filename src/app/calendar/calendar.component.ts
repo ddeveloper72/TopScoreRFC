@@ -10,6 +10,14 @@ import {
   MatchBookingDialogComponent,
   MatchBookingData,
 } from './match-booking-dialog/match-booking-dialog.component';
+import {
+  DayMatchesDialogComponent,
+  DayMatchesDialogData,
+} from './day-matches-dialog/day-matches-dialog.component';
+import {
+  ConfirmationDialogComponent,
+  ConfirmationDialogData,
+} from '../shared/confirmation-dialog/confirmation-dialog.component';
 import { MatchStorageService, Match } from '../services/match-storage.service';
 import {
   fadeInOut,
@@ -90,11 +98,18 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   addNewMatch() {
+    this.addNewMatchForDate(new Date());
+  }
+
+  addNewMatchForDate(selectedDate: Date) {
     const dialogRef = this.dialog.open(MatchBookingDialogComponent, {
       width: '700px',
       maxWidth: '90vw',
       disableClose: true,
-      data: { isEdit: false } as MatchBookingData,
+      data: {
+        isEdit: false,
+        selectedDate: selectedDate,
+      } as MatchBookingData,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -161,13 +176,27 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   deleteMatch(match: Match) {
-    if (
-      confirm(
-        `Are you sure you want to delete the match between ${match.homeTeam} and ${match.awayTeam}?`
-      )
-    ) {
-      this.matchStorageService.deleteMatch(match.id);
-    }
+    const confirmData = {
+      title: 'Delete Match',
+      message: `Are you sure you want to delete the match between ${match.homeTeam} and ${match.awayTeam}?`,
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+    };
+
+    const confirmDialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400px',
+      data: confirmData,
+    });
+
+    confirmDialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.matchStorageService.deleteMatch(match.id);
+        // The subscription will automatically update the UI
+        this.snackBar.open('Match deleted successfully.', undefined, {
+          duration: 2000,
+        });
+      }
+    });
   }
 
   previousMonth() {
@@ -278,8 +307,39 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   onDayClick(day: CalendarDay): void {
     if (day.hasMatches) {
-      // Show matches for this day in a dialog or expand view
-      console.log('Matches for', day.date, ':', day.matches);
+      // Show matches for this day in a dialog
+      const dialogData: DayMatchesDialogData = {
+        date: day.date,
+        matches: day.matches,
+      };
+
+      const dialogRef = this.dialog.open(DayMatchesDialogComponent, {
+        width: '600px',
+        maxWidth: '90vw',
+        data: dialogData,
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          switch (result.action) {
+            case 'edit':
+              this.editMatch(result.match);
+              break;
+            case 'start':
+              this.startMatch(result.match);
+              break;
+            case 'delete':
+              this.deleteMatch(result.match);
+              break;
+            case 'add':
+              this.addNewMatchForDate(result.date);
+              break;
+          }
+        }
+      });
+    } else {
+      // No matches on this day, offer to add one
+      this.addNewMatchForDate(day.date);
     }
   }
 
@@ -290,5 +350,45 @@ export class CalendarComponent implements OnInit, OnDestroy {
     } else {
       return 'upcoming-match';
     }
+  }
+
+  getMatchTooltip(match: Match): string {
+    const timeStr = match.date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+    return `${match.homeTeam} vs ${match.awayTeam} at ${timeStr}`;
+  }
+
+  openMatchDetails(match: Match, event: Event): void {
+    event.stopPropagation(); // Prevent day click event
+
+    const dialogData: DayMatchesDialogData = {
+      date: match.date,
+      matches: [match], // Show just this specific match
+    };
+
+    const dialogRef = this.dialog.open(DayMatchesDialogComponent, {
+      width: '600px',
+      maxWidth: '90vw',
+      data: dialogData,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        switch (result.action) {
+          case 'edit':
+            this.editMatch(result.match);
+            break;
+          case 'start':
+            this.startMatch(result.match);
+            break;
+          case 'delete':
+            this.deleteMatch(result.match);
+            break;
+        }
+      }
+    });
   }
 }
