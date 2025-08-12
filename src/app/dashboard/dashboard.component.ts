@@ -58,10 +58,18 @@ export class DashboardComponent implements OnInit {
     // Debug: Log the upcoming matches
     console.log('Current date:', now);
     console.log('Today start:', todayStart);
-    console.log('All matches:', this.matchStorage.getMatches());
+    console.log('All matches from storage:', this.matchStorage.getMatches());
     console.log('Upcoming matches:', this.upcomingMatches);
     if (this.upcomingMatches.length > 0) {
       console.log('First match details:', this.upcomingMatches[0]);
+      console.log('First match fields check:', {
+        matchType: this.upcomingMatches[0].matchType,
+        homeTeamCategory: this.upcomingMatches[0].homeTeamCategory,
+        homeTeamAgeLevel: this.upcomingMatches[0].homeTeamAgeLevel,
+        awayTeamAgeLevel: this.upcomingMatches[0].awayTeamAgeLevel,
+      });
+    } else {
+      console.log('No upcoming matches found');
     }
   }
 
@@ -173,5 +181,28 @@ export class DashboardComponent implements OnInit {
   quickStartGame() {
     // Navigate to score tracker with default teams
     // Could pre-populate with scheduled match data
+  }
+
+  // Debug function to create test match with all fields
+  createTestMatch() {
+    const testMatch = {
+      matchType: 'boys',
+      homeTeam: 'Clane RFC',
+      homeTeamCategory: 'youths-boys',
+      homeTeamAgeLevel: 'U16',
+      awayTeam: 'Test RFC',
+      awayTeamAgeLevel: 'U16',
+      date: new Date(),
+      venue: 'Clane RFC',
+      competition: 'Test Match',
+      status: 'scheduled' as const,
+    };
+
+    console.log('Creating test match:', testMatch);
+    const id = this.matchStorage.saveMatch(testMatch);
+    console.log('Test match saved with ID:', id);
+
+    // Reload dashboard data
+    this.loadDashboardData();
   }
 }

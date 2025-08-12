@@ -114,21 +114,38 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        console.log('=== MATCH DIALOG RESULT ===');
+        console.log('Raw result from dialog:', result);
+        console.log('Match fields check:', {
+          matchType: result.matchType,
+          homeTeamCategory: result.homeTeamCategory,
+          homeTeamAgeLevel: result.homeTeamAgeLevel,
+          awayTeamAgeLevel: result.awayTeamAgeLevel,
+        });
+
         const id = this.matchStorageService.saveMatch(result);
         this.snackBar.open('Match saved locally.', undefined, {
           duration: 2000,
         });
-        this.matchApi.createMatch({ ...result, id }).subscribe({
-          next: () =>
+
+        const matchToSend = { ...result, id };
+        console.log('Sending to server:', matchToSend);
+
+        this.matchApi.createMatch(matchToSend).subscribe({
+          next: (response) => {
+            console.log('Server response:', response);
             this.snackBar.open('Match synced to server.', undefined, {
               duration: 2000,
-            }),
-          error: () =>
+            });
+          },
+          error: (error) => {
+            console.error('Server sync error:', error);
             this.snackBar.open(
               'Match saved locally. Server sync failed.',
               'Dismiss',
               { duration: 4000 }
-            ),
+            );
+          },
         });
       }
     });

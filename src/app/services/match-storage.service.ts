@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface Match {
   id: string;
+  _id?: string; // MongoDB document ID
   matchType?: string; // 'boys', 'girls', 'mixed'
   homeTeam: string;
   homeTeamCategory?: string; // e.g., 'minis', 'youths-boys', 'girls', 'seniors', 'womens-tag'
@@ -25,6 +26,9 @@ export interface Match {
   status: 'scheduled' | 'completed' | 'cancelled';
   homeScore?: number;
   awayScore?: number;
+  createdAt?: Date; // MongoDB created timestamp
+  updatedAt?: Date; // MongoDB updated timestamp
+  __v?: number; // MongoDB version key
 }
 
 @Injectable({

@@ -1,205 +1,232 @@
 <!-- Rugby Score Tracker Dashboard -->
 <div class="dashboard-container">
-    <!-- Hero Section -->
-    <div class="hero-section">
-        <div class="hero-content">
-            <h1>
-                <img src="assets/images/irish-rugby-ball.png" alt="Irish Rugby Ball" class="dashboard-rugby-ball">
-                Rugby Score Tracker
-            </h1>
-            <p>Your complete rugby match management solution</p>
-            <button mat-raised-button color="primary" routerLink="/score-tracker" class="quick-start-btn">
-                <i class="fa-solid fa-play"></i>
-                Quick Start Game
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1>
+        <img src="assets/images/irish-rugby-ball.png" alt="Irish Rugby Ball" class="dashboard-rugby-ball">
+        Rugby Score Tracker
+      </h1>
+      <p>Your complete rugby match management solution</p>
+      <button mat-raised-button color="primary" routerLink="/score-tracker" class="quick-start-btn">
+        <i class="fa-solid fa-play"></i>
+        Quick Start Game
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Overview -->
+  <div class="stats-overview">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-number">{{ statistics.totalGames || 0 }}</div>
+        <div class="stat-label">Total Games</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-number">{{ statistics.completedGames || 0 }}</div>
+        <div class="stat-label">Completed</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-number">{{ statistics.activeGames || 0 }}</div>
+        <div class="stat-label">Active Games</div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="action-cards">
+      <mat-card class="action-card" routerLink="/score-tracker">
+        <mat-card-content>
+          <i class="fa-solid fa-football fa-3x action-icon"></i>
+          <h3>Start New Game</h3>
+          <p>Begin tracking a new match</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="action-card" routerLink="/calendar">
+        <mat-card-content>
+          <i class="fa-solid fa-calendar-days action-icon"></i>
+          <h3>Match Calendar</h3>
+          <p>View and schedule matches</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="action-card" routerLink="/games-history">
+        <mat-card-content>
+          <i class="fa-solid fa-clock-rotate-left action-icon"></i>
+          <h3>Game History</h3>
+          <p>Review past matches</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Recent Games -->
+  <div class="recent-section" *ngIf="recentGames.length > 0">
+    <h2>Recent Games</h2>
+    <div class="recent-games">
+      <mat-card class="game-card" *ngFor="let game of recentGames">
+        <mat-card-content>
+          <div class="game-header">
+            <span class="game-date">{{ game.timestamp | date:'MMM dd' }}</span>
+            <span class="game-status" [ngClass]="game.status">{{ game.status }}</span>
+          </div>
+          <div class="game-score">
+            <div class="team">
+              <span class="team-name">{{ game.homeTeam.name }}</span>
+              <span class="score">{{ game.homeTeam.score }}</span>
+            </div>
+            <div class="vs">VS</div>
+            <div class="team">
+              <span class="team-name">{{ game.awayTeam.name }}</span>
+              <span class="score">{{ game.awayTeam.score }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Upcoming Matches -->
+  <div class="upcoming-section" *ngIf="upcomingMatches.length > 0">
+    <h2>Upcoming Matches</h2>
+    <div class="upcoming-matches">
+      <mat-card class="match-card" *ngFor="let match of upcomingMatches">
+        <mat-card-content>
+          <div class="match-header">
+            <div class="match-date">
+              <i class="fa-solid fa-clock"></i>
+              {{ match.date | date:'MMM dd, yyyy - HH:mm' }}
+            </div>
+            <div class="match-countdown">
+              {{ getMatchDateDisplay(match.date) }}
+            </div>
+          </div>
+
+          <!-- Match Type and Category Info -->
+          <div class="match-info" [ngClass]="getMatchTypeClass(match.matchType)"
+            *ngIf="match.matchType || match.homeTeamCategory">
+            <div class="match-type" *ngIf="match.matchType">
+              <mat-icon [style.color]="getMatchTypeColor(match.matchType)">
+                {{ getMatchTypeIcon(match.matchType) }}
+              </mat-icon>
+              <span class="match-type-label">{{ formatMatchType(match.matchType) }}</span>
+            </div>
+            <div class="team-details" *ngIf="match.homeTeamCategory || match.homeTeamAgeLevel">
+              <span class="team-category" *ngIf="match.homeTeamCategory">
+                {{ formatTeamCategory(match.homeTeamCategory) }}
+              </span>
+              <span class="team-age" *ngIf="match.homeTeamAgeLevel">
+                {{ match.homeTeamAgeLevel }}
+              </span>
+              <span class="vs-age" *ngIf="match.awayTeamAgeLevel && match.homeTeamAgeLevel !== match.awayTeamAgeLevel">
+                vs {{ match.awayTeamAgeLevel }}
+              </span>
+            </div>
+          </div>
+
+          <div class="match-teams">
+            <div class="team home-team">
+              <span class="team-name">{{ match.homeTeam }}</span>
+              <span class="team-label">HOME</span>
+            </div>
+            <div class="vs-badge">VS</div>
+            <div class="team away-team">
+              <span class="team-name">{{ match.awayTeam }}</span>
+              <span class="team-label">AWAY</span>
+            </div>
+          </div>
+
+          <div class="match-venue">
+            <i class="fa-solid fa-location-dot"></i>
+            {{ match.venue }}
+          </div>
+
+          <div class="match-competition" *ngIf="match.competition">
+            <i class="fa-solid fa-trophy"></i>
+            {{ match.competition }}
+          </div>
+
+          <div class="match-status">
+            <span class="status-badge" [ngClass]="match.status">{{ match.status | titlecase }}</span>
+            <div class="days-until" *ngIf="match.date">
+              {{ getCountdownDisplay(match.date) }}
+            </div>
+          </div>
+
+          <div class="match-actions">
+            <button mat-stroked-button color="primary">
+              <i class="fa-solid fa-football fa-sm"></i>
+              Start Match
             </button>
-        </div>
+          </div>
+
+          <!-- Debug Information -->
+          <div class="debug-info"
+            style="margin-top: 12px; padding: 8px; background-color: #f5f5f5; border-radius: 4px; font-size: 12px; color: #666;">
+            <div><strong>Debug Info:</strong></div>
+            <div><strong>ID:</strong> {{ match._id || 'No ID' }}</div>
+            <div><strong>Updated:</strong> {{ match.updatedAt ? (match.updatedAt | date:'MMM dd, yyyy - HH:mm:ss') : 'No
+              timestamp' }}</div>
+            <div><strong>Match Type:</strong> {{ match.matchType || 'Not set' }}</div>
+            <div><strong>Home Category:</strong> {{ match.homeTeamCategory || 'Not set' }}</div>
+            <div><strong>Home Age:</strong> {{ match.homeTeamAgeLevel || 'Not set' }}</div>
+            <div><strong>Away Age:</strong> {{ match.awayTeamAgeLevel || 'Not set' }}</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
     </div>
+  </div>
 
-    <!-- Stats Overview -->
-    <div class="stats-overview">
-        <mat-card class="stat-card">
-            <mat-card-content>
-                <div class="stat-number">{{ statistics.totalGames || 0 }}</div>
-                <div class="stat-label">Total Games</div>
-            </mat-card-content>
-        </mat-card>
+  <!-- App Features -->
+  <div class="features-section">
+    <h2>Features</h2>
+    <div class="features-grid">
+      <div class="feature-item">
+        <i class="fa-solid fa-stopwatch"></i>
+        <h3>Real-time Scoring</h3>
+        <p>Track scores as they happen with built-in timer</p>
+      </div>
 
-        <mat-card class="stat-card">
-            <mat-card-content>
-                <div class="stat-number">{{ statistics.completedGames || 0 }}</div>
-                <div class="stat-label">Completed</div>
-            </mat-card-content>
-        </mat-card>
+      <div class="feature-item">
+        <i class="fa-solid fa-mobile-screen"></i>
+        <h3>Mobile Optimized</h3>
+        <p>Perfect for sideline use during matches</p>
+      </div>
 
-        <mat-card class="stat-card">
-            <mat-card-content>
-                <div class="stat-number">{{ statistics.activeGames || 0 }}</div>
-                <div class="stat-label">Active Games</div>
-            </mat-card-content>
-        </mat-card>
+      <div class="feature-item">
+        <i class="fa-solid fa-chart-line"></i>
+        <h3>Match Statistics</h3>
+        <p>Detailed breakdown of tries, penalties, and more</p>
+      </div>
+
+      <div class="feature-item">
+        <i class="fa-solid fa-wifi-slash"></i>
+        <h3>Works Offline</h3>
+        <p>No internet required for basic functionality</p>
+      </div>
     </div>
+  </div>
 
-    <!-- Quick Actions -->
-    <div class="quick-actions">
-        <h2>Quick Actions</h2>
-        <div class="action-cards">
-            <mat-card class="action-card" routerLink="/score-tracker">
-                <mat-card-content>
-                    <i class="fa-solid fa-football fa-3x action-icon"></i>
-                    <h3>Start New Game</h3>
-                    <p>Begin tracking a new match</p>
-                </mat-card-content>
-            </mat-card>
-
-            <mat-card class="action-card" routerLink="/calendar">
-                <mat-card-content>
-                    <i class="fa-solid fa-calendar-days action-icon"></i>
-                    <h3>Match Calendar</h3>
-                    <p>View and schedule matches</p>
-                </mat-card-content>
-            </mat-card>
-
-            <mat-card class="action-card" routerLink="/games-history">
-                <mat-card-content>
-                    <i class="fa-solid fa-clock-rotate-left action-icon"></i>
-                    <h3>Game History</h3>
-                    <p>Review past matches</p>
-                </mat-card-content>
-            </mat-card>
-        </div>
-    </div>
-
-    <!-- Recent Games -->
-    <div class="recent-section" *ngIf="recentGames.length > 0">
-        <h2>Recent Games</h2>
-        <div class="recent-games">
-            <mat-card class="game-card" *ngFor="let game of recentGames">
-                <mat-card-content>
-                    <div class="game-header">
-                        <span class="game-date">{{ game.timestamp | date:'MMM dd' }}</span>
-                        <span class="game-status" [ngClass]="game.status">{{ game.status }}</span>
-                    </div>
-                    <div class="game-score">
-                        <div class="team">
-                            <span class="team-name">{{ game.homeTeam.name }}</span>
-                            <span class="score">{{ game.homeTeam.score }}</span>
-                        </div>
-                        <div class="vs">VS</div>
-                        <div class="team">
-                            <span class="team-name">{{ game.awayTeam.name }}</span>
-                            <span class="score">{{ game.awayTeam.score }}</span>
-                        </div>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-        </div>
-    </div>
-
-    <!-- Upcoming Matches -->
-    <div class="upcoming-section" *ngIf="upcomingMatches.length > 0">
-        <h2>Upcoming Matches</h2>
-        <div class="upcoming-matches">
-            <mat-card class="match-card" *ngFor="let match of upcomingMatches">
-                <mat-card-content>
-                    <div class="match-header">
-                        <div class="match-date">
-                            <i class="fa-solid fa-clock"></i>
-                            {{ match.date | date:'MMM dd, yyyy - HH:mm' }}
-                        </div>
-                        <div class="match-countdown">
-                            {{ getMatchDateDisplay(match.date) }}
-                        </div>
-                    </div>
-
-                    <!-- Match Type and Category Info -->
-                    <div class="match-info" [ngClass]="getMatchTypeClass(match.matchType)" *ngIf="match.matchType || match.homeTeamCategory">
-                        <div class="match-type" *ngIf="match.matchType">
-                            <mat-icon [style.color]="getMatchTypeColor(match.matchType)">
-                                {{ getMatchTypeIcon(match.matchType) }}
-                            </mat-icon>
-                            <span class="match-type-label">{{ formatMatchType(match.matchType) }}</span>
-                        </div>
-                        <div class="team-details" *ngIf="match.homeTeamCategory || match.homeTeamAgeLevel">
-                            <span class="team-category" *ngIf="match.homeTeamCategory">
-                                {{ formatTeamCategory(match.homeTeamCategory) }}
-                            </span>
-                            <span class="team-age" *ngIf="match.homeTeamAgeLevel">
-                                {{ match.homeTeamAgeLevel }}
-                            </span>
-                            <span class="vs-age"
-                                *ngIf="match.awayTeamAgeLevel && match.homeTeamAgeLevel !== match.awayTeamAgeLevel">
-                                vs {{ match.awayTeamAgeLevel }}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="match-teams">
-                        <div class="team home-team">
-                            <span class="team-name">{{ match.homeTeam }}</span>
-                            <span class="team-label">HOME</span>
-                        </div>
-                        <div class="vs-badge">VS</div>
-                        <div class="team away-team">
-                            <span class="team-name">{{ match.awayTeam }}</span>
-                            <span class="team-label">AWAY</span>
-                        </div>
-                    </div>
-
-                    <div class="match-venue">
-                        <i class="fa-solid fa-location-dot"></i>
-                        {{ match.venue }}
-                    </div>
-
-                    <div class="match-competition" *ngIf="match.competition">
-                        <i class="fa-solid fa-trophy"></i>
-                        {{ match.competition }}
-                    </div>
-
-                    <div class="match-status">
-                        <span class="status-badge" [ngClass]="match.status">{{ match.status | titlecase }}</span>
-                        <div class="days-until" *ngIf="match.date">
-                            {{ getCountdownDisplay(match.date) }}
-                        </div>
-                    </div>
-
-                    <div class="match-actions">
-                        <button mat-stroked-button color="primary">
-                            <i class="fa-solid fa-football fa-sm"></i>
-                            Start Match
-                        </button>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-        </div>
-    </div>
-
-    <!-- App Features -->
-    <div class="features-section">
-        <h2>Features</h2>
-        <div class="features-grid">
-            <div class="feature-item">
-                <i class="fa-solid fa-stopwatch"></i>
-                <h3>Real-time Scoring</h3>
-                <p>Track scores as they happen with built-in timer</p>
-            </div>
-
-            <div class="feature-item">
-                <i class="fa-solid fa-mobile-screen"></i>
-                <h3>Mobile Optimized</h3>
-                <p>Perfect for sideline use during matches</p>
-            </div>
-
-            <div class="feature-item">
-                <i class="fa-solid fa-chart-line"></i>
-                <h3>Match Statistics</h3>
-                <p>Detailed breakdown of tries, penalties, and more</p>
-            </div>
-
-            <div class="feature-item">
-                <i class="fa-solid fa-wifi-slash"></i>
-                <h3>Works Offline</h3>
-                <p>No internet required for basic functionality</p>
-            </div>
-        </div>
-    </div>
+  <!-- Debug Section - Remove in production -->
+  <div class="debug-section" style="margin-top: 2rem; padding: 1rem; background: #f5f5f5; border-radius: 8px;">
+    <h3>Debug Tools</h3>
+    <button mat-raised-button color="accent" (click)="createTestMatch()" style="margin-right: 1rem;">
+      Create Test Match
+    </button>
+    <button mat-raised-button color="primary" (click)="loadDashboardData()">
+      Reload Dashboard
+    </button>
+    <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+      Total matches in storage: {{ upcomingMatches.length }}
+    </p>
+  </div>
 </div>

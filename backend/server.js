@@ -65,6 +65,15 @@ app.use(
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Request logging middleware for debugging
+app.use((req, res, next) => {
+  console.log(`🌐 ${req.method} ${req.url}`);
+  if (req.method === 'POST' && req.url.includes('/matches')) {
+    console.log('📦 POST /matches body:', JSON.stringify(req.body, null, 2));
+  }
+  next();
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({
