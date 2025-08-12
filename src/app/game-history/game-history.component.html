@@ -193,6 +193,10 @@
                         <div class="team home-team">
                             <div class="team-info">
                                 <h3 class="team-name">{{ match.homeTeam }}</h3>
+                                <div class="team-details" *ngIf="match.homeTeamCategory && match.homeTeamAgeLevel">
+                                    <span class="team-category">{{ formatTeamCategory(match.homeTeamCategory) }}</span>
+                                    <span class="team-age">{{ match.homeTeamAgeLevel }}</span>
+                                </div>
                                 <span class="team-label">Home</span>
                             </div>
                             <div class="team-score" *ngIf="match.status === 'completed'">
@@ -208,6 +212,10 @@
                         <div class="team away-team">
                             <div class="team-info">
                                 <h3 class="team-name">{{ match.awayTeam }}</h3>
+                                <div class="team-details" *ngIf="match.awayTeamCategory && match.awayTeamAgeLevel">
+                                    <span class="team-category">{{ formatTeamCategory(match.awayTeamCategory) }}</span>
+                                    <span class="team-age">{{ match.awayTeamAgeLevel }}</span>
+                                </div>
                                 <span class="team-label">Away</span>
                             </div>
                             <div class="team-score" *ngIf="match.status === 'completed'">
