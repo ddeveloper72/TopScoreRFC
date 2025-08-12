@@ -158,7 +158,13 @@
         Cancel
       </button>
 
-      <button mat-raised-button color="primary" type="submit" [disabled]="bookingForm.invalid" class="submit-button">
+      <!-- Debug button (temporary) -->
+      <button mat-button type="button" (click)="debugFormValidation()" *ngIf="data.isEdit">
+        Debug
+      </button>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="!isSubmitButtonEnabled()"
+        class="submit-button">
         <mat-icon>{{ data.isEdit ? 'save' : 'add' }}</mat-icon>
         {{ data.isEdit ? 'Update Match' : 'Book Match' }}
       </button>
