@@ -94,11 +94,8 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
   // Cached team categories for the current match type
   currentTeamCategories: { value: string; label: string }[] = [];
 
-  // Cached age levels for the current team categories
-  currentHomeAgelevels: string[] = [];
-  currentAwayAgeLevels: string[] = [];
-
-  // Team categories based on match type
+  // Cached age levels for the home team category
+  currentHomeAgelevels: string[] = []; // Team categories based on match type
   getTeamCategoriesForMatchType(matchType: string) {
     switch (matchType) {
       case 'boys':
@@ -167,8 +164,7 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
       homeTeamCategory: ['', Validators.required],
       homeTeamAgeLevel: ['', Validators.required],
       awayTeam: ['', [Validators.required, Validators.minLength(2)]],
-      awayTeamCategory: ['', Validators.required],
-      awayTeamAgeLevel: ['', Validators.required],
+      awayTeamAgeLevel: ['', Validators.required], // Required age level for away team
       date: ['', [Validators.required, this.dateRangeValidator.bind(this)]],
       time: ['', [Validators.required]],
       venue: ['', [Validators.required, Validators.minLength(2)]],
@@ -258,8 +254,7 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
         homeTeamCategory: match.homeTeamCategory || '',
         homeTeamAgeLevel: match.homeTeamAgeLevel || '',
         awayTeam: match.awayTeam,
-        awayTeamCategory: match.awayTeamCategory || '',
-        awayTeamAgeLevel: match.awayTeamAgeLevel || '',
+        awayTeamAgeLevel: match.awayTeamAgeLevel || '', // Handle away team age level
         date: matchDate,
         time: this.formatTimeForInput(matchDate),
         venue: match.venue,
@@ -273,13 +268,9 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
 
       // Set default team categories if not present (for backward compatibility)
       let homeTeamCategory = match.homeTeamCategory;
-      let awayTeamCategory = match.awayTeamCategory;
 
       if (!homeTeamCategory && matchType === 'mixed') {
         homeTeamCategory = 'seniors'; // Default category for mixed matches
-      }
-      if (!awayTeamCategory && matchType === 'mixed') {
-        awayTeamCategory = 'seniors'; // Default category for mixed matches
       }
 
       if (homeTeamCategory) {
@@ -290,14 +281,6 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
           this.bookingForm.patchValue({ homeTeamCategory: homeTeamCategory });
         }
       }
-      if (awayTeamCategory) {
-        this.currentAwayAgeLevels =
-          this.getAgeLevelsForCategory(awayTeamCategory);
-        // Update form if we set a default
-        if (!match.awayTeamCategory) {
-          this.bookingForm.patchValue({ awayTeamCategory: awayTeamCategory });
-        }
-      }
 
       // Set default age levels if not present
       if (!match.homeTeamAgeLevel && homeTeamCategory) {
@@ -305,9 +288,13 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
           this.getAgeLevelsForCategory(homeTeamCategory)[0] || 'Adults';
         this.bookingForm.patchValue({ homeTeamAgeLevel: defaultAgeLevel });
       }
-      if (!match.awayTeamAgeLevel && awayTeamCategory) {
+
+      // Set default away team age level if not present (same as home team)
+      if (!match.awayTeamAgeLevel && homeTeamCategory) {
         const defaultAgeLevel =
-          this.getAgeLevelsForCategory(awayTeamCategory)[0] || 'Adults';
+          match.homeTeamAgeLevel ||
+          this.getAgeLevelsForCategory(homeTeamCategory)[0] ||
+          'Adults';
         this.bookingForm.patchValue({ awayTeamAgeLevel: defaultAgeLevel });
       }
 
@@ -388,39 +375,28 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
 
     // Reset age levels cache
     this.currentHomeAgelevels = [];
-    this.currentAwayAgeLevels = [];
 
-    // Reset both teams' category and age level selections when match type changes
+    // Reset home team's category and age level selections when match type changes
     this.bookingForm.patchValue({
       homeTeamCategory: '',
       homeTeamAgeLevel: '',
-      awayTeamCategory: '',
-      awayTeamAgeLevel: '',
+      awayTeamAgeLevel: '', // Also reset away team age level
     });
   }
 
   // Handle team category changes and reset age level
-  onTeamCategoryChange(teamType: 'home' | 'away'): void {
-    const categoryField =
-      teamType === 'home' ? 'homeTeamCategory' : 'awayTeamCategory';
-    const ageLevelField =
-      teamType === 'home' ? 'homeTeamAgeLevel' : 'awayTeamAgeLevel';
+  onTeamCategoryChange(teamType: 'home'): void {
+    // Get the selected category for home team only
+    const selectedCategory = this.bookingForm.get('homeTeamCategory')?.value;
 
-    // Get the selected category
-    const selectedCategory = this.bookingForm.get(categoryField)?.value;
+    // Update cached age levels for home team
+    this.currentHomeAgelevels = this.getAgeLevelsForCategory(selectedCategory);
 
-    // Update cached age levels
-    if (teamType === 'home') {
-      this.currentHomeAgelevels =
-        this.getAgeLevelsForCategory(selectedCategory);
-    } else {
-      this.currentAwayAgeLevels =
-        this.getAgeLevelsForCategory(selectedCategory);
-    }
-
-    // Reset age level when category changes
+    // Reset both home and away age levels when home category changes
+    // (since away age options depend on home team category)
     this.bookingForm.patchValue({
-      [ageLevelField]: '',
+      homeTeamAgeLevel: '',
+      awayTeamAgeLevel: '',
     });
   }
 
@@ -656,8 +632,7 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
           homeTeamCategory: formValue.homeTeamCategory,
           homeTeamAgeLevel: formValue.homeTeamAgeLevel,
           awayTeam: formValue.awayTeam,
-          awayTeamCategory: formValue.awayTeamCategory,
-          awayTeamAgeLevel: formValue.awayTeamAgeLevel,
+          awayTeamAgeLevel: formValue.awayTeamAgeLevel, // Away team age level from dropdown
           date: this.combineDateTime(),
           venue: formValue.venue,
           competition: formValue.competition,
