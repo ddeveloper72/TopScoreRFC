@@ -1,7 +1,7 @@
 const Match = require('../models/Match');
 
 exports.createMatch = async (req, res) => {
-  console.log('🏉 CREATE MATCH REQUEST RECEIVED');
+  console.log('🏉 CREATE MATCH REQUEST RECEIVED - Updated with new fields');
   console.log('Body:', req.body);
 
   try {

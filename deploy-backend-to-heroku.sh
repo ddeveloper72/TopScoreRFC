@@ -31,7 +31,7 @@ git commit -m "Add new match type fields: matchType, homeTeamCategory, homeTeamA
 
 # Push to Heroku
 echo "🚀 Pushing to Heroku..."
-git push heroku main --force
+git push heroku master --force
 
 echo "✅ Deployment complete!"
-echo "🔍 You can check your app at: https://rugbyappbackend-4014b68ac4bb.herokuapp.com/"
+echo "🔍 You can check your app at: https://rugbyappbackend.herokuapp.com/"
