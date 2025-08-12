@@ -188,6 +188,10 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
         competition: match.competition || '',
         status: match.status,
       });
+
+      // Mark the form as pristine after populating it with existing data
+      this.bookingForm.markAsPristine();
+      this.bookingForm.markAsUntouched();
     } else if (this.data?.selectedDate) {
       // Pre-populate date when creating a new match for a specific date
       this.bookingForm.patchValue({
@@ -321,7 +325,8 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    if (selectedDate < today) {
+    // In edit mode, allow past dates (for historical matches)
+    if (!this.data?.isEdit && selectedDate < today) {
       return { pastDate: true };
     }
 
@@ -524,6 +529,34 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
       // No changes, close directly
       this.dialogRef.close();
     }
+  }
+
+  /**
+   * Check if the submit button should be enabled
+   */
+  isSubmitButtonEnabled(): boolean {
+    // For edit mode, enable if form is valid (ignore dirty state)
+    if (this.data?.isEdit) {
+      return this.bookingForm.valid;
+    }
+    // For new matches, enable if form is valid
+    return this.bookingForm.valid;
+  }
+
+  /**
+   * Debug method to check form validation status
+   */
+  debugFormValidation(): void {
+    console.log('Form valid:', this.bookingForm.valid);
+    console.log('Form dirty:', this.bookingForm.dirty);
+    console.log('Form errors:', this.bookingForm.errors);
+
+    Object.keys(this.bookingForm.controls).forEach((key) => {
+      const control = this.bookingForm.get(key);
+      if (control && control.invalid) {
+        console.log(`${key} errors:`, control.errors);
+      }
+    });
   }
 
   /**
