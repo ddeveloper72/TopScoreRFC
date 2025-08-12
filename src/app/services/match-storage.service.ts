@@ -8,8 +8,7 @@ export interface Match {
   homeTeamCategory?: string; // e.g., 'minis', 'youths-boys', 'girls', 'seniors', 'womens-tag'
   homeTeamAgeLevel?: string; // e.g., 'U12', 'U16', 'Adults'
   awayTeam: string;
-  awayTeamCategory?: string;
-  awayTeamAgeLevel?: string;
+  awayTeamAgeLevel?: string; // Same age level options as home team category
   date: Date;
   venue: string; // Keep as string for backward compatibility, but can also store VenueLocation
   venueDetails?: {
