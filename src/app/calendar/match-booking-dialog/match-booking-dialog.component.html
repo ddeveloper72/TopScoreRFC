@@ -43,9 +43,7 @@
                 <mat-label>Team Category</mat-label>
                 <mat-select formControlName="homeTeamCategory" (selectionChange)="onTeamCategoryChange('home')"
                   [disabled]="!bookingForm.get('matchType')?.value">
-                  <mat-option
-                    *ngFor="let category of currentTeamCategories"
-                    [value]="category.value">
+                  <mat-option *ngFor="let category of currentTeamCategories" [value]="category.value">
                     {{ category.label }}
                   </mat-option>
                 </mat-select>
@@ -57,8 +55,7 @@
               <mat-form-field appearance="outline" class="team-field">
                 <mat-label>Age Level</mat-label>
                 <mat-select formControlName="homeTeamAgeLevel" [disabled]="!bookingForm.get('homeTeamCategory')?.value">
-                  <mat-option *ngFor="let age of currentHomeAgelevels"
-                    [value]="age">
+                  <mat-option *ngFor="let age of currentHomeAgelevels" [value]="age">
                     {{ age }}
                   </mat-option>
                 </mat-select>
@@ -87,9 +84,7 @@
                 <mat-label>Team Category</mat-label>
                 <mat-select formControlName="awayTeamCategory" (selectionChange)="onTeamCategoryChange('away')"
                   [disabled]="!bookingForm.get('matchType')?.value">
-                  <mat-option
-                    *ngFor="let category of currentTeamCategories"
-                    [value]="category.value">
+                  <mat-option *ngFor="let category of currentTeamCategories" [value]="category.value">
                     {{ category.label }}
                   </mat-option>
                 </mat-select>
@@ -101,8 +96,7 @@
               <mat-form-field appearance="outline" class="team-field">
                 <mat-label>Age Level</mat-label>
                 <mat-select formControlName="awayTeamAgeLevel" [disabled]="!bookingForm.get('awayTeamCategory')?.value">
-                  <mat-option *ngFor="let age of currentAwayAgeLevels"
-                    [value]="age">
+                  <mat-option *ngFor="let age of currentAwayAgeLevels" [value]="age">
                     {{ age }}
                   </mat-option>
                 </mat-select>
