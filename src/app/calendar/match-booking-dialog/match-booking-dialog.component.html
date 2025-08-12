@@ -73,33 +73,23 @@
             <div class="team-column">
               <mat-form-field appearance="outline" class="team-field">
                 <mat-label>Away Team</mat-label>
-                <input matInput formControlName="awayTeam" placeholder="Enter away team name" (blur)="teamsValidator()">
+                <input matInput formControlName="awayTeam" placeholder="e.g. Naas RFC U14 Boys"
+                  (blur)="teamsValidator()">
                 <span matSuffix class="field-icon" aria-hidden="true"><i class="fa-solid fa-plane-departure"></i></span>
                 <mat-error *ngIf="hasError('awayTeam')">
                   {{ getErrorMessage('awayTeam') }}
                 </mat-error>
               </mat-form-field>
 
+              <!-- Away Team Age Level -->
               <mat-form-field appearance="outline" class="team-field">
-                <mat-label>Team Category</mat-label>
-                <mat-select formControlName="awayTeamCategory" (selectionChange)="onTeamCategoryChange('away')"
-                  [disabled]="!bookingForm.get('matchType')?.value">
-                  <mat-option *ngFor="let category of currentTeamCategories" [value]="category.value">
-                    {{ category.label }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="hasError('awayTeamCategory')">
-                  {{ getErrorMessage('awayTeamCategory') }}
-                </mat-error>
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="team-field">
-                <mat-label>Age Level</mat-label>
-                <mat-select formControlName="awayTeamAgeLevel" [disabled]="!bookingForm.get('awayTeamCategory')?.value">
-                  <mat-option *ngFor="let age of currentAwayAgeLevels" [value]="age">
+                <mat-label>Away Team Age Level</mat-label>
+                <mat-select formControlName="awayTeamAgeLevel" [disabled]="!bookingForm.get('homeTeamCategory')?.value">
+                  <mat-option *ngFor="let age of currentHomeAgelevels" [value]="age">
                     {{ age }}
                   </mat-option>
                 </mat-select>
+                <mat-hint>Select the age level of the opposing team</mat-hint>
                 <mat-error *ngIf="hasError('awayTeamAgeLevel')">
                   {{ getErrorMessage('awayTeamAgeLevel') }}
                 </mat-error>
