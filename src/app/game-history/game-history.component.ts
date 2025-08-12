@@ -329,6 +329,23 @@ export class GameHistoryComponent implements OnInit {
     });
   }
 
+  formatTeamCategory(category: string): string {
+    switch (category) {
+      case 'minis':
+        return 'Minis';
+      case 'youths-boys':
+        return 'Youths';
+      case 'girls':
+        return 'Girls';
+      case 'seniors':
+        return 'Seniors';
+      case 'womens-tag':
+        return "Women's Tag";
+      default:
+        return category;
+    }
+  }
+
   getMatchTypeColor(competition?: string): string {
     if (!competition) return 'primary';
 
