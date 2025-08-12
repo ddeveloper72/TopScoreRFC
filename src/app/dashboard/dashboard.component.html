@@ -101,17 +101,68 @@
         <div class="upcoming-matches">
             <mat-card class="match-card" *ngFor="let match of upcomingMatches">
                 <mat-card-content>
-                    <div class="match-date">
-                        <i class="fa-solid fa-clock"></i>
-                        {{ match.date | date:'MMM dd, yyyy' }}
+                    <div class="match-header">
+                        <div class="match-date">
+                            <i class="fa-solid fa-clock"></i>
+                            {{ match.date | date:'MMM dd, yyyy - HH:mm' }}
+                        </div>
+                        <div class="match-countdown">
+                            {{ (match.date | date:'mediumDate') === (new Date() | date:'mediumDate') ? 'Today' : 
+                                 (match.date | date:'fullDate') | slice:0:3 }}
+                        </div>
                     </div>
+
+                    <!-- Match Type and Category Info -->
+                    <div class="match-info" *ngIf="match.matchType || match.homeTeamCategory">
+                        <div class="match-type" *ngIf="match.matchType">
+                            <mat-icon [style.color]="getMatchTypeColor(match.matchType)">
+                                {{ getMatchTypeIcon(match.matchType) }}
+                            </mat-icon>
+                            <span class="match-type-label">{{ formatMatchType(match.matchType) }}</span>
+                        </div>
+                        <div class="team-details" *ngIf="match.homeTeamCategory || match.homeTeamAgeLevel">
+                            <span class="team-category" *ngIf="match.homeTeamCategory">
+                                {{ formatTeamCategory(match.homeTeamCategory) }}
+                            </span>
+                            <span class="team-age" *ngIf="match.homeTeamAgeLevel">
+                                {{ match.homeTeamAgeLevel }}
+                            </span>
+                            <span class="vs-age" *ngIf="match.awayTeamAgeLevel && match.homeTeamAgeLevel !== match.awayTeamAgeLevel">
+                                vs {{ match.awayTeamAgeLevel }}
+                            </span>
+                        </div>
+                    </div>
+
                     <div class="match-teams">
-                        {{ match.homeTeam }} vs {{ match.awayTeam }}
+                        <div class="team home-team">
+                            <span class="team-name">{{ match.homeTeam }}</span>
+                            <span class="team-label">HOME</span>
+                        </div>
+                        <div class="vs-badge">VS</div>
+                        <div class="team away-team">
+                            <span class="team-name">{{ match.awayTeam }}</span>
+                            <span class="team-label">AWAY</span>
+                        </div>
                     </div>
+
                     <div class="match-venue">
                         <i class="fa-solid fa-location-dot"></i>
                         {{ match.venue }}
                     </div>
+
+                    <div class="match-competition" *ngIf="match.competition">
+                        <i class="fa-solid fa-trophy"></i>
+                        {{ match.competition }}
+                    </div>
+
+                    <div class="match-status">
+                        <span class="status-badge" [ngClass]="match.status">{{ match.status | titlecase }}</span>
+                        <div class="days-until" *ngIf="match.date">
+                            {{ ((match.date | date:'yyyy-MM-dd') === (new Date() | date:'yyyy-MM-dd')) ? 'Today' : 
+                                 (Math.ceil((match.date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))) + ' days' }}
+                        </div>
+                    </div>
+
                     <div class="match-actions">
                         <button mat-stroked-button color="primary">
                             <i class="fa-solid fa-football fa-sm"></i>
