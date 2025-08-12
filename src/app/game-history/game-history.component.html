@@ -229,8 +229,10 @@
 
                         <!-- Match Type Information -->
                         <div class="info-row match-type-info" *ngIf="match.matchType">
-                            <mat-icon [style.color]="match.matchType === 'girls' ? '#e91e63' : match.matchType === 'boys' ? '#2196f3' : '#4caf50'">
-                                {{ match.matchType === 'girls' ? 'female' : match.matchType === 'boys' ? 'male' : 'groups' }}
+                            <mat-icon
+                                [style.color]="match.matchType === 'girls' ? '#e91e63' : match.matchType === 'boys' ? '#2196f3' : '#4caf50'">
+                                {{ match.matchType === 'girls' ? 'female' : match.matchType === 'boys' ? 'male' :
+                                'groups' }}
                             </mat-icon>
                             <span class="match-type-label">{{ formatMatchType(match.matchType) }}</span>
                         </div>
