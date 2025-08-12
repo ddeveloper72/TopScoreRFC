@@ -78,9 +78,10 @@
                     <mat-form-field appearance="outline">
                         <mat-label>Status</mat-label>
                         <mat-select [(ngModel)]="filter.status" (selectionChange)="onFilterChange()">
-                            <mat-option value="all">All Games</mat-option>
+                            <mat-option value="all">All Matches</mat-option>
                             <mat-option value="completed">Completed</mat-option>
-                            <mat-option value="active">Active</mat-option>
+                            <mat-option value="scheduled">Scheduled</mat-option>
+                            <mat-option value="cancelled">Cancelled</mat-option>
                         </mat-select>
                     </mat-form-field>
 
@@ -90,6 +91,7 @@
                         <mat-select [(ngModel)]="filter.sortBy" (selectionChange)="onFilterChange()">
                             <mat-option value="date">Date</mat-option>
                             <mat-option value="teams">Teams</mat-option>
+                            <mat-option value="venue">Venue</mat-option>
                             <mat-option value="score">Total Score</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -107,12 +109,13 @@
 
                 <!-- Action Buttons -->
                 <div class="action-buttons">
-                    <button mat-raised-button color="primary" (click)="exportAllGames()"
-                        [disabled]="games.length === 0">
+                    <button mat-raised-button color="primary" (click)="exportAllMatches()"
+                        [disabled]="matches.length === 0">
                         <mat-icon>download</mat-icon>
                         Export All
                     </button>
-                    <button mat-raised-button color="warn" (click)="clearAllGames()" [disabled]="games.length === 0">
+                    <button mat-raised-button color="warn" (click)="clearAllMatches()"
+                        [disabled]="matches.length === 0">
                         <mat-icon>delete_sweep</mat-icon>
                         Clear All
                     </button>
@@ -121,20 +124,20 @@
         </mat-card>
     </div>
 
-    <!-- Games List -->
-    <div class="games-section">
+    <!-- Matches List -->
+    <div class="matches-section">
 
-        <!-- No Games Message -->
-        <div class="no-games" *ngIf="filteredGames.length === 0 && games.length === 0">
-            <mat-card class="no-games-card">
+        <!-- No Matches Message -->
+        <div class="no-matches" *ngIf="filteredMatches.length === 0 && matches.length === 0">
+            <mat-card class="no-matches-card">
                 <mat-card-content>
-                    <div class="no-games-content">
-                        <app-rugby-ball-gray size="64" class="no-games-icon"></app-rugby-ball-gray>
-                        <h3>No Games Yet</h3>
-                        <p>Start playing some rugby matches to see your game history here!</p>
-                        <button mat-raised-button color="primary" routerLink="/score-tracker">
-                            <mat-icon>play_arrow</mat-icon>
-                            Start New Game
+                    <div class="no-matches-content">
+                        <app-rugby-ball-gray size="64" class="no-matches-icon"></app-rugby-ball-gray>
+                        <h3>No Matches Yet</h3>
+                        <p>Schedule some rugby matches to see your match history here!</p>
+                        <button mat-raised-button color="primary" routerLink="/calendar">
+                            <mat-icon>event</mat-icon>
+                            Schedule Match
                         </button>
                     </div>
                 </mat-card-content>
@@ -142,12 +145,12 @@
         </div>
 
         <!-- No Results Message -->
-        <div class="no-results" *ngIf="filteredGames.length === 0 && games.length > 0">
+        <div class="no-results" *ngIf="filteredMatches.length === 0 && matches.length > 0">
             <mat-card class="no-results-card">
                 <mat-card-content>
                     <div class="no-results-content">
                         <mat-icon class="no-results-icon">search_off</mat-icon>
-                        <h3>No Games Found</h3>
+                        <h3>No Matches Found</h3>
                         <p>Try adjusting your search or filter criteria.</p>
                         <button mat-stroked-button (click)="clearSearch()">
                             <mat-icon>clear_all</mat-icon>
@@ -158,81 +161,161 @@
             </mat-card>
         </div>
 
-        <!-- Games Grid -->
-        <div class="games-grid" *ngIf="filteredGames.length > 0">
-            <mat-card class="game-card" *ngFor="let game of filteredGames">
-                <mat-card-header>
-                    <div class="game-date">
-                        <mat-icon>schedule</mat-icon>
-                        {{ formatDate(game.timestamp) }}
+        <!-- Enhanced Match Cards Grid -->
+        <div class="matches-grid" *ngIf="filteredMatches.length > 0">
+            <mat-card class="enhanced-match-card" *ngFor="let match of filteredMatches"
+                (click)="openMatchDetails(match)">
+
+                <!-- Card Header with Date and Status -->
+                <mat-card-header class="match-header">
+                    <div class="match-date-section">
+                        <div class="match-date">
+                            <mat-icon>event</mat-icon>
+                            <span>{{ formatDate(match.date) }}</span>
+                        </div>
+                        <div class="match-time">
+                            {{ formatTime(match.date) }}
+                        </div>
                     </div>
-                    <div class="game-status">
-                        <mat-chip [color]="getStatusColor(game.status)">
-                            <mat-icon>{{ getStatusIcon(game.status) }}</mat-icon>
-                            {{ game.status | titlecase }}
+
+                    <div class="match-status-section">
+                        <mat-chip [color]="getStatusColor(match.status)" selected>
+                            <mat-icon>{{ getStatusIcon(match.status) }}</mat-icon>
+                            {{ match.status | titlecase }}
                         </mat-chip>
                     </div>
                 </mat-card-header>
 
-                <mat-card-content>
-                    <!-- Game Score -->
-                    <div class="game-score">
+                <mat-card-content class="match-content">
+
+                    <!-- Teams and Score Display -->
+                    <div class="teams-display">
                         <div class="team home-team">
-                            <div class="team-name">{{ game.homeTeam.name }}</div>
-                            <div class="team-score">{{ game.homeTeam.score }}</div>
+                            <div class="team-info">
+                                <h3 class="team-name">{{ match.homeTeam }}</h3>
+                                <span class="team-label">Home</span>
+                            </div>
+                            <div class="team-score" *ngIf="match.status === 'completed'">
+                                {{ match.homeScore || 0 }}
+                            </div>
                         </div>
 
-                        <div class="vs-divider">
-                            <app-rugby-ball-accent size="24" [rotation]="45" class="vs-icon"></app-rugby-ball-accent>
+                        <div class="vs-section">
+                            <app-rugby-ball-accent size="32" [rotation]="15" class="vs-icon"></app-rugby-ball-accent>
                             <div class="vs-text">VS</div>
                         </div>
 
                         <div class="team away-team">
-                            <div class="team-name">{{ game.awayTeam.name }}</div>
-                            <div class="team-score">{{ game.awayTeam.score }}</div>
+                            <div class="team-info">
+                                <h3 class="team-name">{{ match.awayTeam }}</h3>
+                                <span class="team-label">Away</span>
+                            </div>
+                            <div class="team-score" *ngIf="match.status === 'completed'">
+                                {{ match.awayScore || 0 }}
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Game Details -->
-                    <div class="game-details">
-                        <div class="detail-item">
-                            <mat-icon>timer</mat-icon>
-                            <span>Duration: {{ getGameDuration(game) }}</span>
+                    <!-- Match Details Info -->
+                    <div class="match-info">
+
+                        <!-- Venue Information -->
+                        <div class="info-row venue-info">
+                            <mat-icon>location_on</mat-icon>
+                            <div class="venue-details">
+                                <span class="venue-name">{{ match.venue }}</span>
+                                <span class="venue-address" *ngIf="match.venueDetails?.formattedAddress">
+                                    {{ match.venueDetails?.formattedAddress }}
+                                </span>
+                            </div>
                         </div>
 
-                        <div class="detail-item" *ngIf="getWinner(game) !== 'Draw'">
-                            <mat-icon color="accent">emoji_events</mat-icon>
-                            <span>Winner: {{ getWinner(game) }} (+{{ getScoreDifference(game) }})</span>
+                        <!-- Competition Information -->
+                        <div class="info-row competition-info" *ngIf="match.competition">
+                            <mat-icon
+                                [style.color]="getMatchTypeColor(match.competition) === 'warn' ? '#ff9800' : '#1976d2'">
+                                emoji_events
+                            </mat-icon>
+                            <span class="competition-name">{{ match.competition }}</span>
                         </div>
 
-                        <div class="detail-item" *ngIf="getWinner(game) === 'Draw'">
-                            <mat-icon>balance</mat-icon>
-                            <span>Match ended in a draw</span>
+                        <!-- Result Information (for completed matches) -->
+                        <div class="info-row result-info" *ngIf="match.status === 'completed'">
+                            <mat-icon [style.color]="getWinner(match) === 'Draw' ? '#ff9800' : '#4caf50'">
+                                {{ getWinner(match) === 'Draw' ? 'balance' : 'emoji_events' }}
+                            </mat-icon>
+                            <span class="result-text">
+                                <ng-container *ngIf="getWinner(match) === 'Draw'">
+                                    Match ended in a draw ({{ getTotalScore(match) }} total points)
+                                </ng-container>
+                                <ng-container *ngIf="getWinner(match) !== 'Draw' && getWinner(match) !== 'TBD'">
+                                    {{ getWinner(match) }} won by {{ getScoreDifference(match) }} points
+                                </ng-container>
+                            </span>
                         </div>
 
-                        <div class="detail-item" *ngIf="game.scoreHistory?.length">
-                            <mat-icon>history</mat-icon>
-                            <span>{{ game.scoreHistory.length }} scoring events</span>
-                        </div>
                     </div>
+
+                    <!-- Interactive Elements Indicators -->
+                    <div class="interaction-indicators" *ngIf="match.status === 'completed'">
+                        <mat-chip-set class="indicator-chips">
+                            <mat-chip class="indicator-chip" *ngIf="hasNotes(match.id)" color="primary" selected>
+                                <mat-icon>note</mat-icon>
+                                Notes
+                            </mat-chip>
+                            <mat-chip class="indicator-chip" *ngIf="hasPhotos(match.id)" color="accent" selected>
+                                <mat-icon>photo_library</mat-icon>
+                                Photos
+                            </mat-chip>
+                            <mat-chip class="indicator-chip view-details" color="primary" selected>
+                                <mat-icon>visibility</mat-icon>
+                                View Details
+                            </mat-chip>
+                        </mat-chip-set>
+                    </div>
+
                 </mat-card-content>
 
-                <mat-card-actions>
-                    <button mat-icon-button [matMenuTriggerFor]="gameMenu" [matTooltip]="'Game options'">
-                        <mat-icon>more_vert</mat-icon>
-                    </button>
+                <!-- Card Actions -->
+                <mat-card-actions class="match-actions">
+                    <div class="action-buttons-left">
+                        <button mat-icon-button [matTooltip]="'View match details'"
+                            (click)="openMatchDetails(match); $event.stopPropagation()">
+                            <mat-icon>open_in_new</mat-icon>
+                        </button>
 
-                    <mat-menu #gameMenu="matMenu">
-                        <button mat-menu-item (click)="exportGame(game)">
+                        <button mat-icon-button [matTooltip]="'Export match data'"
+                            (click)="exportMatch(match); $event.stopPropagation()">
                             <mat-icon>download</mat-icon>
-                            <span>Export Game</span>
                         </button>
-                        <button mat-menu-item (click)="deleteGame(game.id)" class="danger-action">
-                            <mat-icon>delete</mat-icon>
-                            <span>Delete Game</span>
+                    </div>
+
+                    <div class="action-buttons-right">
+                        <button mat-icon-button [matMenuTriggerFor]="matchMenu" [matTooltip]="'More options'"
+                            (click)="$event.stopPropagation()">
+                            <mat-icon>more_vert</mat-icon>
                         </button>
-                    </mat-menu>
+
+                        <mat-menu #matchMenu="matMenu">
+                            <button mat-menu-item (click)="openMatchDetails(match)">
+                                <mat-icon>visibility</mat-icon>
+                                <span>View Details</span>
+                            </button>
+                            <button mat-menu-item (click)="exportMatch(match)">
+                                <mat-icon>download</mat-icon>
+                                <span>Export Match</span>
+                            </button>
+                            <button mat-menu-item (click)="deleteMatch(match.id)" class="danger-action">
+                                <mat-icon>delete</mat-icon>
+                                <span>Delete Match</span>
+                            </button>
+                        </mat-menu>
+                    </div>
                 </mat-card-actions>
+
+                <!-- Hover Effect Overlay -->
+                <div class="card-hover-overlay"></div>
+
             </mat-card>
         </div>
     </div>
