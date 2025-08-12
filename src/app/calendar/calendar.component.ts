@@ -209,7 +209,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
       if (confirmed) {
         // Delete from both API (database) and local storage
         const matchId = match._id || match.id; // Use MongoDB ID if available
-        
+
         this.matchApi.deleteMatch(matchId).subscribe({
           next: () => {
             // Successfully deleted from API, now remove from local storage
@@ -222,10 +222,14 @@ export class CalendarComponent implements OnInit, OnDestroy {
             console.error('Failed to delete match from API:', error);
             // Still try to remove from local storage for UI consistency
             this.matchStorageService.deleteMatch(match.id);
-            this.snackBar.open('Match deleted locally (API error).', undefined, {
-              duration: 3000,
-            });
-          }
+            this.snackBar.open(
+              'Match deleted locally (API error).',
+              undefined,
+              {
+                duration: 3000,
+              }
+            );
+          },
         });
       }
     });
