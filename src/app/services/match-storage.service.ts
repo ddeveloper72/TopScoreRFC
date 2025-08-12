@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface Match {
   id: string;
+  matchType?: string; // 'boys', 'girls', 'mixed'
   homeTeam: string;
   homeTeamCategory?: string; // e.g., 'minis', 'youths-boys', 'girls', 'seniors', 'womens-tag'
   homeTeamAgeLevel?: string; // e.g., 'U12', 'U16', 'Adults'
