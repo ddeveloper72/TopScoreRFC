@@ -169,17 +169,10 @@
             </button>
           </div>
 
-          <!-- Debug Information -->
-          <div class="debug-info"
-            style="margin-top: 12px; padding: 8px; background-color: #f5f5f5; border-radius: 4px; font-size: 12px; color: #666;">
-            <div><strong>Debug Info:</strong></div>
-            <div><strong>ID:</strong> {{ match._id || 'No ID' }}</div>
-            <div><strong>Updated:</strong> {{ match.updatedAt ? (match.updatedAt | date:'MMM dd, yyyy - HH:mm:ss') : 'No
-              timestamp' }}</div>
-            <div><strong>Match Type:</strong> {{ match.matchType || 'Not set' }}</div>
-            <div><strong>Home Category:</strong> {{ match.homeTeamCategory || 'Not set' }}</div>
-            <div><strong>Home Age:</strong> {{ match.homeTeamAgeLevel || 'Not set' }}</div>
-            <div><strong>Away Age:</strong> {{ match.awayTeamAgeLevel || 'Not set' }}</div>
+          <!-- Database ID for reference -->
+          <div class="match-id" 
+            style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999; opacity: 0.7;">
+            {{ match._id || match.id }}
           </div>
         </mat-card-content>
       </mat-card>
