@@ -11,27 +11,83 @@
         <div class="team-section">
           <h3>Teams</h3>
           <div class="team-inputs">
-            <mat-form-field appearance="outline" class="team-field">
-              <mat-label>Home Team</mat-label>
-              <span matPrefix class="field-icon" aria-hidden="true"><i class="fa-solid fa-house-chimney"></i></span>
-              <input matInput formControlName="homeTeam" placeholder="Enter home team name" (blur)="teamsValidator()">
-              <mat-error *ngIf="hasError('homeTeam')">
-                {{ getErrorMessage('homeTeam') }}
-              </mat-error>
-            </mat-form-field>
+            <!-- Home Team Column -->
+            <div class="team-column">
+              <mat-form-field appearance="outline" class="team-field">
+                <mat-label>Home Team</mat-label>
+                <span matPrefix class="field-icon" aria-hidden="true"><i class="fa-solid fa-house-chimney"></i></span>
+                <input matInput formControlName="homeTeam" placeholder="Enter home team name" (blur)="teamsValidator()">
+                <mat-error *ngIf="hasError('homeTeam')">
+                  {{ getErrorMessage('homeTeam') }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="team-field">
+                <mat-label>Team Category</mat-label>
+                <mat-select formControlName="homeTeamCategory" (selectionChange)="onTeamCategoryChange('home')">
+                  <mat-option *ngFor="let category of teamCategories" [value]="category.value">
+                    {{ category.label }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="hasError('homeTeamCategory')">
+                  {{ getErrorMessage('homeTeamCategory') }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="team-field">
+                <mat-label>Age Level</mat-label>
+                <mat-select formControlName="homeTeamAgeLevel" [disabled]="!bookingForm.get('homeTeamCategory')?.value">
+                  <mat-option *ngFor="let age of getAgeLevelsForCategory(bookingForm.get('homeTeamCategory')?.value)"
+                    [value]="age">
+                    {{ age }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="hasError('homeTeamAgeLevel')">
+                  {{ getErrorMessage('homeTeamAgeLevel') }}
+                </mat-error>
+              </mat-form-field>
+            </div>
 
             <div class="vs-divider">
               <img src="assets/images/irish-rugby-ball.png" alt="Rugby ball" class="rugby-ball" />
             </div>
 
-            <mat-form-field appearance="outline" class="team-field">
-              <mat-label>Away Team</mat-label>
-              <input matInput formControlName="awayTeam" placeholder="Enter away team name" (blur)="teamsValidator()">
-              <span matSuffix class="field-icon" aria-hidden="true"><i class="fa-solid fa-plane-departure"></i></span>
-              <mat-error *ngIf="hasError('awayTeam')">
-                {{ getErrorMessage('awayTeam') }}
-              </mat-error>
-            </mat-form-field>
+            <!-- Away Team Column -->
+            <div class="team-column">
+              <mat-form-field appearance="outline" class="team-field">
+                <mat-label>Away Team</mat-label>
+                <input matInput formControlName="awayTeam" placeholder="Enter away team name" (blur)="teamsValidator()">
+                <span matSuffix class="field-icon" aria-hidden="true"><i class="fa-solid fa-plane-departure"></i></span>
+                <mat-error *ngIf="hasError('awayTeam')">
+                  {{ getErrorMessage('awayTeam') }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="team-field">
+                <mat-label>Team Category</mat-label>
+                <mat-select formControlName="awayTeamCategory" (selectionChange)="onTeamCategoryChange('away')">
+                  <mat-option *ngFor="let category of teamCategories" [value]="category.value">
+                    {{ category.label }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="hasError('awayTeamCategory')">
+                  {{ getErrorMessage('awayTeamCategory') }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="team-field">
+                <mat-label>Age Level</mat-label>
+                <mat-select formControlName="awayTeamAgeLevel" [disabled]="!bookingForm.get('awayTeamCategory')?.value">
+                  <mat-option *ngFor="let age of getAgeLevelsForCategory(bookingForm.get('awayTeamCategory')?.value)"
+                    [value]="age">
+                    {{ age }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="hasError('awayTeamAgeLevel')">
+                  {{ getErrorMessage('awayTeamAgeLevel') }}
+                </mat-error>
+              </mat-form-field>
+            </div>
           </div>
         </div>
 
@@ -156,11 +212,6 @@
       <button mat-button type="button" (click)="onCancel()" class="cancel-button">
         <mat-icon>cancel</mat-icon>
         Cancel
-      </button>
-
-      <!-- Debug button (temporary) -->
-      <button mat-button type="button" (click)="debugFormValidation()" *ngIf="data.isEdit">
-        Debug
       </button>
 
       <button mat-raised-button color="primary" type="button" [disabled]="!isSubmitButtonEnabled()"
