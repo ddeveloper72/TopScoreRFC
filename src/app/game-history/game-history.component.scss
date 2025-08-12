@@ -667,6 +667,14 @@
           }
         }
 
+        &.match-type-info {
+          .match-type-label {
+            font-weight: 500;
+            color: #333;
+            font-size: 0.95rem;
+          }
+        }
+
         &.result-info {
           .result-text {
             font-weight: 500;
