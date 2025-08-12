@@ -10,7 +10,7 @@
         <!-- Team Selection -->
         <div class="team-section">
           <h3>Teams</h3>
-          
+
           <!-- Match Type Selection -->
           <div class="match-type-selection">
             <mat-form-field appearance="outline" class="match-type-field">
@@ -41,8 +41,11 @@
 
               <mat-form-field appearance="outline" class="team-field">
                 <mat-label>Team Category</mat-label>
-                <mat-select formControlName="homeTeamCategory" (selectionChange)="onTeamCategoryChange('home')" [disabled]="!bookingForm.get('matchType')?.value">
-                  <mat-option *ngFor="let category of getTeamCategoriesForMatchType(bookingForm.get('matchType')?.value)" [value]="category.value">
+                <mat-select formControlName="homeTeamCategory" (selectionChange)="onTeamCategoryChange('home')"
+                  [disabled]="!bookingForm.get('matchType')?.value">
+                  <mat-option
+                    *ngFor="let category of getTeamCategoriesForMatchType(bookingForm.get('matchType')?.value)"
+                    [value]="category.value">
                     {{ category.label }}
                   </mat-option>
                 </mat-select>
@@ -82,8 +85,11 @@
 
               <mat-form-field appearance="outline" class="team-field">
                 <mat-label>Team Category</mat-label>
-                <mat-select formControlName="awayTeamCategory" (selectionChange)="onTeamCategoryChange('away')" [disabled]="!bookingForm.get('matchType')?.value">
-                  <mat-option *ngFor="let category of getTeamCategoriesForMatchType(bookingForm.get('matchType')?.value)" [value]="category.value">
+                <mat-select formControlName="awayTeamCategory" (selectionChange)="onTeamCategoryChange('away')"
+                  [disabled]="!bookingForm.get('matchType')?.value">
+                  <mat-option
+                    *ngFor="let category of getTeamCategoriesForMatchType(bookingForm.get('matchType')?.value)"
+                    [value]="category.value">
                     {{ category.label }}
                   </mat-option>
                 </mat-select>
