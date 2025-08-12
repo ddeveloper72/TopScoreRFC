@@ -343,13 +343,23 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
   teamsValidator() {
     const homeTeam = this.bookingForm.get('homeTeam')?.value;
     const awayTeam = this.bookingForm.get('awayTeam')?.value;
+    const awayTeamControl = this.bookingForm.get('awayTeam');
 
     if (
       homeTeam &&
       awayTeam &&
       homeTeam.toLowerCase() === awayTeam.toLowerCase()
     ) {
-      this.bookingForm.get('awayTeam')?.setErrors({ sameTeam: true });
+      awayTeamControl?.setErrors({ sameTeam: true });
+    } else {
+      // Clear the sameTeam error if teams are different
+      const currentErrors = awayTeamControl?.errors;
+      if (currentErrors && currentErrors['sameTeam']) {
+        delete currentErrors['sameTeam'];
+        // If no other errors exist, set errors to null
+        const hasOtherErrors = Object.keys(currentErrors).length > 0;
+        awayTeamControl?.setErrors(hasOtherErrors ? currentErrors : null);
+      }
     }
   }
 
@@ -372,16 +382,28 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
    * Combine date and time into a single Date object
    */
   private combineDateTime(): Date {
-    const date = new Date(this.bookingForm.get('date')?.value);
-    const timeString = this.bookingForm.get('time')?.value;
-    const [hours, minutes] = timeString.split(':');
+    try {
+      const date = new Date(this.bookingForm.get('date')?.value);
+      const timeString = this.bookingForm.get('time')?.value;
 
-    date.setHours(parseInt(hours, 10));
-    date.setMinutes(parseInt(minutes, 10));
-    date.setSeconds(0);
-    date.setMilliseconds(0);
+      if (!timeString) {
+        console.error('No time string provided');
+        return date;
+      }
 
-    return date;
+      const [hours, minutes] = timeString.split(':');
+
+      date.setHours(parseInt(hours, 10));
+      date.setMinutes(parseInt(minutes, 10));
+      date.setSeconds(0);
+      date.setMilliseconds(0);
+
+      console.log('Combined date/time:', date);
+      return date;
+    } catch (error) {
+      console.error('Error combining date/time:', error);
+      return new Date();
+    }
   }
 
   /**
@@ -444,11 +466,21 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
    * Handle form submission
    */
   onSubmit(): void {
+    console.log('=== FORM SUBMISSION STARTED ===');
+    console.log('Button clicked! Form submission triggered.');
+    console.log('Initial form valid:', this.bookingForm.valid);
+
     if (this.bookingForm.valid) {
+      console.log('Form passed initial validation, running teams validator...');
+
       // Validate that teams are different
       this.teamsValidator();
 
+      console.log('Form valid after teams validator:', this.bookingForm.valid);
+
       if (this.bookingForm.valid) {
+        console.log('Form is valid, proceeding with submission...');
+
         const formValue = this.bookingForm.value;
         const matchData: Partial<Match> = {
           homeTeam: formValue.homeTeam,
@@ -475,9 +507,28 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
           matchData.id = this.data.match.id;
         }
 
+        console.log('Closing dialog with match data:', matchData);
         this.dialogRef.close(matchData);
+      } else {
+        console.log('Form validation failed after teams validator');
+        // Show which fields are now invalid
+        Object.keys(this.bookingForm.controls).forEach((key) => {
+          const control = this.bookingForm.get(key);
+          if (control && control.invalid) {
+            console.log(`${key} is invalid:`, control.errors);
+          }
+        });
       }
     } else {
+      console.log('Form is invalid, marking all fields as touched');
+      // Show which fields are invalid
+      Object.keys(this.bookingForm.controls).forEach((key) => {
+        const control = this.bookingForm.get(key);
+        if (control && control.invalid) {
+          console.log(`${key} is invalid:`, control.errors);
+        }
+      });
+
       // Mark all fields as touched to show validation errors
       Object.keys(this.bookingForm.controls).forEach((key) => {
         this.bookingForm.get(key)?.markAsTouched();
@@ -547,16 +598,31 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
    * Debug method to check form validation status
    */
   debugFormValidation(): void {
+    console.log('=== FORM DEBUG INFO ===');
     console.log('Form valid:', this.bookingForm.valid);
     console.log('Form dirty:', this.bookingForm.dirty);
+    console.log('Form touched:', this.bookingForm.touched);
     console.log('Form errors:', this.bookingForm.errors);
+    console.log('Button enabled:', this.isSubmitButtonEnabled());
+    console.log('Edit mode:', this.data?.isEdit);
 
+    console.log('=== INDIVIDUAL FIELD VALIDATION ===');
     Object.keys(this.bookingForm.controls).forEach((key) => {
       const control = this.bookingForm.get(key);
-      if (control && control.invalid) {
-        console.log(`${key} errors:`, control.errors);
-      }
+      console.log(`${key}:`, {
+        value: control?.value,
+        valid: control?.valid,
+        invalid: control?.invalid,
+        dirty: control?.dirty,
+        touched: control?.touched,
+        errors: control?.errors,
+      });
     });
+
+    // Run teams validator to check if it's causing issues
+    console.log('=== RUNNING TEAMS VALIDATOR ===');
+    this.teamsValidator();
+    console.log('Form valid after teams validator:', this.bookingForm.valid);
   }
 
   /**
