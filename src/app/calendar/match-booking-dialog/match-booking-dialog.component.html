@@ -163,8 +163,8 @@
         Debug
       </button>
 
-      <button mat-raised-button color="primary" type="submit" [disabled]="!isSubmitButtonEnabled()"
-        class="submit-button">
+      <button mat-raised-button color="primary" type="button" [disabled]="!isSubmitButtonEnabled()"
+        class="submit-button" (click)="onSubmit()">
         <mat-icon>{{ data.isEdit ? 'save' : 'add' }}</mat-icon>
         {{ data.isEdit ? 'Update Match' : 'Book Match' }}
       </button>
