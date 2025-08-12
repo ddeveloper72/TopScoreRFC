@@ -112,7 +112,7 @@
                     </div>
 
                     <!-- Match Type and Category Info -->
-                    <div class="match-info" *ngIf="match.matchType || match.homeTeamCategory">
+                    <div class="match-info" [ngClass]="getMatchTypeClass(match.matchType)" *ngIf="match.matchType || match.homeTeamCategory">
                         <div class="match-type" *ngIf="match.matchType">
                             <mat-icon [style.color]="getMatchTypeColor(match.matchType)">
                                 {{ getMatchTypeIcon(match.matchType) }}
