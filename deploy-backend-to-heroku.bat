@@ -18,7 +18,7 @@ if not exist ".git" (
 REM Add Heroku remote if not exists
 echo 🔗 Adding Heroku remote...
 git remote remove heroku 2>nul
-git remote add heroku https://git.heroku.com/rugbyappbackend-4014b68ac4bb.git
+git remote add heroku https://git.heroku.com/rugbyappbackend.git
 
 REM Stage all changes
 echo 📦 Staging changes...
