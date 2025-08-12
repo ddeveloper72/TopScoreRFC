@@ -91,6 +91,13 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
     { value: 'mixed', label: 'Mixed/Adults' },
   ];
 
+  // Cached team categories for the current match type
+  currentTeamCategories: { value: string; label: string }[] = [];
+  
+  // Cached age levels for the current team categories
+  currentHomeAgelevels: string[] = [];
+  currentAwayAgeLevels: string[] = [];
+
   // Team categories based on match type
   getTeamCategoriesForMatchType(matchType: string) {
     switch (matchType) {
@@ -253,6 +260,17 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
         status: match.status,
       });
 
+      // Initialize cached data for edit mode
+      if (match.matchType) {
+        this.currentTeamCategories = this.getTeamCategoriesForMatchType(match.matchType);
+      }
+      if (match.homeTeamCategory) {
+        this.currentHomeAgelevels = this.getAgeLevelsForCategory(match.homeTeamCategory);
+      }
+      if (match.awayTeamCategory) {
+        this.currentAwayAgeLevels = this.getAgeLevelsForCategory(match.awayTeamCategory);
+      }
+
       // Mark the form as pristine after populating it with existing data
       this.bookingForm.markAsPristine();
       this.bookingForm.markAsUntouched();
@@ -323,6 +341,15 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
 
   // Handle match type changes and reset team categories and age levels
   onMatchTypeChange(): void {
+    const matchType = this.bookingForm.get('matchType')?.value;
+    
+    // Update cached team categories
+    this.currentTeamCategories = this.getTeamCategoriesForMatchType(matchType);
+    
+    // Reset age levels cache
+    this.currentHomeAgelevels = [];
+    this.currentAwayAgeLevels = [];
+    
     // Reset both teams' category and age level selections when match type changes
     this.bookingForm.patchValue({
       homeTeamCategory: '',
@@ -339,6 +366,16 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
     const ageLevelField =
       teamType === 'home' ? 'homeTeamAgeLevel' : 'awayTeamAgeLevel';
 
+    // Get the selected category
+    const selectedCategory = this.bookingForm.get(categoryField)?.value;
+    
+    // Update cached age levels
+    if (teamType === 'home') {
+      this.currentHomeAgelevels = this.getAgeLevelsForCategory(selectedCategory);
+    } else {
+      this.currentAwayAgeLevels = this.getAgeLevelsForCategory(selectedCategory);
+    }
+    
     // Reset age level when category changes
     this.bookingForm.patchValue({
       [ageLevelField]: '',
