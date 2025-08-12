@@ -207,10 +207,25 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
     confirmDialogRef.afterClosed().subscribe((confirmed) => {
       if (confirmed) {
-        this.matchStorageService.deleteMatch(match.id);
-        // The subscription will automatically update the UI
-        this.snackBar.open('Match deleted successfully.', undefined, {
-          duration: 2000,
+        // Delete from both API (database) and local storage
+        const matchId = match._id || match.id; // Use MongoDB ID if available
+        
+        this.matchApi.deleteMatch(matchId).subscribe({
+          next: () => {
+            // Successfully deleted from API, now remove from local storage
+            this.matchStorageService.deleteMatch(match.id);
+            this.snackBar.open('Match deleted successfully.', undefined, {
+              duration: 2000,
+            });
+          },
+          error: (error) => {
+            console.error('Failed to delete match from API:', error);
+            // Still try to remove from local storage for UI consistency
+            this.matchStorageService.deleteMatch(match.id);
+            this.snackBar.open('Match deleted locally (API error).', undefined, {
+              duration: 3000,
+            });
+          }
         });
       }
     });
