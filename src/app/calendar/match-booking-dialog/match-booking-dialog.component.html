@@ -10,6 +10,23 @@
         <!-- Team Selection -->
         <div class="team-section">
           <h3>Teams</h3>
+          
+          <!-- Match Type Selection -->
+          <div class="match-type-selection">
+            <mat-form-field appearance="outline" class="match-type-field">
+              <mat-label>Match Type</mat-label>
+              <mat-select formControlName="matchType" (selectionChange)="onMatchTypeChange()">
+                <mat-option *ngFor="let type of matchTypes" [value]="type.value">
+                  {{ type.label }}
+                </mat-option>
+              </mat-select>
+              <mat-hint>Specify whether this is a boys' or girls' match</mat-hint>
+              <mat-error *ngIf="hasError('matchType')">
+                {{ getErrorMessage('matchType') }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
           <div class="team-inputs">
             <!-- Home Team Column -->
             <div class="team-column">
@@ -24,8 +41,8 @@
 
               <mat-form-field appearance="outline" class="team-field">
                 <mat-label>Team Category</mat-label>
-                <mat-select formControlName="homeTeamCategory" (selectionChange)="onTeamCategoryChange('home')">
-                  <mat-option *ngFor="let category of teamCategories" [value]="category.value">
+                <mat-select formControlName="homeTeamCategory" (selectionChange)="onTeamCategoryChange('home')" [disabled]="!bookingForm.get('matchType')?.value">
+                  <mat-option *ngFor="let category of getTeamCategoriesForMatchType(bookingForm.get('matchType')?.value)" [value]="category.value">
                     {{ category.label }}
                   </mat-option>
                 </mat-select>
@@ -65,8 +82,8 @@
 
               <mat-form-field appearance="outline" class="team-field">
                 <mat-label>Team Category</mat-label>
-                <mat-select formControlName="awayTeamCategory" (selectionChange)="onTeamCategoryChange('away')">
-                  <mat-option *ngFor="let category of teamCategories" [value]="category.value">
+                <mat-select formControlName="awayTeamCategory" (selectionChange)="onTeamCategoryChange('away')" [disabled]="!bookingForm.get('matchType')?.value">
+                  <mat-option *ngFor="let category of getTeamCategoriesForMatchType(bookingForm.get('matchType')?.value)" [value]="category.value">
                     {{ category.label }}
                   </mat-option>
                 </mat-select>
