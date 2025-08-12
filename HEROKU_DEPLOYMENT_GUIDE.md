@@ -46,7 +46,7 @@
 
 ### Option 3: Using Heroku Dashboard (Manual Deploy)
 
-1. Go to https://dashboard.heroku.com/apps/rugbyappbackend
+1. Go to <https://dashboard.heroku.com/apps/rugbyappbackend>
 2. Go to "Deploy" tab
 3. Connect to GitHub repository if not already connected
 4. Select the branch with your changes
