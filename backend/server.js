@@ -123,6 +123,7 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     endpoints: {
       games: '/api/games',
+      matches: '/api/matches',
       health: '/health'
     }
   });
