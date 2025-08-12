@@ -556,6 +556,32 @@
             text-align: center;
           }
 
+          .team-details {
+            display: flex;
+            gap: 8px;
+            margin: 2px 0 4px 0;
+
+            .team-category {
+              font-size: 0.8rem;
+              color: #4a5568;
+              font-weight: 500;
+              background: #f7fafc;
+              padding: 2px 8px;
+              border-radius: 12px;
+              border: 1px solid #e2e8f0;
+            }
+
+            .team-age {
+              font-size: 0.8rem;
+              color: #2d3748;
+              font-weight: 600;
+              background: #bee3f8;
+              padding: 2px 8px;
+              border-radius: 12px;
+              border: 1px solid #90cdf4;
+            }
+          }
+
           .team-label {
             font-size: 0.75rem;
             color: #666;
