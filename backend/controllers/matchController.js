@@ -27,10 +27,20 @@ exports.updateMatch = async (req, res) => {
 };
 
 exports.getMatches = async (req, res) => {
+  console.log('🔍 GET MATCHES REQUEST');
   try {
+    console.log('📊 Attempting to find matches...');
     const matches = await Match.find().sort({ date: 1 });
+    console.log('✅ FOUND MATCHES:', matches.length);
+    console.log('📋 Matches preview:', matches.map(m => ({
+      id: m._id,
+      homeTeam: m.homeTeam,
+      awayTeam: m.awayTeam,
+      date: m.date
+    })));
     res.json(matches);
   } catch (err) {
+    console.error('❌ GET MATCHES ERROR:', err.message);
     res.status(500).json({ message: 'Error fetching matches', error: err.message });
   }
 };
@@ -46,11 +56,27 @@ exports.getMatchById = async (req, res) => {
 };
 
 exports.deleteMatch = async (req, res) => {
+  console.log('🗑️ DELETE MATCH REQUEST');
+  console.log('ID:', req.params.id);
+  
   try {
+    console.log('🔍 Attempting to find and delete match...');
     const deleted = await Match.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ message: 'Match not found' });
-    res.json({ message: 'Match deleted' });
+    
+    if (!deleted) {
+      console.log('❌ Match not found for deletion');
+      return res.status(404).json({ message: 'Match not found' });
+    }
+    
+    console.log('✅ MATCH DELETED:', {
+      id: deleted._id,
+      homeTeam: deleted.homeTeam,
+      awayTeam: deleted.awayTeam
+    });
+    
+    res.json({ message: 'Match deleted', deletedMatch: deleted });
   } catch (err) {
+    console.error('❌ DELETE MATCH ERROR:', err.message);
     res.status(500).json({ message: 'Error deleting match', error: err.message });
   }
 };
