@@ -346,6 +346,19 @@ export class GameHistoryComponent implements OnInit {
     }
   }
 
+  formatMatchType(matchType: string): string {
+    switch (matchType) {
+      case 'boys':
+        return "Boys' Teams";
+      case 'girls':
+        return "Girls' Teams";
+      case 'mixed':
+        return 'Mixed/Adults';
+      default:
+        return matchType || 'Not specified';
+    }
+  }
+
   getMatchTypeColor(competition?: string): string {
     if (!competition) return 'primary';
 
