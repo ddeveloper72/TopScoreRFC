@@ -84,6 +84,38 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
     'Other',
   ];
 
+  // Match types (boys vs boys, girls vs girls)
+  matchTypes = [
+    { value: 'boys', label: "Boys' Teams" },
+    { value: 'girls', label: "Girls' Teams" },
+    { value: 'mixed', label: 'Mixed/Adults' },
+  ];
+
+  // Team categories based on match type
+  getTeamCategoriesForMatchType(matchType: string) {
+    switch (matchType) {
+      case 'boys':
+        return [
+          { value: 'minis', label: 'Minis (Boys)' },
+          { value: 'youths-boys', label: 'Youths (Boys)' },
+          { value: 'seniors', label: 'Seniors' },
+        ];
+      case 'girls':
+        return [
+          { value: 'minis', label: 'Minis (Girls)' },
+          { value: 'girls', label: 'Girls (Wolves Amalgamation)' },
+          { value: 'womens-tag', label: "Women's Tag Rugby" },
+        ];
+      case 'mixed':
+        return [
+          { value: 'seniors', label: 'Seniors' },
+          { value: 'womens-tag', label: "Women's Tag Rugby" },
+        ];
+      default:
+        return [];
+    }
+  }
+
   // Team categories and age levels based on Clane RFC structure
   teamCategories = [
     { value: 'minis', label: 'Minis (Boys & Girls)' },
@@ -123,6 +155,7 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
     this.generateTimeOptions();
 
     this.bookingForm = this.fb.group({
+      matchType: ['', Validators.required],
       homeTeam: ['', [Validators.required, Validators.minLength(2)]],
       homeTeamCategory: ['', Validators.required],
       homeTeamAgeLevel: ['', Validators.required],
@@ -206,6 +239,7 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
       const matchDate = new Date(match.date);
 
       this.bookingForm.patchValue({
+        matchType: match.matchType || '',
         homeTeam: match.homeTeam,
         homeTeamCategory: match.homeTeamCategory || '',
         homeTeamAgeLevel: match.homeTeamAgeLevel || '',
@@ -285,6 +319,17 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
     this.selectedVenue = venue;
     this.bookingForm.patchValue({ venue: venue.name });
     setTimeout(() => this.initializeMap(), 50);
+  }
+
+  // Handle match type changes and reset team categories and age levels
+  onMatchTypeChange(): void {
+    // Reset both teams' category and age level selections when match type changes
+    this.bookingForm.patchValue({
+      homeTeamCategory: '',
+      homeTeamAgeLevel: '',
+      awayTeamCategory: '',
+      awayTeamAgeLevel: '',
+    });
   }
 
   // Handle team category changes and reset age level
@@ -526,6 +571,7 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
 
         const formValue = this.bookingForm.value;
         const matchData: Partial<Match> = {
+          matchType: formValue.matchType,
           homeTeam: formValue.homeTeam,
           homeTeamCategory: formValue.homeTeamCategory,
           homeTeamAgeLevel: formValue.homeTeamAgeLevel,
