@@ -37,6 +37,7 @@ import {
 export interface MatchBookingData {
   match?: Match;
   isEdit: boolean;
+  selectedDate?: Date;
 }
 
 @Component({
@@ -172,6 +173,7 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // Detect Maps configuration
     this.mapsConfigured = this.googleMapsService.hasApiKey;
+
     // If editing an existing match, populate the form
     if (this.data?.isEdit && this.data.match) {
       const match = this.data.match;
@@ -185,6 +187,11 @@ export class MatchBookingDialogComponent implements OnInit, AfterViewInit {
         venue: match.venue,
         competition: match.competition || '',
         status: match.status,
+      });
+    } else if (this.data?.selectedDate) {
+      // Pre-populate date when creating a new match for a specific date
+      this.bookingForm.patchValue({
+        date: this.data.selectedDate,
       });
     }
   }
