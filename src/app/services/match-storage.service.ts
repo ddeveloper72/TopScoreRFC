@@ -57,6 +57,13 @@ export class MatchStorageService {
   }
 
   /**
+   * Get all matches (alias for backward compatibility)
+   */
+  getAllMatches(): Match[] {
+    return this.getMatches();
+  }
+
+  /**
    * Save a new match
    */
   saveMatch(matchData: Omit<Match, 'id'>): string {
@@ -208,28 +215,99 @@ export class MatchStorageService {
         id: '1',
         homeTeam: 'Lions RFC',
         awayTeam: 'Eagles United',
-        date: new Date(2025, 7, 15, 15, 0), // August 15, 2025, 3:00 PM
+        date: new Date(2024, 11, 15, 15, 0), // December 15, 2024, 3:00 PM (past match)
         venue: 'City Stadium',
+        venueDetails: {
+          name: 'City Stadium',
+          address: '123 Stadium Drive, Sports City',
+          coordinates: { lat: -33.8688, lng: 151.2093 },
+          formattedAddress: '123 Stadium Drive, Sports City, NSW 2000',
+        },
         competition: 'League Championship',
-        status: 'scheduled',
+        status: 'completed',
+        homeScore: 28,
+        awayScore: 21,
       },
       {
         id: '2',
         homeTeam: 'Tigers FC',
         awayTeam: 'Sharks RFC',
-        date: new Date(2025, 7, 22, 14, 30), // August 22, 2025, 2:30 PM
+        date: new Date(2024, 11, 22, 14, 30), // December 22, 2024, 2:30 PM (past match)
         venue: 'Home Ground',
+        venueDetails: {
+          name: 'Home Ground',
+          address: '456 Rugby Lane, Home Town',
+          coordinates: { lat: -33.865, lng: 151.2094 },
+          formattedAddress: '456 Rugby Lane, Home Town, NSW 2001',
+        },
         competition: 'Cup Quarter-Final',
-        status: 'scheduled',
+        status: 'completed',
+        homeScore: 35,
+        awayScore: 14,
       },
       {
         id: '3',
         homeTeam: 'Wolves United',
         awayTeam: 'Bears RFC',
-        date: new Date(2025, 8, 5, 16, 0), // September 5, 2025, 4:00 PM
+        date: new Date(2025, 0, 5, 16, 0), // January 5, 2025, 4:00 PM
         venue: 'Central Park',
+        venueDetails: {
+          name: 'Central Park Rugby Field',
+          address: '789 Park Avenue, Central District',
+          coordinates: { lat: -33.867, lng: 151.208 },
+          formattedAddress: '789 Park Avenue, Central District, NSW 2002',
+        },
         competition: 'Friendly Match',
         status: 'scheduled',
+      },
+      {
+        id: '4',
+        homeTeam: 'Panthers United',
+        awayTeam: 'Warriors RFC',
+        date: new Date(2024, 10, 30, 13, 0), // November 30, 2024, 1:00 PM (past match)
+        venue: 'Memorial Stadium',
+        venueDetails: {
+          name: 'Memorial Stadium',
+          address: '321 Memorial Way, Victory Heights',
+          coordinates: { lat: -33.86, lng: 151.21 },
+          formattedAddress: '321 Memorial Way, Victory Heights, NSW 2003',
+        },
+        competition: 'Derby Match',
+        status: 'completed',
+        homeScore: 21,
+        awayScore: 21,
+      },
+      {
+        id: '5',
+        homeTeam: 'Dragons RFC',
+        awayTeam: 'Phoenix United',
+        date: new Date(2025, 1, 14, 15, 30), // February 14, 2025, 3:30 PM
+        venue: 'Fortress Ground',
+        venueDetails: {
+          name: 'Fortress Ground',
+          address: '555 Fortress Street, Stronghold',
+          coordinates: { lat: -33.871, lng: 151.207 },
+          formattedAddress: '555 Fortress Street, Stronghold, NSW 2004',
+        },
+        competition: "Valentine's Cup",
+        status: 'scheduled',
+      },
+      {
+        id: '6',
+        homeTeam: 'Titans RFC',
+        awayTeam: 'Giants United',
+        date: new Date(2024, 11, 1, 14, 0), // December 1, 2024, 2:00 PM (past match)
+        venue: 'Titan Arena',
+        venueDetails: {
+          name: 'Titan Arena',
+          address: '888 Titan Boulevard, Giant Valley',
+          coordinates: { lat: -33.875, lng: 151.205 },
+          formattedAddress: '888 Titan Boulevard, Giant Valley, NSW 2005',
+        },
+        competition: 'Grand Final',
+        status: 'completed',
+        homeScore: 42,
+        awayScore: 38,
       },
     ];
 
