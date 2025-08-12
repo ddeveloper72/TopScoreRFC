@@ -92,6 +92,28 @@
           </div>
         </div>
 
+        <!-- Match Type and Category Info -->
+        <div class="match-info" [ngClass]="getMatchTypeClass(match.matchType)"
+          *ngIf="match.matchType || match.homeTeamCategory">
+          <div class="match-type" *ngIf="match.matchType">
+            <mat-icon [style.color]="getMatchTypeColor(match.matchType)">
+              {{ getMatchTypeIcon(match.matchType) }}
+            </mat-icon>
+            <span class="match-type-label">{{ formatMatchType(match.matchType) }}</span>
+          </div>
+          <div class="team-details" *ngIf="match.homeTeamCategory || match.homeTeamAgeLevel">
+            <span class="team-category" *ngIf="match.homeTeamCategory">
+              {{ formatTeamCategory(match.homeTeamCategory) }}
+            </span>
+            <span class="team-age" *ngIf="match.homeTeamAgeLevel">
+              {{ match.homeTeamAgeLevel }}
+            </span>
+            <span class="vs-age" *ngIf="match.awayTeamAgeLevel && match.homeTeamAgeLevel !== match.awayTeamAgeLevel">
+              vs {{ match.awayTeamAgeLevel }}
+            </span>
+          </div>
+        </div>
+
         <div class="match-teams">
           <div class="team home-team">
             <span class="team-name">{{ match.homeTeam }}</span>

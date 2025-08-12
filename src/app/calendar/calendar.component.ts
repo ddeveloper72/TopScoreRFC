@@ -408,4 +408,78 @@ export class CalendarComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  // Match type and team formatting methods (shared with dashboard)
+  formatMatchType(matchType: string | undefined): string {
+    if (!matchType) return '';
+
+    switch (matchType) {
+      case 'boys':
+        return "Boys' Teams";
+      case 'girls':
+        return "Girls' Teams";
+      case 'mixed':
+        return 'Mixed/Adults';
+      default:
+        return matchType;
+    }
+  }
+
+  formatTeamCategory(category: string | undefined): string {
+    if (!category) return '';
+
+    switch (category) {
+      case 'minis':
+        return 'Minis';
+      case 'youths-boys':
+        return 'Youths';
+      case 'girls':
+        return 'Girls';
+      case 'seniors':
+        return 'Seniors';
+      case 'womens-tag':
+        return "Women's Tag";
+      default:
+        return category;
+    }
+  }
+
+  getMatchTypeColor(matchType: string | undefined): string {
+    switch (matchType) {
+      case 'boys':
+        return '#2196f3'; // Blue
+      case 'girls':
+        return '#e91e63'; // Pink
+      case 'mixed':
+        return '#4caf50'; // Green
+      default:
+        return '#757575'; // Grey
+    }
+  }
+
+  getMatchTypeClass(matchType: string | undefined): string {
+    switch (matchType) {
+      case 'boys':
+        return 'boys-teams';
+      case 'girls':
+        return 'girls-teams';
+      case 'mixed':
+        return 'mixed-adults';
+      default:
+        return '';
+    }
+  }
+
+  getMatchTypeIcon(matchType: string | undefined): string {
+    switch (matchType) {
+      case 'boys':
+        return 'sports_rugby';
+      case 'girls':
+        return 'sports_handball';
+      case 'mixed':
+        return 'groups';
+      default:
+        return 'sports';
+    }
+  }
 }

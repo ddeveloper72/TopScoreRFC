@@ -604,3 +604,87 @@
     }
   }
 }
+
+// Match type and category info styles (shared with dashboard)
+.match-info {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: rgba(52, 152, 219, 0.05);
+  border-radius: 8px;
+  border-left: 3px solid #3498db;
+
+  &.boys-teams {
+    background: rgba(52, 152, 219, 0.05);
+    border-left-color: #3498db;
+
+    .match-type mat-icon {
+      color: #3498db;
+    }
+  }
+
+  &.girls-teams {
+    background: rgba(231, 76, 60, 0.05);
+    border-left-color: #e74c3c;
+
+    .match-type mat-icon {
+      color: #e74c3c;
+    }
+  }
+
+  &.mixed-adults {
+    background: rgba(142, 68, 173, 0.05);
+    border-left-color: #8e44ad;
+
+    .match-type mat-icon {
+      color: #8e44ad;
+    }
+  }
+
+  .match-type {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+
+    mat-icon {
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    .match-type-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+  }
+
+  .team-details {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+    .team-category {
+      font-size: 0.85rem;
+      color: #3498db;
+      font-weight: 600;
+      padding: 0.25rem 0.5rem;
+      background: rgba(52, 152, 219, 0.1);
+      border-radius: 6px;
+    }
+
+    .team-age {
+      font-size: 0.85rem;
+      color: #27ae60;
+      font-weight: 600;
+      padding: 0.25rem 0.5rem;
+      background: rgba(39, 174, 96, 0.1);
+      border-radius: 6px;
+    }
+
+    .vs-age {
+      font-size: 0.8rem;
+      color: #7f8c8d;
+    }
+  }
+}
