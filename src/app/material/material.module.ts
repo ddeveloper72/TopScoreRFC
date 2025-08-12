@@ -18,6 +18,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 // Essential Material modules for the Rugby Score Tracker
 const MaterialComponents = [
@@ -40,6 +42,8 @@ const MaterialComponents = [
   MatAutocompleteModule,
   MatProgressSpinnerModule,
   MatSnackBarModule,
+  MatTabsModule,
+  MatProgressBarModule,
 ];
 
 @NgModule({
