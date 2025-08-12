@@ -48,9 +48,10 @@
         <!-- Match indicators for this day -->
         <div class="match-indicators" *ngIf="day.hasMatches">
           <div class="match-dot" *ngFor="let match of day.matches.slice(0, 3)" [ngClass]="getMatchTypeClass(match)"
-            [title]="match.homeTeam + ' vs ' + match.awayTeam">
+            [matTooltip]="getMatchTooltip(match)" matTooltipPosition="above" (click)="openMatchDetails(match, $event)">
           </div>
-          <div class="more-matches" *ngIf="day.matches.length > 3">
+          <div class="more-matches" *ngIf="day.matches.length > 3"
+            [matTooltip]="'View all ' + day.matches.length + ' matches'" matTooltipPosition="above">
             +{{ day.matches.length - 3 }}
           </div>
         </div>
