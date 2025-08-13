@@ -1,5 +1,9 @@
 const router = require('express').Router();
 const ctrl = require('../controllers/matchController');
+const { authenticate } = require('../middleware/auth');
+
+// Apply authentication to all match routes
+router.use(authenticate);
 
 // Match CRUD operations
 router.get('/', ctrl.getMatches);

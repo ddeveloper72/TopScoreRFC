@@ -8,17 +8,24 @@ import { Match, MatchEvent } from './match-storage.service';
 @Injectable({ providedIn: 'root' })
 export class MatchApiService {
   private apiUrl: string;
-  private httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-  };
+  private apiKey = 'ClaneRFC2025SecureKey!'; // TODO: Move to environment config
+  private httpOptions: { headers: HttpHeaders };
 
   constructor(private http: HttpClient, private cfg: AppConfigService) {
     const base = this.cfg.apiUrl || 'http://localhost:3000/api';
     this.apiUrl = base.replace(/\/$/, '');
+    
+    // Set up headers with API key authentication
+    this.httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'X-API-Key': this.apiKey
+      }),
+    };
   }
 
   getAllMatches(): Observable<Match[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/matches`).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}/matches`, this.httpOptions).pipe(
       map((items) =>
         (items || []).map((m) => ({
           ...m,
@@ -42,7 +49,7 @@ export class MatchApiService {
   }
 
   deleteMatch(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/matches/${id}`);
+    return this.http.delete(`${this.apiUrl}/matches/${id}`, this.httpOptions);
   }
 
   // ===============================================
@@ -64,15 +71,19 @@ export class MatchApiService {
    * Get all events for a specific match
    */
   getMatchEvents(matchId: string): Observable<MatchEvent[]> {
-    return this.http.get<{ events: MatchEvent[] }>(`${this.apiUrl}/matches/${matchId}/events`).pipe(
-      map(response => response.events || [])
-    );
+    return this.http
+      .get<{ events: MatchEvent[] }>(`${this.apiUrl}/matches/${matchId}/events`, this.httpOptions)
+      .pipe(map((response) => response.events || []));
   }
 
   /**
    * Update a specific event in a match
    */
-  updateMatchEvent(matchId: string, eventId: string, event: Partial<MatchEvent>): Observable<any> {
+  updateMatchEvent(
+    matchId: string,
+    eventId: string,
+    event: Partial<MatchEvent>
+  ): Observable<any> {
     return this.http.put(
       `${this.apiUrl}/matches/${matchId}/events/${eventId}`,
       event,
@@ -84,19 +95,22 @@ export class MatchApiService {
    * Delete a specific event from a match
    */
   deleteMatchEvent(matchId: string, eventId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/matches/${matchId}/events/${eventId}`);
+    return this.http.delete(
+      `${this.apiUrl}/matches/${matchId}/events/${eventId}`,
+      this.httpOptions
+    );
   }
 
   /**
    * Get a match with all its events (convenience method)
    */
   getMatchWithEvents(matchId: string): Observable<Match> {
-    return this.http.get<any>(`${this.apiUrl}/matches/${matchId}`).pipe(
-      map(match => ({
+    return this.http.get<any>(`${this.apiUrl}/matches/${matchId}`, this.httpOptions).pipe(
+      map((match) => ({
         ...match,
         id: match._id || match.id,
         date: match.date ? new Date(match.date) : new Date(),
-        events: match.events || []
+        events: match.events || [],
       }))
     );
   }
