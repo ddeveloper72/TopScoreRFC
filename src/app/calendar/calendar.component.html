@@ -171,7 +171,7 @@
   <!-- Enhanced Past Matches Section with Event Timeline -->
   <div class="past-matches" *ngIf="pastMatches.length > 0" [@fadeInOut]>
     <h3 [@slideInFromBottom]>Recent Results</h3>
-    
+
     <mat-card class="enhanced-match-card" *ngFor="let match of pastMatches.slice(0, 5); let i = index" [@fadeInOut]
       [style.animation-delay]="(i * 100) + 'ms'">
       <mat-card-header>
@@ -198,8 +198,8 @@
 
       <mat-card-content>
         <!-- Match Type and Competition Info -->
-        <div class="match-info-bar" [ngClass]="getMatchTypeClass(match.matchType)" 
-             *ngIf="match.matchType || match.competition">
+        <div class="match-info-bar" [ngClass]="getMatchTypeClass(match.matchType)"
+          *ngIf="match.matchType || match.competition">
           <div class="match-type" *ngIf="match.matchType">
             <mat-icon [style.color]="getMatchTypeColor(match.matchType)">
               {{ getMatchTypeIcon(match.matchType) }}
@@ -219,10 +219,10 @@
             <i class="fa-solid fa-clock"></i>
             Match Events
           </h4>
-          
+
           <div class="timeline">
-            <div class="timeline-event" *ngFor="let event of getSortedEvents(match.events)" 
-                 [ngClass]="'event-' + event.eventType">
+            <div class="timeline-event" *ngFor="let event of getSortedEvents(match.events)"
+              [ngClass]="'event-' + event.eventType">
               <div class="event-time">{{ event.time }}</div>
               <div class="event-content">
                 <div class="event-header">
@@ -245,8 +245,7 @@
           </div>
 
           <!-- Add Event Button for Completed Matches -->
-          <button mat-stroked-button color="primary" class="add-event-btn" 
-                  (click)="openEventManager(match)">
+          <button mat-stroked-button color="primary" class="add-event-btn" (click)="openEventManager(match)">
             <i class="fa-solid fa-plus"></i>
             Add Event
           </button>
