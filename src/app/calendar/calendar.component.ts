@@ -210,35 +210,35 @@ export class CalendarComponent implements OnInit, OnDestroy {
         // Delete from both API (database) and local storage
         const matchId = match._id || match.id; // Use MongoDB ID if available
         const localId = match.id; // Local storage ID
-        
+
         console.log('🗑️ Deleting match:', { matchId, localId, match });
 
         this.matchApi.deleteMatch(matchId).subscribe({
           next: (response) => {
             console.log('✅ API deletion successful:', response);
-            
+
             // Remove from local storage using both possible IDs
             this.matchStorageService.deleteMatch(localId);
             if (matchId !== localId) {
               this.matchStorageService.deleteMatch(matchId);
             }
-            
+
             // Force refresh from API to ensure consistency
             this.refreshMatchesFromAPI();
-            
+
             this.snackBar.open('Match deleted successfully.', undefined, {
               duration: 2000,
             });
           },
           error: (error) => {
             console.error('❌ Failed to delete match from API:', error);
-            
+
             // Still try to remove from local storage for UI consistency
             this.matchStorageService.deleteMatch(localId);
             if (matchId !== localId) {
               this.matchStorageService.deleteMatch(matchId);
             }
-            
+
             this.snackBar.open(
               'Match deleted locally (API error).',
               undefined,
@@ -260,13 +260,13 @@ export class CalendarComponent implements OnInit, OnDestroy {
         console.log('📥 Received matches from API:', apiMatches.length);
         // Update local storage with fresh API data
         this.matchStorageService.clearAllMatches();
-        apiMatches.forEach(match => {
+        apiMatches.forEach((match) => {
           this.matchStorageService.saveMatch(match);
         });
       },
       error: (error) => {
         console.error('❌ Failed to refresh from API:', error);
-      }
+      },
     });
   }
 
