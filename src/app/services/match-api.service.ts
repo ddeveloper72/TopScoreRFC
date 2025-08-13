@@ -14,26 +14,28 @@ export class MatchApiService {
   constructor(private http: HttpClient, private cfg: AppConfigService) {
     const base = this.cfg.apiUrl || 'http://localhost:3000/api';
     this.apiUrl = base.replace(/\/$/, '');
-    
+
     // Set up headers with API key authentication
     this.httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'X-API-Key': this.apiKey
+        'X-API-Key': this.apiKey,
       }),
     };
   }
 
   getAllMatches(): Observable<Match[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/matches`, this.httpOptions).pipe(
-      map((items) =>
-        (items || []).map((m) => ({
-          ...m,
-          id: m._id || m.id,
-          date: m.date ? new Date(m.date) : new Date(),
-        }))
-      )
-    );
+    return this.http
+      .get<any[]>(`${this.apiUrl}/matches`, this.httpOptions)
+      .pipe(
+        map((items) =>
+          (items || []).map((m) => ({
+            ...m,
+            id: m._id || m.id,
+            date: m.date ? new Date(m.date) : new Date(),
+          }))
+        )
+      );
   }
 
   createMatch(match: Partial<Match>): Observable<any> {
@@ -72,7 +74,10 @@ export class MatchApiService {
    */
   getMatchEvents(matchId: string): Observable<MatchEvent[]> {
     return this.http
-      .get<{ events: MatchEvent[] }>(`${this.apiUrl}/matches/${matchId}/events`, this.httpOptions)
+      .get<{ events: MatchEvent[] }>(
+        `${this.apiUrl}/matches/${matchId}/events`,
+        this.httpOptions
+      )
       .pipe(map((response) => response.events || []));
   }
 
@@ -105,13 +110,15 @@ export class MatchApiService {
    * Get a match with all its events (convenience method)
    */
   getMatchWithEvents(matchId: string): Observable<Match> {
-    return this.http.get<any>(`${this.apiUrl}/matches/${matchId}`, this.httpOptions).pipe(
-      map((match) => ({
-        ...match,
-        id: match._id || match.id,
-        date: match.date ? new Date(match.date) : new Date(),
-        events: match.events || [],
-      }))
-    );
+    return this.http
+      .get<any>(`${this.apiUrl}/matches/${matchId}`, this.httpOptions)
+      .pipe(
+        map((match) => ({
+          ...match,
+          id: match._id || match.id,
+          date: match.date ? new Date(match.date) : new Date(),
+          events: match.events || [],
+        }))
+      );
   }
 }
