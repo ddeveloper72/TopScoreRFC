@@ -33,6 +33,14 @@ export const routes: Routes = [
     data: { animation: 'Calendar' },
   },
   {
+    path: 'live-scoring/:id',
+    loadComponent: () =>
+      import('./shared/live-match-scoring/live-match-scoring.component').then(
+        (m) => m.LiveMatchScoringComponent
+      ),
+    data: { animation: 'LiveScoring' },
+  },
+  {
     path: 'games-history',
     loadComponent: () =>
       import('./game-history/game-history.component').then(
