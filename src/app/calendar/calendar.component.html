@@ -168,22 +168,150 @@
     </div>
   </div>
 
-  <!-- Past Matches Section -->
+  <!-- Enhanced Past Matches Section with Event Timeline -->
   <div class="past-matches" *ngIf="pastMatches.length > 0" [@fadeInOut]>
     <h3 [@slideInFromBottom]>Recent Results</h3>
-    <mat-card class="past-match-card" *ngFor="let match of pastMatches.slice(0, 5); let i = index" [@fadeInOut]
+    
+    <mat-card class="enhanced-match-card" *ngFor="let match of pastMatches.slice(0, 5); let i = index" [@fadeInOut]
       [style.animation-delay]="(i * 100) + 'ms'">
+      <mat-card-header>
+        <div class="match-result-header">
+          <div class="match-teams-result">
+            <div class="team-result home">
+              <span class="team-name">{{ match.homeTeam }}</span>
+              <span class="team-score">{{ match.homeScore || 0 }}</span>
+            </div>
+            <div class="vs-result">-</div>
+            <div class="team-result away">
+              <span class="team-score">{{ match.awayScore || 0 }}</span>
+              <span class="team-name">{{ match.awayTeam }}</span>
+            </div>
+          </div>
+          <div class="match-meta">
+            <span class="match-date">{{ match.date | date:'MMM dd, yyyy' }}</span>
+            <span class="result-badge" [ngClass]="getResultClass(match)">
+              {{ getMatchResult(match) }}
+            </span>
+          </div>
+        </div>
+      </mat-card-header>
+
       <mat-card-content>
-        <div class="past-match-header">
-          <span class="past-match-date">{{ match.date | date:'MMM dd' }}</span>
-          <span class="result-badge" [ngClass]="getResultClass(match)">
-            {{ getMatchResult(match) }}
-          </span>
+        <!-- Match Type and Competition Info -->
+        <div class="match-info-bar" [ngClass]="getMatchTypeClass(match.matchType)" 
+             *ngIf="match.matchType || match.competition">
+          <div class="match-type" *ngIf="match.matchType">
+            <mat-icon [style.color]="getMatchTypeColor(match.matchType)">
+              {{ getMatchTypeIcon(match.matchType) }}
+            </mat-icon>
+            <span>{{ formatMatchType(match.matchType) }}</span>
+            <span *ngIf="match.homeTeamAgeLevel"> - {{ match.homeTeamAgeLevel }}</span>
+          </div>
+          <div class="competition" *ngIf="match.competition">
+            <i class="fa-solid fa-trophy"></i>
+            {{ match.competition }}
+          </div>
         </div>
-        <div class="past-match-score">
-          {{ match.homeTeam }} {{ match.homeScore || 0 }} - {{ match.awayScore || 0 }} {{ match.awayTeam }}
+
+        <!-- Events Timeline -->
+        <div class="events-timeline" *ngIf="match.events && match.events.length > 0">
+          <h4 class="timeline-title">
+            <i class="fa-solid fa-clock"></i>
+            Match Events
+          </h4>
+          
+          <div class="timeline">
+            <div class="timeline-event" *ngFor="let event of getSortedEvents(match.events)" 
+                 [ngClass]="'event-' + event.eventType">
+              <div class="event-time">{{ event.time }}</div>
+              <div class="event-content">
+                <div class="event-header">
+                  <span class="event-icon">{{ getEventIcon(event.eventType) }}</span>
+                  <span class="event-type">{{ formatEventType(event.eventType) }}</span>
+                  <span class="event-team" [ngClass]="event.team">
+                    {{ event.team === 'home' ? match.homeTeam : match.awayTeam }}
+                  </span>
+                </div>
+                <div class="event-description">{{ event.description }}</div>
+                <div class="event-player" *ngIf="event.ourPlayer && event.team === 'home'">
+                  <i class="fa-solid fa-user"></i>
+                  {{ event.ourPlayer }}
+                </div>
+                <div class="event-notes" *ngIf="event.notes">
+                  <small>{{ event.notes }}</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Event Button for Completed Matches -->
+          <button mat-stroked-button color="primary" class="add-event-btn" 
+                  (click)="openEventManager(match)">
+            <i class="fa-solid fa-plus"></i>
+            Add Event
+          </button>
         </div>
+
+        <!-- No Events State -->
+        <div class="no-events" *ngIf="!match.events || match.events.length === 0">
+          <div class="no-events-content">
+            <i class="fa-solid fa-clipboard"></i>
+            <p>No match events recorded</p>
+            <button mat-raised-button color="primary" (click)="openEventManager(match)">
+              <i class="fa-solid fa-plus"></i>
+              Add Match Events
+            </button>
+          </div>
+        </div>
+
+        <!-- Match Statistics Summary -->
+        <div class="match-stats" *ngIf="match.events && match.events.length > 0">
+          <div class="stat-item">
+            <span class="stat-label">Tries</span>
+            <span class="stat-value">{{ getEventCount(match.events, 'try') }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Conversions</span>
+            <span class="stat-value">{{ getEventCount(match.events, 'conversion') }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Penalties</span>
+            <span class="stat-value">{{ getEventCount(match.events, 'penalty') }}</span>
+          </div>
+        </div>
+
+        <!-- Database ID for reference -->
+        <div class="match-id">{{ match._id || match.id }}</div>
       </mat-card-content>
+
+      <!-- Card Actions -->
+      <mat-card-actions align="end">
+        <button mat-button (click)="openEventManager(match)">
+          <i class="fa-solid fa-edit"></i>
+          Manage Events
+        </button>
+        <button mat-button (click)="viewMatchReport(match)">
+          <i class="fa-solid fa-file-alt"></i>
+          Full Report
+        </button>
+        <button mat-icon-button [matMenuTriggerFor]="matchActionsMenu">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+        <mat-menu #matchActionsMenu="matMenu">
+          <button mat-menu-item (click)="editMatch(match)">
+            <i class="fa-solid fa-pen"></i>
+            Edit Match
+          </button>
+          <button mat-menu-item (click)="duplicateMatch(match)">
+            <i class="fa-solid fa-copy"></i>
+            Duplicate
+          </button>
+          <button mat-menu-item (click)="deleteMatch(match)" class="danger">
+            <i class="fa-solid fa-trash"></i>
+            Delete
+          </button>
+        </mat-menu>
+      </mat-card-actions>
     </mat-card>
   </div>
 </div>

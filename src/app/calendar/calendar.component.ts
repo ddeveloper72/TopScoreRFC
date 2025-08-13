@@ -18,6 +18,10 @@ import {
   ConfirmationDialogComponent,
   ConfirmationDialogData,
 } from '../shared/confirmation-dialog/confirmation-dialog.component';
+import {
+  EventManagerDialogComponent,
+  EventManagerDialogData,
+} from '../shared/event-manager-dialog/event-manager-dialog.component';
 import { MatchStorageService, Match } from '../services/match-storage.service';
 import {
   fadeInOut,
@@ -535,5 +539,133 @@ export class CalendarComponent implements OnInit, OnDestroy {
       default:
         return 'sports';
     }
+  }
+
+  // ===============================================
+  // ENHANCED MATCH EVENTS METHODS
+  // ===============================================
+
+  /**
+   * Sort events by time for timeline display
+   */
+  getSortedEvents(events: any[]): any[] {
+    if (!events) return [];
+    return events.sort((a, b) => {
+      const timeA = this.convertTimeToMinutes(a.time);
+      const timeB = this.convertTimeToMinutes(b.time);
+      return timeA - timeB;
+    });
+  }
+
+  /**
+   * Convert time string (e.g., "15:30") to minutes for sorting
+   */
+  private convertTimeToMinutes(timeStr: string): number {
+    const [minutes, seconds] = timeStr.split(':').map(Number);
+    return minutes + (seconds / 60);
+  }
+
+  /**
+   * Get icon for event type
+   */
+  getEventIcon(eventType: string): string {
+    switch (eventType) {
+      case 'try': return '🏉';
+      case 'conversion': return '⚽';
+      case 'penalty': return '🎯';
+      case 'drop_goal': return '🏈';
+      case 'card': return '🟨';
+      case 'injury': return '🩹';
+      case 'substitution': return '🔄';
+      default: return '📝';
+    }
+  }
+
+  /**
+   * Format event type for display
+   */
+  formatEventType(eventType: string): string {
+    switch (eventType) {
+      case 'try': return 'Try';
+      case 'conversion': return 'Conversion';
+      case 'penalty': return 'Penalty';
+      case 'drop_goal': return 'Drop Goal';
+      case 'card': return 'Card';
+      case 'injury': return 'Injury';
+      case 'substitution': return 'Substitution';
+      default: return eventType.charAt(0).toUpperCase() + eventType.slice(1);
+    }
+  }
+
+  /**
+   * Count events of specific type
+   */
+  getEventCount(events: any[], eventType: string): number {
+    if (!events) return 0;
+    return events.filter(event => event.eventType === eventType).length;
+  }
+
+  /**
+   * Open event manager dialog
+   */
+  openEventManager(match: Match): void {
+    const dialogRef = this.dialog.open(EventManagerDialogComponent, {
+      width: '90vw',
+      maxWidth: '800px',
+      maxHeight: '90vh',
+      data: { match } as EventManagerDialogData,
+      panelClass: 'event-manager-dialog'
+    });
+
+    dialogRef.afterClosed().subscribe((updatedMatch) => {
+      if (updatedMatch) {
+        console.log('Match updated with events:', updatedMatch);
+        // Refresh matches to show updated events
+        this.refreshMatchesFromAPI();
+      }
+    });
+  }
+
+  /**
+   * View full match report
+   */
+  viewMatchReport(match: Match): void {
+    // TODO: Create MatchReportDialogComponent  
+    console.log('Viewing match report for:', match);
+    this.snackBar.open('Match Report - Coming Soon!', 'Close', { duration: 3000 });
+  }
+
+  /**
+   * Duplicate match for rescheduling
+   */
+  duplicateMatch(match: Match): void {
+    const duplicatedMatch = {
+      ...match,
+      id: undefined,
+      _id: undefined,
+      date: new Date(match.date.getTime() + 7 * 24 * 60 * 60 * 1000), // Add 1 week
+      status: 'scheduled' as const,
+      homeScore: 0,
+      awayScore: 0,
+      events: [] // Clear events for new match
+    };
+
+    // Open booking dialog with duplicated match data
+    const dialogRef = this.dialog.open(MatchBookingDialogComponent, {
+      width: '90vw',
+      maxWidth: '800px',
+      data: {
+        match: duplicatedMatch,
+        isEdit: false
+      } as MatchBookingData,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.snackBar.open('Match duplicated successfully!', 'Close', {
+          duration: 3000,
+        });
+      }
+    });
   }
 }
