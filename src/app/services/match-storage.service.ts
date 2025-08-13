@@ -1,6 +1,20 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
+export interface MatchEvent {
+  _id?: string; // MongoDB document ID for the event
+  time: string; // Game time in "MM:SS" format
+  period: 'first' | 'second' | 'extra';
+  eventType: 'try' | 'conversion' | 'penalty' | 'drop_goal' | 'injury' | 'card' | 'substitution' | 'other';
+  team: 'home' | 'away';
+  ourPlayer?: string; // Focus on OUR team's player performance
+  description: string; // Event description - fully editable
+  pointsSnapshot?: number; // Current match score when event occurred
+  notes?: string; // Additional context - editable for careful wording
+  createdAt?: Date; // Event creation timestamp
+  updatedAt?: Date; // Last edit timestamp
+}
+
 export interface Match {
   id: string;
   _id?: string; // MongoDB document ID
@@ -26,6 +40,7 @@ export interface Match {
   status: 'scheduled' | 'completed' | 'cancelled';
   homeScore?: number;
   awayScore?: number;
+  events?: MatchEvent[]; // Array of match events for detailed game tracking
   createdAt?: Date; // MongoDB created timestamp
   updatedAt?: Date; // MongoDB updated timestamp
   __v?: number; // MongoDB version key
@@ -325,5 +340,89 @@ export class MatchStorageService {
     }
 
     return defaultMatches;
+  }
+
+  // ===============================================
+  // MATCH EVENTS LOCAL STORAGE OPERATIONS
+  // ===============================================
+
+  /**
+   * Add an event to a match in local storage
+   */
+  addEventToMatch(matchId: string, event: MatchEvent): void {
+    const matches = this.getMatches();
+    const matchIndex = matches.findIndex(m => m.id === matchId || m._id === matchId);
+    
+    if (matchIndex !== -1) {
+      if (!matches[matchIndex].events) {
+        matches[matchIndex].events = [];
+      }
+      
+      // Add the event with a temporary ID if not provided
+      const eventWithId = {
+        ...event,
+        _id: event._id || this.generateId(),
+        createdAt: event.createdAt || new Date(),
+        updatedAt: event.updatedAt || new Date()
+      };
+      
+      matches[matchIndex].events!.push(eventWithId);
+      this.setMatches(matches);
+    }
+  }
+
+  /**
+   * Update an event in a match
+   */
+  updateEventInMatch(matchId: string, eventId: string, updatedEvent: Partial<MatchEvent>): void {
+    const matches = this.getMatches();
+    const matchIndex = matches.findIndex(m => m.id === matchId || m._id === matchId);
+    
+    if (matchIndex !== -1 && matches[matchIndex].events) {
+      const eventIndex = matches[matchIndex].events!.findIndex(e => e._id === eventId);
+      
+      if (eventIndex !== -1) {
+        matches[matchIndex].events![eventIndex] = {
+          ...matches[matchIndex].events![eventIndex],
+          ...updatedEvent,
+          updatedAt: new Date()
+        };
+        this.setMatches(matches);
+      }
+    }
+  }
+
+  /**
+   * Delete an event from a match
+   */
+  deleteEventFromMatch(matchId: string, eventId: string): void {
+    const matches = this.getMatches();
+    const matchIndex = matches.findIndex(m => m.id === matchId || m._id === matchId);
+    
+    if (matchIndex !== -1 && matches[matchIndex].events) {
+      matches[matchIndex].events = matches[matchIndex].events!.filter(e => e._id !== eventId);
+      this.setMatches(matches);
+    }
+  }
+
+  /**
+   * Get all events for a specific match
+   */
+  getEventsForMatch(matchId: string): MatchEvent[] {
+    const match = this.getMatchById(matchId);
+    return match?.events || [];
+  }
+
+  /**
+   * Update match with events from API response
+   */
+  updateMatchWithEvents(matchId: string, events: MatchEvent[]): void {
+    const matches = this.getMatches();
+    const matchIndex = matches.findIndex(m => m.id === matchId || m._id === matchId);
+    
+    if (matchIndex !== -1) {
+      matches[matchIndex].events = events;
+      this.setMatches(matches);
+    }
   }
 }
