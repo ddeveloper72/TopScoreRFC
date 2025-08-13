@@ -186,14 +186,32 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   startMatch(match: Match) {
-    // Navigate to score tracker with pre-filled team names
-    this.router.navigate(['/score-tracker'], {
-      queryParams: {
-        homeTeam: match.homeTeam,
-        awayTeam: match.awayTeam,
-        matchId: match.id,
-      },
-    });
+    console.log('🏉 Starting match:', match);
+    // Navigate to live match scoring interface
+    const matchId = match._id || match.id;
+    console.log('🔗 Navigating to live-scoring with ID:', matchId);
+
+    if (!matchId) {
+      this.snackBar.open('Error: No match ID found', 'Close', {
+        duration: 3000,
+      });
+      return;
+    }
+
+    this.router
+      .navigate(['/live-scoring', matchId])
+      .then((success) => {
+        if (success) {
+          console.log('✅ Navigation successful');
+        } else {
+          console.log('❌ Navigation failed');
+          this.snackBar.open('Navigation failed', 'Close', { duration: 3000 });
+        }
+      })
+      .catch((error) => {
+        console.error('❌ Navigation error:', error);
+        this.snackBar.open('Navigation error', 'Close', { duration: 3000 });
+      });
   }
 
   deleteMatch(match: Match) {
@@ -418,7 +436,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     }
   }
 
-  getMatchTypeClass(match: Match): string {
+  getMatchTimingClass(match: Match): string {
     const now = new Date();
     if (match.date < now) {
       return 'past-match';
@@ -657,15 +675,21 @@ export class CalendarComponent implements OnInit, OnDestroy {
    * Duplicate match for rescheduling
    */
   duplicateMatch(match: Match): void {
-    const duplicatedMatch = {
-      ...match,
-      id: undefined,
-      _id: undefined,
+    const duplicatedMatch: Match = {
+      id: '', // Will be assigned by the service
+      homeTeam: match.homeTeam,
+      awayTeam: match.awayTeam,
       date: new Date(match.date.getTime() + 7 * 24 * 60 * 60 * 1000), // Add 1 week
-      status: 'scheduled' as const,
+      status: 'scheduled',
       homeScore: 0,
       awayScore: 0,
       events: [], // Clear events for new match
+      matchType: match.matchType,
+      homeTeamCategory: match.homeTeamCategory,
+      homeTeamAgeLevel: match.homeTeamAgeLevel,
+      awayTeamAgeLevel: match.awayTeamAgeLevel,
+      venue: match.venue,
+      competition: match.competition,
     };
 
     // Open booking dialog with duplicated match data
