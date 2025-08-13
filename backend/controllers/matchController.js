@@ -59,32 +59,32 @@ exports.getMatchById = async (req, res) => {
 exports.deleteMatch = async (req, res) => {
   console.log('🗑️ DELETE MATCH REQUEST');
   console.log('ID:', req.params.id);
-  
+
   try {
     // Validate ObjectId format
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       console.log('❌ Invalid ObjectId format');
       return res.status(400).json({ message: 'Invalid match ID format' });
     }
-    
+
     console.log('🔍 Attempting to find and delete match using findOneAndDelete...');
-    
+
     // Using findOneAndDelete with explicit _id query
-    const deleted = await Match.findOneAndDelete({ 
-      _id: new mongoose.Types.ObjectId(req.params.id) 
+    const deleted = await Match.findOneAndDelete({
+      _id: new mongoose.Types.ObjectId(req.params.id)
     });
-    
+
     if (!deleted) {
       console.log('❌ Match not found for deletion');
       return res.status(404).json({ message: 'Match not found' });
     }
-    
+
     console.log('✅ MATCH DELETED using findOneAndDelete:', {
       id: deleted._id,
       homeTeam: deleted.homeTeam,
       awayTeam: deleted.awayTeam
     });
-    
+
     res.json({ message: 'Match deleted successfully', deletedMatch: deleted });
   } catch (err) {
     console.error('❌ DELETE MATCH ERROR:', err.message);
