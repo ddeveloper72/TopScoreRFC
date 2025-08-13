@@ -2,45 +2,45 @@ const mongoose = require('mongoose');
 
 // MatchEvent subdocument schema for CRUD operations on individual events
 const matchEventSchema = new mongoose.Schema({
-  time: { 
-    type: String, 
+  time: {
+    type: String,
     required: true,
     match: /^[0-9]{1,2}:[0-5][0-9]$/ // Format: "15:30" (minute:second)
   },
-  period: { 
-    type: String, 
-    enum: ['first', 'second', 'extra'], 
-    required: true 
+  period: {
+    type: String,
+    enum: ['first', 'second', 'extra'],
+    required: true
   },
-  eventType: { 
-    type: String, 
-    enum: ['try', 'conversion', 'penalty', 'drop_goal', 'injury', 'card', 'substitution', 'other'], 
-    required: true 
+  eventType: {
+    type: String,
+    enum: ['try', 'conversion', 'penalty', 'drop_goal', 'injury', 'card', 'substitution', 'other'],
+    required: true
   },
-  team: { 
-    type: String, 
-    enum: ['home', 'away'], 
-    required: true 
+  team: {
+    type: String,
+    enum: ['home', 'away'],
+    required: true
   },
-  ourPlayer: { 
-    type: String, 
+  ourPlayer: {
+    type: String,
     required: false // Focus on OUR team's player performance
   },
-  description: { 
-    type: String, 
+  description: {
+    type: String,
     required: true,
     maxlength: 500 // Reasonable limit for event descriptions
   },
-  pointsSnapshot: { 
-    type: Number, 
+  pointsSnapshot: {
+    type: Number,
     required: false // Current match score when event occurred
   },
-  notes: { 
-    type: String, 
+  notes: {
+    type: String,
     required: false,
     maxlength: 1000 // Additional context, editable for careful wording
   }
-}, { 
+}, {
   timestamps: true // Provides createdAt and updatedAt for audit trail
 });
 

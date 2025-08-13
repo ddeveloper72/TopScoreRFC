@@ -121,7 +121,7 @@ exports.addMatchEvent = async (req, res) => {
 
     // Get the newly created event (last one in array)
     const newEvent = savedMatch.events[savedMatch.events.length - 1];
-    
+
     console.log('✅ EVENT ADDED:', newEvent);
     res.status(201).json({
       message: 'Event added successfully',
