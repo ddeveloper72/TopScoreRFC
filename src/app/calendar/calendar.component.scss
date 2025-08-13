@@ -784,7 +784,8 @@
       border-left: 4px solid #e91e63;
     }
 
-    .match-type, .competition {
+    .match-type,
+    .competition {
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -814,7 +815,7 @@
       position: relative;
 
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         left: 20px;
         top: 0;
@@ -829,7 +830,7 @@
         margin-bottom: 0.75rem;
 
         &::before {
-          content: '';
+          content: "";
           position: absolute;
           left: 14px;
           top: 50%;
@@ -842,10 +843,18 @@
           box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
         }
 
-        &.event-try::before { background: #27ae60; }
-        &.event-penalty::before { background: #f39c12; }
-        &.event-card::before { background: #e74c3c; }
-        &.event-injury::before { background: #e67e22; }
+        &.event-try::before {
+          background: #27ae60;
+        }
+        &.event-penalty::before {
+          background: #f39c12;
+        }
+        &.event-card::before {
+          background: #e74c3c;
+        }
+        &.event-injury::before {
+          background: #e67e22;
+        }
 
         .event-time {
           position: absolute;
@@ -1032,4 +1041,43 @@
   }
 }
 
+// Start Match Button Styling
+.enhanced-match-card {
+  mat-card-actions {
+    .start-match-btn {
+      background: linear-gradient(135deg, #27ae60, #2ecc71) !important;
+      color: white !important;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+        background: linear-gradient(135deg, #219a52, #27ae60) !important;
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      mat-icon,
+      i {
+        margin-right: 0.5rem;
+        animation: pulse 2s infinite;
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
