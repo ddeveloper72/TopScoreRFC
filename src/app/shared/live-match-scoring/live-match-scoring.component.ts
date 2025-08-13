@@ -76,23 +76,6 @@ interface QuickEventButton {
           <div class="team-name">{{ match.homeTeam }}</div>
           <div class="score-display">
             <span class="score">{{ currentHomeScore }}</span>
-            <div class="score-controls">
-              <button
-                mat-mini-fab
-                color="primary"
-                (click)="adjustScore('home', 1)"
-              >
-                <mat-icon>add</mat-icon>
-              </button>
-              <button
-                mat-mini-fab
-                color="warn"
-                (click)="adjustScore('home', -1)"
-                [disabled]="currentHomeScore <= 0"
-              >
-                <mat-icon>remove</mat-icon>
-              </button>
-            </div>
           </div>
         </div>
 
@@ -111,30 +94,16 @@ interface QuickEventButton {
           <div class="team-name">{{ match.awayTeam }}</div>
           <div class="score-display">
             <span class="score">{{ currentAwayScore }}</span>
-            <div class="score-controls">
-              <button
-                mat-mini-fab
-                color="primary"
-                (click)="adjustScore('away', 1)"
-              >
-                <mat-icon>add</mat-icon>
-              </button>
-              <button
-                mat-mini-fab
-                color="warn"
-                (click)="adjustScore('away', -1)"
-                [disabled]="currentAwayScore <= 0"
-              >
-                <mat-icon>remove</mat-icon>
-              </button>
-            </div>
           </div>
         </div>
       </div>
 
       <!-- Quick Event Buttons -->
       <div class="quick-events" *ngIf="isMatchActive">
-        <h3>Quick Add Event</h3>
+        <h3>🏉 Add Scoring Events</h3>
+        <p class="scoring-info">
+          Use these buttons to add events with correct rugby point values
+        </p>
         <div class="event-buttons">
           <div class="team-section">
             <h4>{{ match.homeTeam }} (Home)</h4>
@@ -183,7 +152,7 @@ interface QuickEventButton {
           class="custom-event-btn"
         >
           <mat-icon>add_circle_outline</mat-icon>
-          Add Custom Event
+          Add Non-Scoring Event
         </button>
       </div>
 
@@ -374,6 +343,28 @@ interface QuickEventButton {
 
         .control-btn {
           font-weight: 600;
+
+          // Stroked button (Finish Match)
+          &[mat-stroked-button] {
+            color: white !important;
+            border-color: rgba(255, 255, 255, 0.5) !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+
+            &:hover:not(:disabled) {
+              background-color: rgba(255, 255, 255, 0.2) !important;
+              border-color: rgba(255, 255, 255, 0.7) !important;
+            }
+
+            &:disabled {
+              opacity: 0.5;
+              color: rgba(255, 255, 255, 0.5) !important;
+              border-color: rgba(255, 255, 255, 0.2) !important;
+            }
+
+            mat-icon {
+              color: inherit !important;
+            }
+          }
         }
       }
 
@@ -443,6 +434,15 @@ interface QuickEventButton {
 
           .period-btn {
             font-size: 0.85rem;
+            background-color: rgba(255, 255, 255, 0.15) !important;
+            color: white !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            transition: all 0.3s ease;
+
+            &:hover {
+              background-color: rgba(255, 255, 255, 0.25) !important;
+              transform: translateY(-1px);
+            }
           }
         }
       }
@@ -455,8 +455,16 @@ interface QuickEventButton {
         backdrop-filter: blur(10px);
 
         h3 {
-          margin-bottom: 1rem;
+          margin-bottom: 0.5rem;
           text-align: center;
+        }
+
+        .scoring-info {
+          text-align: center;
+          color: rgba(255, 255, 255, 0.8);
+          font-size: 0.9rem;
+          margin-bottom: 1.5rem;
+          font-style: italic;
         }
 
         .event-buttons {
@@ -517,6 +525,19 @@ interface QuickEventButton {
           margin-top: 1rem;
           padding: 1rem;
           font-size: 1rem;
+          background-color: rgba(255, 255, 255, 0.1) !important;
+          color: white !important;
+          border: 1px solid rgba(255, 255, 255, 0.3) !important;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            transform: translateY(-1px);
+          }
+
+          mat-icon {
+            color: white !important;
+          }
         }
       }
 
@@ -695,6 +716,36 @@ interface QuickEventButton {
         button {
           padding: 0.75rem 2rem;
           font-weight: 600;
+
+          // Stroked buttons (Export, Exit)
+          &[mat-stroked-button] {
+            color: white !important;
+            border-color: rgba(255, 255, 255, 0.5) !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+
+            &:hover {
+              background-color: rgba(255, 255, 255, 0.2) !important;
+              border-color: rgba(255, 255, 255, 0.7) !important;
+            }
+
+            mat-icon {
+              color: white !important;
+            }
+          }
+
+          // Regular buttons (Exit)
+          &[mat-button] {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+
+            &:hover {
+              background-color: rgba(255, 255, 255, 0.2) !important;
+            }
+
+            mat-icon {
+              color: white !important;
+            }
+          }
         }
       }
 
@@ -898,7 +949,7 @@ export class LiveMatchScoringComponent implements OnInit, OnDestroy {
     });
   }
 
-  adjustScore(team: 'home' | 'away', change: number): void {
+  private adjustScore(team: 'home' | 'away', change: number): void {
     if (team === 'home') {
       this.currentHomeScore = Math.max(0, this.currentHomeScore + change);
     } else {
@@ -945,8 +996,33 @@ export class LiveMatchScoringComponent implements OnInit, OnDestroy {
   }
 
   editLiveEvent(event: MatchEvent & { matchTime?: number }): void {
-    // TODO: Open edit dialog
-    console.log('Edit event:', event);
+    console.log('🎯 Editing event:', event);
+
+    // Create a simple prompt-based edit for now
+    const newDescription = prompt(
+      'Edit event description:',
+      event.description || ''
+    );
+    const newPlayer = prompt('Edit our player name:', event.ourPlayer || '');
+    const newNotes = prompt('Edit notes:', event.notes || '');
+
+    if (newDescription !== null) {
+      // User didn't cancel
+      // Find and update the event
+      const eventIndex = this.liveEvents.findIndex((e) => e._id === event._id);
+      if (eventIndex > -1) {
+        this.liveEvents[eventIndex] = {
+          ...this.liveEvents[eventIndex],
+          description:
+            newDescription || this.liveEvents[eventIndex].description,
+          ourPlayer: newPlayer || this.liveEvents[eventIndex].ourPlayer,
+          notes: newNotes || this.liveEvents[eventIndex].notes,
+        };
+
+        this.snackBar.open('Event updated!', 'Close', { duration: 2000 });
+        console.log('✅ Event updated successfully');
+      }
+    }
   }
 
   deleteLiveEvent(event: MatchEvent & { matchTime?: number }): void {
