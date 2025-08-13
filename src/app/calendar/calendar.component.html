@@ -47,7 +47,7 @@
 
         <!-- Match indicators for this day -->
         <div class="match-indicators" *ngIf="day.hasMatches">
-          <div class="match-dot" *ngFor="let match of day.matches.slice(0, 3)" [ngClass]="getMatchTypeClass(match)"
+          <div class="match-dot" *ngFor="let match of day.matches.slice(0, 3)" [ngClass]="getMatchTimingClass(match)"
             [matTooltip]="getMatchTooltip(match)" matTooltipPosition="above" (click)="openMatchDetails(match, $event)">
           </div>
           <div class="more-matches" *ngIf="day.matches.length > 3"
@@ -285,6 +285,11 @@
 
       <!-- Card Actions -->
       <mat-card-actions align="end">
+        <button mat-raised-button color="primary" (click)="startMatch(match)" *ngIf="match.status === 'scheduled'"
+          class="start-match-btn">
+          <i class="fa-solid fa-play"></i>
+          Start Match
+        </button>
         <button mat-button (click)="openEventManager(match)">
           <i class="fa-solid fa-edit"></i>
           Manage Events
