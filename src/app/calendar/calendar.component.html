@@ -63,15 +63,39 @@
   <div class="matches-list" *ngIf="currentView === 'list'" [@fadeInOut]>
     <h3 [@slideInFromBottom]>Upcoming Matches</h3>
 
-    <mat-card class="match-card" *ngFor="let match of upcomingMatches; let i = index" [@fadeInOut]
+    <mat-accordion class="match-accordion" *ngFor="let match of upcomingMatches; let i = index" [@fadeInOut]
       [style.animation-delay]="(i * 100) + 'ms'">
-      <mat-card-content>
-        <div class="match-header">
-          <div class="match-date">
-            <i class="fa-solid fa-clock"></i>
-            {{ match.date | date:'MMM dd, yyyy - HH:mm' }}
-          </div>
-          <div class="match-actions">
+      
+      <mat-expansion-panel [expanded]="isAccordionExpanded(match._id || match.id)" 
+                          (opened)="onAccordionOpened(match._id || match.id)" 
+                          (closed)="onAccordionClosed(match._id || match.id)"
+                          class="match-expansion-panel">
+        
+        <!-- Accordion Header -->
+        <mat-expansion-panel-header class="match-header">
+          <mat-panel-title class="match-title">
+            <div class="match-teams-summary">
+              <span class="team-name-short">{{ match.homeTeam }}</span>
+              <span class="vs-indicator">vs</span>
+              <span class="team-name-short">{{ match.awayTeam }}</span>
+            </div>
+          </mat-panel-title>
+          <mat-panel-description class="match-description">
+            <div class="match-date-summary">
+              <i class="fa-solid fa-clock"></i>
+              {{ match.date | date:'MMM dd - HH:mm' }}
+            </div>
+            <div class="match-status-summary">
+              <span class="status-badge" [ngClass]="match.status">
+                {{ match.status | titlecase }}
+              </span>
+            </div>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <!-- Accordion Content -->
+        <div class="match-content">
+          <div class="match-actions-header">
             <button mat-icon-button [matMenuTriggerFor]="matchMenu">
               <i class="fa-solid fa-ellipsis-vertical"></i>
             </button>
@@ -90,71 +114,67 @@
               </button>
             </mat-menu>
           </div>
-        </div>
 
-        <!-- Match Type and Category Info -->
-        <div class="match-info" [ngClass]="getMatchTypeClass(match.matchType)"
-          *ngIf="match.matchType || match.homeTeamCategory">
-          <div class="match-type" *ngIf="match.matchType">
-            <mat-icon [style.color]="getMatchTypeColor(match.matchType)">
-              {{ getMatchTypeIcon(match.matchType) }}
-            </mat-icon>
-            <span class="match-type-label">{{ formatMatchType(match.matchType) }}</span>
+          <!-- Match Type and Category Info -->
+          <div class="match-info" [ngClass]="getMatchTypeClass(match.matchType)"
+            *ngIf="match.matchType || match.homeTeamCategory">
+            <div class="match-type" *ngIf="match.matchType">
+              <mat-icon [style.color]="getMatchTypeColor(match.matchType)">
+                {{ getMatchTypeIcon(match.matchType) }}
+              </mat-icon>
+              <span class="match-type-label">{{ formatMatchType(match.matchType) }}</span>
+            </div>
+            <div class="team-details" *ngIf="match.homeTeamCategory || match.homeTeamAgeLevel">
+              <span class="team-category" *ngIf="match.homeTeamCategory">
+                {{ formatTeamCategory(match.homeTeamCategory) }}
+              </span>
+              <span class="team-age" *ngIf="match.homeTeamAgeLevel">
+                {{ match.homeTeamAgeLevel }}
+              </span>
+              <span class="vs-age" *ngIf="match.awayTeamAgeLevel && match.homeTeamAgeLevel !== match.awayTeamAgeLevel">
+                vs {{ match.awayTeamAgeLevel }}
+              </span>
+            </div>
           </div>
-          <div class="team-details" *ngIf="match.homeTeamCategory || match.homeTeamAgeLevel">
-            <span class="team-category" *ngIf="match.homeTeamCategory">
-              {{ formatTeamCategory(match.homeTeamCategory) }}
+
+          <div class="match-teams-detailed">
+            <div class="team home-team">
+              <span class="team-name">{{ match.homeTeam }}</span>
+              <small class="team-type">Home</small>
+            </div>
+            <div class="vs-section">
+              <span class="vs">VS</span>
+            </div>
+            <div class="team away-team">
+              <span class="team-name">{{ match.awayTeam }}</span>
+              <small class="team-type">Away</small>
+            </div>
+          </div>
+
+          <div class="match-details">
+            <div class="detail-item">
+              <i class="fa-solid fa-location-dot"></i>
+              {{ match.venue }}
+            </div>
+            <div class="detail-item" *ngIf="match.competition">
+              <i class="fa-solid fa-trophy"></i>
+              {{ match.competition }}
+            </div>
+          </div>
+
+          <div class="match-timing">
+            <span class="days-until" *ngIf="getDaysUntil(match.date) >= 0">
+              {{ getDaysUntil(match.date) === 0 ? 'Today' : getDaysUntil(match.date) + ' days' }}
             </span>
-            <span class="team-age" *ngIf="match.homeTeamAgeLevel">
-              {{ match.homeTeamAgeLevel }}
-            </span>
-            <span class="vs-age" *ngIf="match.awayTeamAgeLevel && match.homeTeamAgeLevel !== match.awayTeamAgeLevel">
-              vs {{ match.awayTeamAgeLevel }}
-            </span>
           </div>
-        </div>
 
-        <div class="match-teams">
-          <div class="team home-team">
-            <span class="team-name">{{ match.homeTeam }}</span>
-            <small class="team-type">Home</small>
-          </div>
-          <div class="vs-section">
-            <span class="vs">VS</span>
-          </div>
-          <div class="team away-team">
-            <span class="team-name">{{ match.awayTeam }}</span>
-            <small class="team-type">Away</small>
+          <!-- Database ID for reference -->
+          <div class="match-id">
+            {{ match._id || match.id }}
           </div>
         </div>
-
-        <div class="match-details">
-          <div class="detail-item">
-            <i class="fa-solid fa-location-dot"></i>
-            {{ match.venue }}
-          </div>
-          <div class="detail-item" *ngIf="match.competition">
-            <i class="fa-solid fa-trophy"></i>
-            {{ match.competition }}
-          </div>
-        </div>
-
-        <div class="match-status">
-          <span class="status-badge" [ngClass]="match.status">
-            {{ match.status | titlecase }}
-          </span>
-          <span class="days-until" *ngIf="getDaysUntil(match.date) >= 0">
-            {{ getDaysUntil(match.date) === 0 ? 'Today' : getDaysUntil(match.date) + ' days' }}
-          </span>
-        </div>
-
-        <!-- Database ID for reference -->
-        <div class="match-id"
-          style="position: absolute; bottom: 8px; right: 8px; font-size: 10px; color: #999; opacity: 0.7;">
-          {{ match._id || match.id }}
-        </div>
-      </mat-card-content>
-    </mat-card>
+      </mat-expansion-panel>
+    </mat-accordion>
 
     <!-- No matches message -->
     <div class="no-matches" *ngIf="upcomingMatches.length === 0">
