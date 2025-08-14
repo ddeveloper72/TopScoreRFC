@@ -33,7 +33,8 @@
 .hero-section .hero-content .dashboard-rugby-ball {
   width: 63px;
   height: 45px;
-  filter: brightness(1.1) contrast(1.1) saturate(1.2) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
+  filter: brightness(1.1) contrast(1.1) saturate(1.2)
+    drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
   transition: all 0.3s ease-in-out;
   flex-shrink: 0;
   scale: 1;
@@ -47,7 +48,8 @@
 .hero-section .hero-content .dashboard-rugby-ball:hover,
 .hero-section .hero-content .dashboard-rugby-ball:focus {
   transform: scale(1.1) rotate(5deg) translateY(-4px);
-  filter: brightness(1.3) contrast(1.3) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+  filter: brightness(1.3) contrast(1.3)
+    drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
   background: transparent !important;
   border: none;
   outline: none;
@@ -150,12 +152,61 @@
 .upcoming-section {
   padding: 2rem 1rem;
 }
+
+.recent-section .section-header,
+.upcoming-section .section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto 1.5rem auto;
+}
+
+.recent-section .section-header h2,
+.upcoming-section .section-header h2,
 .recent-section h2,
 .upcoming-section h2 {
   color: white;
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin: 0;
   font-size: 1.5rem;
+}
+
+.recent-section .section-header button,
+.upcoming-section .section-header button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.recent-section .section-header button:hover,
+.upcoming-section .section-header button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.recent-section .section-footer,
+.upcoming-section .section-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.recent-section .section-footer button,
+.upcoming-section .section-footer button {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.5);
+  border-radius: 25px;
+  font-weight: 500;
+}
+
+.recent-section .section-footer button:hover,
+.upcoming-section .section-footer button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.8);
 }
 
 .recent-games,
@@ -333,4 +384,4 @@
     max-width: 1200px;
     margin: 0 auto;
   }
-}/*# sourceMappingURL=dashboard.component.css.map */
+} /*# sourceMappingURL=dashboard.component.css.map */
