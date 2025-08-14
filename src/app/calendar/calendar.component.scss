@@ -1,7 +1,19 @@
 // Calendar Component Styles - Mobile First with Smooth Animations
+
+// Variables
+$primary-color: #667eea;
+$secondary-color: #764ba2;
+$accent-color: #f1c40f;
+$text-color: #2c3e50;
+$light-gray: #bdc3c7;
+$white: #ffffff;
+$border-radius: 12px;
+$shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+$transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
 .calendar-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
   padding: 1rem;
   animation: fadeIn 0.6s ease-in-out;
 }
@@ -465,6 +477,246 @@
   }
 }
 
+// Accordion Styles for Match Cards
+.matches-list {
+  // Accordion specific styles
+  .match-accordion {
+    margin-bottom: 1rem;
+
+    .match-expansion-panel {
+      background: #ffffff;
+      border-radius: 12px !important;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      margin-bottom: 1rem;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      &.mat-expanded {
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+      }
+
+      // Override Material's default styles
+      &.mat-expansion-panel {
+        border-radius: 12px !important;
+
+        &:first-child {
+          border-top-left-radius: 12px !important;
+          border-top-right-radius: 12px !important;
+        }
+
+        &:last-child {
+          border-bottom-left-radius: 12px !important;
+          border-bottom-right-radius: 12px !important;
+        }
+      }
+
+      // Header styling
+      .match-header {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px 12px 0 0;
+        &.mat-expansion-panel-header {
+          padding: 1rem 1.5rem;
+          height: auto;
+          min-height: 64px;
+
+          &:hover {
+            background: linear-gradient(135deg, #f1f3f4, #e8eaed);
+          }
+        }
+
+        .match-title {
+          flex: 1;
+
+          .match-teams-summary {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #2c3e50;
+
+            .team-name-short {
+              color: #2c3e50;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 120px;
+            }
+
+            .vs-indicator {
+              background: linear-gradient(135deg, #667eea, #764ba2);
+              color: #ffffff;
+              padding: 0.25rem 0.6rem;
+              border-radius: 12px;
+              font-weight: 700;
+              font-size: 0.8rem;
+              flex-shrink: 0;
+            }
+          }
+        }
+
+        .match-description {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 0.5rem;
+
+          .match-date-summary {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.9rem;
+
+            i {
+              font-size: 0.9rem;
+            }
+          }
+
+          .match-status-summary {
+            .status-badge {
+              padding: 0.25rem 0.75rem;
+              border-radius: 15px;
+              font-size: 0.75rem;
+              font-weight: 700;
+
+              &.scheduled {
+                background: #e3f2fd;
+                color: #1976d2;
+              }
+
+              &.in-progress {
+                background: #ffebee;
+                color: #d32f2f;
+              }
+
+              &.completed {
+                background: #e8f5e8;
+                color: #388e3c;
+              }
+            }
+          }
+        }
+      }
+
+      // Content styling
+      .match-content {
+        padding: 1.5rem;
+        position: relative;
+
+        .match-actions-header {
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+
+          button {
+            color: #7f8c8d;
+
+            &:hover {
+              color: #667eea;
+            }
+          }
+        }
+
+        .match-teams-detailed {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 1.5rem;
+          padding: 1rem;
+          background: #f8f9fa;
+          border-radius: 8px;
+
+          .team {
+            text-align: center;
+            flex: 1;
+
+            .team-name {
+              display: block;
+              font-weight: 700;
+              font-size: 1.2rem;
+              color: #2c3e50;
+              margin-bottom: 0.25rem;
+            }
+
+            .team-type {
+              font-size: 0.8rem;
+              color: #7f8c8d;
+              font-weight: 500;
+            }
+          }
+
+          .vs-section {
+            margin: 0 1rem;
+
+            .vs {
+              background: linear-gradient(135deg, #667eea, #764ba2);
+              color: #ffffff;
+              padding: 0.5rem 1rem;
+              border-radius: 20px;
+              font-weight: 700;
+              font-size: 0.9rem;
+            }
+          }
+        }
+
+        .match-details {
+          margin-bottom: 1rem;
+
+          .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+
+            i {
+              width: 16px;
+              color: #667eea;
+            }
+          }
+        }
+
+        .match-timing {
+          text-align: center;
+          margin-bottom: 1rem;
+
+          .days-until {
+            font-weight: 600;
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+          }
+        }
+
+        .match-id {
+          position: absolute;
+          bottom: 8px;
+          right: 8px;
+          font-size: 10px;
+          color: #999;
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+}
+
 // Past Matches - DISABLED: Moved to dedicated Recent Matches page
 /* 
 .past-matches {
@@ -565,6 +817,44 @@
         }
       }
     }
+
+    // Accordion responsive styles for tablets and up
+    .match-accordion {
+      .match-expansion-panel {
+        .match-header {
+          .match-title .match-teams-summary {
+            font-size: 1.2rem;
+            gap: 1rem;
+
+            .team-name-short {
+              max-width: 180px;
+            }
+
+            .vs-indicator {
+              padding: 0.3rem 0.8rem;
+              font-size: 0.9rem;
+            }
+          }
+
+          .match-description {
+            flex-direction: row;
+            gap: 1rem;
+
+            .match-date-summary {
+              font-size: 1rem;
+            }
+          }
+        }
+
+        .match-content {
+          .match-teams-detailed {
+            .team .team-name {
+              font-size: 1.3rem;
+            }
+          }
+        }
+      }
+    }
   }
 }
 
@@ -604,6 +894,19 @@
 
     .no-matches {
       grid-column: 1 / -1;
+    }
+
+    // Accordion grid layout for desktop
+    .match-accordion {
+      .match-expansion-panel {
+        .match-header {
+          .match-title .match-teams-summary {
+            .team-name-short {
+              max-width: 200px;
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -1088,3 +1391,368 @@
   }
 }
 */
+
+// Mobile responsive styles for accordion
+@media (max-width: 768px) {
+  .matches-list {
+    .match-accordion {
+      .match-expansion-panel {
+        .match-header {
+          .match-title .match-teams-summary {
+            font-size: 1rem;
+            gap: 0.5rem;
+
+            .team-name-short {
+              max-width: 80px;
+              font-size: 0.95rem;
+            }
+
+            .vs-indicator {
+              padding: 0.2rem 0.4rem;
+              font-size: 0.7rem;
+            }
+          }
+
+          .match-description {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+
+            .match-date-summary {
+              font-size: 0.8rem;
+
+              i {
+                font-size: 0.8rem;
+              }
+            }
+
+            .match-status-summary .status-badge {
+              font-size: 0.7rem;
+              padding: 0.2rem 0.5rem;
+            }
+          }
+        }
+
+        .match-content {
+          padding: 1rem;
+
+          .match-actions-header {
+            top: 0.5rem;
+            right: 0.5rem;
+          }
+
+          .match-teams-detailed {
+            flex-direction: column;
+            gap: 1rem;
+            padding: 0.75rem;
+
+            .vs-section {
+              margin: 0;
+              order: 2;
+
+              .vs {
+                padding: 0.3rem 0.8rem;
+                font-size: 0.8rem;
+              }
+            }
+
+            .team {
+              &.away-team {
+                order: 3;
+              }
+
+              .team-name {
+                font-size: 1rem;
+              }
+            }
+          }
+
+          .match-timing {
+            .days-until {
+              font-size: 0.8rem;
+              padding: 0.4rem 0.8rem;
+            }
+          }
+
+          .match-details {
+            .detail-item {
+              font-size: 0.8rem;
+
+              i {
+                width: 14px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// New Split Card Styles
+.match-card {
+  margin-bottom: 1.5rem;
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+  overflow: hidden;
+  background: $white;
+  transition: $transition;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Top Section (Always Visible)
+.match-top-section {
+  padding: 1.5rem;
+  background: $white;
+  border-bottom: 2px solid #f5f5f5;
+
+  .match-teams-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+
+    .team {
+      flex: 1;
+      text-align: center;
+
+      &.home-team {
+        text-align: left;
+      }
+
+      &.away-team {
+        text-align: right;
+      }
+
+      .team-name {
+        display: block;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: $text-color;
+        margin-bottom: 0.25rem;
+      }
+
+      .team-score {
+        font-size: 2rem;
+        font-weight: 700;
+        color: $primary-color;
+      }
+    }
+
+    .score-separator {
+      margin: 0 1rem;
+
+      .vs-text {
+        font-size: 1.2rem;
+        color: $light-gray;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .match-info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+
+    .match-type-info,
+    .match-status-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: $text-color;
+      font-size: 0.9rem;
+
+      i {
+        color: $primary-color;
+      }
+    }
+  }
+
+  .match-date-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .match-date {
+      color: $text-color;
+      font-weight: 500;
+    }
+
+    .match-actions-btn {
+      color: $text-color;
+
+      &:hover {
+        background-color: rgba($primary-color, 0.1);
+      }
+    }
+
+    .match-edit-btn {
+      color: $primary-color;
+      font-size: 0.9rem;
+
+      &:hover {
+        background-color: rgba($primary-color, 0.1);
+      }
+    }
+  }
+}
+
+// Bottom Section (Accordion)
+.match-events-accordion {
+  .match-events-panel {
+    box-shadow: none;
+    border: none;
+
+    .events-header {
+      background-color: #f8f9fa;
+      border-top: 1px solid #e9ecef;
+
+      mat-panel-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: $text-color;
+        font-weight: 500;
+
+        i {
+          color: $primary-color;
+        }
+      }
+    }
+
+    .match-events-content {
+      padding: 1rem;
+      background: $white;
+
+      .match-event {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f0f0f0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .event-time {
+          font-weight: 600;
+          color: $text-color;
+          min-width: 3rem;
+          text-align: center;
+        }
+
+        .event-icon {
+          width: 2rem;
+          height: 2rem;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          &.try-icon {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+          }
+
+          &.conversion-icon {
+            background-color: rgba(33, 150, 243, 0.2);
+            color: #2196f3;
+          }
+
+          &.drop-goal-icon {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+          }
+
+          i {
+            font-size: 0.8rem;
+          }
+        }
+
+        .event-details {
+          flex: 1;
+
+          .event-type {
+            font-weight: 600;
+            color: $text-color;
+            margin-bottom: 0.25rem;
+          }
+
+          .event-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+          }
+
+          .event-team {
+            font-size: 0.8rem;
+            color: $primary-color;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive design for split cards
+@media (max-width: 768px) {
+  .match-top-section {
+    padding: 1rem;
+
+    .match-teams-header {
+      .team {
+        .team-name {
+          font-size: 1rem;
+        }
+
+        .team-score {
+          font-size: 1.5rem;
+        }
+      }
+    }
+
+    .match-info-row {
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: flex-start;
+    }
+  }
+
+  .match-events-content {
+    .match-event {
+      gap: 0.75rem;
+
+      .event-time {
+        min-width: 2.5rem;
+        font-size: 0.9rem;
+      }
+
+      .event-icon {
+        width: 1.75rem;
+        height: 1.75rem;
+      }
+
+      .event-details {
+        .event-type {
+          font-size: 0.9rem;
+        }
+
+        .event-description {
+          font-size: 0.85rem;
+        }
+
+        .event-team {
+          font-size: 0.75rem;
+        }
+      }
+    }
+  }
+}
