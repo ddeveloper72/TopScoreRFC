@@ -465,7 +465,8 @@
   }
 }
 
-// Past Matches
+// Past Matches - DISABLED: Moved to dedicated Recent Matches page
+/* 
 .past-matches {
   margin-top: 2rem;
 
@@ -521,6 +522,7 @@
     }
   }
 }
+*/
 
 // Responsive Design
 @media (min-width: 768px) {
@@ -691,9 +693,9 @@
 }
 
 // ===============================================
-// ENHANCED MATCH RESULTS CARDS WITH EVENT TIMELINE
+// ENHANCED MATCH RESULTS CARDS WITH EVENT TIMELINE - DISABLED: Moved to Recent Matches page
 // ===============================================
-
+/*
 .enhanced-match-card {
   position: relative;
   margin-bottom: 1.5rem;
@@ -1010,8 +1012,10 @@
     }
   }
 }
+*/
 
-// Mobile Responsiveness
+// Mobile Responsiveness - DISABLED: Related to enhanced match cards
+/*
 @media (max-width: 768px) {
   .enhanced-match-card {
     .match-result-header {
@@ -1040,8 +1044,10 @@
     }
   }
 }
+*/
 
-// Start Match Button Styling
+// Start Match Button Styling - DISABLED: Related to enhanced match cards
+/*
 .enhanced-match-card {
   mat-card-actions {
     .start-match-btn {
@@ -1081,3 +1087,4 @@
     transform: scale(1);
   }
 }
+*/
