@@ -51,6 +51,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   upcomingMatches: Match[] = [];
   calendarDays: CalendarDay[] = [];
   weekDays: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  expandedAccordionPanels: Set<string> = new Set<string>();
   private subscription = new Subscription();
 
   constructor(
@@ -597,5 +598,26 @@ export class CalendarComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  // Accordion panel methods
+  isAccordionExpanded(matchId: string): boolean {
+    return this.expandedAccordionPanels.has(matchId);
+  }
+
+  toggleAccordionPanel(matchId: string): void {
+    if (this.expandedAccordionPanels.has(matchId)) {
+      this.expandedAccordionPanels.delete(matchId);
+    } else {
+      this.expandedAccordionPanels.add(matchId);
+    }
+  }
+
+  onAccordionOpened(matchId: string): void {
+    this.expandedAccordionPanels.add(matchId);
+  }
+
+  onAccordionClosed(matchId: string): void {
+    this.expandedAccordionPanels.delete(matchId);
   }
 }
