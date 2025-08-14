@@ -33,6 +33,14 @@ export const routes: Routes = [
     data: { animation: 'Calendar' },
   },
   {
+    path: 'recent-matches',
+    loadComponent: () =>
+      import('./recent-matches/recent-matches.component').then(
+        (m) => m.RecentMatchesComponent
+      ),
+    data: { animation: 'RecentMatches' },
+  },
+  {
     path: 'live-scoring/:id',
     loadComponent: () =>
       import('./shared/live-match-scoring/live-match-scoring.component').then(
