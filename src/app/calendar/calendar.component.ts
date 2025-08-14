@@ -49,7 +49,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
   currentMonth = new Date();
   currentView: 'month' | 'list' = 'list';
   upcomingMatches: Match[] = [];
-  pastMatches: Match[] = [];
   calendarDays: CalendarDay[] = [];
   weekDays: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   private subscription = new Subscription();
@@ -71,11 +70,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
           (a, b) => a.date.getTime() - b.date.getTime()
         );
 
-        // Separate into upcoming and past matches
+        // Filter for upcoming matches only (past matches handled by Recent Matches page)
         this.upcomingMatches = sortedMatches.filter(
           (match) => match.date >= now
         );
-        this.pastMatches = sortedMatches.filter((match) => match.date < now);
         this.generateCalendar();
       })
     );
@@ -316,38 +314,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   }
 
-  getMatchResult(match: Match): string {
-    if (
-      match.status !== 'completed' ||
-      match.homeScore === undefined ||
-      match.awayScore === undefined
-    ) {
-      return 'N/A';
-    }
-
-    if (match.homeScore > match.awayScore) {
-      return 'W';
-    } else if (match.homeScore < match.awayScore) {
-      return 'L';
-    } else {
-      return 'D';
-    }
-  }
-
-  getResultClass(match: Match): string {
-    const result = this.getMatchResult(match);
-    switch (result) {
-      case 'W':
-        return 'win';
-      case 'L':
-        return 'loss';
-      case 'D':
-        return 'draw';
-      default:
-        return '';
-    }
-  }
-
   // Calendar Grid Methods
   generateCalendar(): void {
     const year = this.currentMonth.getFullYear();
@@ -386,8 +352,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   getMatchesForDate(date: Date): Match[] {
-    const allMatches = [...this.upcomingMatches, ...this.pastMatches];
-    return allMatches.filter((match) => this.isSameDay(match.date, date));
+    // Only show upcoming matches in calendar (past matches in dedicated Recent Matches page)
+    return this.upcomingMatches.filter((match) =>
+      this.isSameDay(match.date, date)
+    );
   }
 
   isSameDay(date1: Date, date2: Date): boolean {
@@ -557,86 +525,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
       default:
         return 'sports';
     }
-  }
-
-  // ===============================================
-  // ENHANCED MATCH EVENTS METHODS
-  // ===============================================
-
-  /**
-   * Sort events by time for timeline display
-   */
-  getSortedEvents(events: any[]): any[] {
-    if (!events) return [];
-    return events.sort((a, b) => {
-      const timeA = this.convertTimeToMinutes(a.time);
-      const timeB = this.convertTimeToMinutes(b.time);
-      return timeA - timeB;
-    });
-  }
-
-  /**
-   * Convert time string (e.g., "15:30") to minutes for sorting
-   */
-  private convertTimeToMinutes(timeStr: string): number {
-    const [minutes, seconds] = timeStr.split(':').map(Number);
-    return minutes + seconds / 60;
-  }
-
-  /**
-   * Get icon for event type
-   */
-  getEventIcon(eventType: string): string {
-    switch (eventType) {
-      case 'try':
-        return '🏉';
-      case 'conversion':
-        return '⚽';
-      case 'penalty':
-        return '🎯';
-      case 'drop_goal':
-        return '🏈';
-      case 'card':
-        return '🟨';
-      case 'injury':
-        return '🩹';
-      case 'substitution':
-        return '🔄';
-      default:
-        return '📝';
-    }
-  }
-
-  /**
-   * Format event type for display
-   */
-  formatEventType(eventType: string): string {
-    switch (eventType) {
-      case 'try':
-        return 'Try';
-      case 'conversion':
-        return 'Conversion';
-      case 'penalty':
-        return 'Penalty';
-      case 'drop_goal':
-        return 'Drop Goal';
-      case 'card':
-        return 'Card';
-      case 'injury':
-        return 'Injury';
-      case 'substitution':
-        return 'Substitution';
-      default:
-        return eventType.charAt(0).toUpperCase() + eventType.slice(1);
-    }
-  }
-
-  /**
-   * Count events of specific type
-   */
-  getEventCount(events: any[], eventType: string): number {
-    if (!events) return 0;
-    return events.filter((event) => event.eventType === eventType).length;
   }
 
   /**
