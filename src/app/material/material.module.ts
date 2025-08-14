@@ -20,6 +20,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 // Essential Material modules for the Rugby Score Tracker
 const MaterialComponents = [
@@ -44,6 +45,7 @@ const MaterialComponents = [
   MatSnackBarModule,
   MatTabsModule,
   MatProgressBarModule,
+  MatExpansionModule,
 ];
 
 @NgModule({
