@@ -63,118 +63,120 @@
   <div class="matches-list" *ngIf="currentView === 'list'" [@fadeInOut]>
     <h3 [@slideInFromBottom]>Upcoming Matches</h3>
 
-    <mat-accordion class="match-accordion" *ngFor="let match of upcomingMatches; let i = index" [@fadeInOut]
+    <!-- Match Cards with Split Structure -->
+    <div class="match-card" *ngFor="let match of upcomingMatches; let i = index" [@fadeInOut]
       [style.animation-delay]="(i * 100) + 'ms'">
-      
-      <mat-expansion-panel [expanded]="isAccordionExpanded(match._id || match.id)" 
-                          (opened)="onAccordionOpened(match._id || match.id)" 
-                          (closed)="onAccordionClosed(match._id || match.id)"
-                          class="match-expansion-panel">
-        
-        <!-- Accordion Header -->
-        <mat-expansion-panel-header class="match-header">
-          <mat-panel-title class="match-title">
-            <div class="match-teams-summary">
-              <span class="team-name-short">{{ match.homeTeam }}</span>
-              <span class="vs-indicator">vs</span>
-              <span class="team-name-short">{{ match.awayTeam }}</span>
-            </div>
-          </mat-panel-title>
-          <mat-panel-description class="match-description">
-            <div class="match-date-summary">
-              <i class="fa-solid fa-clock"></i>
-              {{ match.date | date:'MMM dd - HH:mm' }}
-            </div>
-            <div class="match-status-summary">
-              <span class="status-badge" [ngClass]="match.status">
-                {{ match.status | titlecase }}
-              </span>
-            </div>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
 
-        <!-- Accordion Content -->
-        <div class="match-content">
-          <div class="match-actions-header">
-            <button mat-icon-button [matMenuTriggerFor]="matchMenu">
-              <i class="fa-solid fa-ellipsis-vertical"></i>
-            </button>
-            <mat-menu #matchMenu="matMenu">
-              <button mat-menu-item (click)="editMatch(match)">
-                <i class="fa-solid fa-pen"></i>
-                Edit
-              </button>
-              <button mat-menu-item (click)="startMatch(match)">
-                <i class="fa-solid fa-football"></i>
-                Start Game
-              </button>
-              <button mat-menu-item (click)="deleteMatch(match)" class="danger">
-                <i class="fa-solid fa-trash"></i>
-                Delete
-              </button>
-            </mat-menu>
+      <!-- Top Section - Always Visible -->
+      <div class="match-top-section">
+        <!-- Teams and Score -->
+        <div class="match-teams-header">
+          <div class="team home-team">
+            <span class="team-name">{{ match.homeTeam }}</span>
+            <div class="team-score" *ngIf="match.homeScore !== undefined">{{ match.homeScore }}</div>
           </div>
 
-          <!-- Match Type and Category Info -->
-          <div class="match-info" [ngClass]="getMatchTypeClass(match.matchType)"
-            *ngIf="match.matchType || match.homeTeamCategory">
-            <div class="match-type" *ngIf="match.matchType">
-              <mat-icon [style.color]="getMatchTypeColor(match.matchType)">
-                {{ getMatchTypeIcon(match.matchType) }}
-              </mat-icon>
-              <span class="match-type-label">{{ formatMatchType(match.matchType) }}</span>
-            </div>
-            <div class="team-details" *ngIf="match.homeTeamCategory || match.homeTeamAgeLevel">
-              <span class="team-category" *ngIf="match.homeTeamCategory">
-                {{ formatTeamCategory(match.homeTeamCategory) }}
-              </span>
-              <span class="team-age" *ngIf="match.homeTeamAgeLevel">
-                {{ match.homeTeamAgeLevel }}
-              </span>
-              <span class="vs-age" *ngIf="match.awayTeamAgeLevel && match.homeTeamAgeLevel !== match.awayTeamAgeLevel">
-                vs {{ match.awayTeamAgeLevel }}
-              </span>
-            </div>
+          <div class="score-separator">
+            <span class="vs-text">-</span>
           </div>
 
-          <div class="match-teams-detailed">
-            <div class="team home-team">
-              <span class="team-name">{{ match.homeTeam }}</span>
-              <small class="team-type">Home</small>
-            </div>
-            <div class="vs-section">
-              <span class="vs">VS</span>
-            </div>
-            <div class="team away-team">
-              <span class="team-name">{{ match.awayTeam }}</span>
-              <small class="team-type">Away</small>
-            </div>
-          </div>
-
-          <div class="match-details">
-            <div class="detail-item">
-              <i class="fa-solid fa-location-dot"></i>
-              {{ match.venue }}
-            </div>
-            <div class="detail-item" *ngIf="match.competition">
-              <i class="fa-solid fa-trophy"></i>
-              {{ match.competition }}
-            </div>
-          </div>
-
-          <div class="match-timing">
-            <span class="days-until" *ngIf="getDaysUntil(match.date) >= 0">
-              {{ getDaysUntil(match.date) === 0 ? 'Today' : getDaysUntil(match.date) + ' days' }}
-            </span>
-          </div>
-
-          <!-- Database ID for reference -->
-          <div class="match-id">
-            {{ match._id || match.id }}
+          <div class="team away-team">
+            <span class="team-name">{{ match.awayTeam }}</span>
+            <div class="team-score" *ngIf="match.awayScore !== undefined">{{ match.awayScore }}</div>
           </div>
         </div>
-      </mat-expansion-panel>
-    </mat-accordion>
+
+        <!-- Match Type and Status -->
+        <div class="match-info-row">
+          <div class="match-type-info" *ngIf="match.homeTeamCategory">
+            <i class="fa-solid fa-users"></i>
+            <span>{{ formatTeamCategory(match.homeTeamCategory) }}</span>
+          </div>
+          <div class="match-status-info">
+            <i class="fa-solid fa-trophy"></i>
+            <span>{{ match.matchType || 'Friendly Match' }}</span>
+          </div>
+        </div>
+
+        <!-- Date and Actions -->
+        <div class="match-date-actions">
+          <div class="match-date">
+            {{ match.date | date:'EEEE, MMM dd, yyyy' }}
+          </div>
+          <button mat-button (click)="editMatch(match)" class="match-edit-btn">
+            <i class="fa-solid fa-pen"></i>
+            Edit
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom Section - Accordion for Match Events -->
+      <mat-accordion class="match-events-accordion">
+        <mat-expansion-panel [expanded]="isAccordionExpanded(match._id || match.id)"
+          (opened)="onAccordionOpened(match._id || match.id)" (closed)="onAccordionClosed(match._id || match.id)"
+          class="match-events-panel">
+
+          <mat-expansion-panel-header class="events-header">
+            <mat-panel-title>
+              <i class="fa-solid fa-list"></i>
+              <span>Match Events (9)</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <!-- Match Events Content -->
+          <div class="match-events-content">
+            <!-- Sample match events - replace with actual match events data -->
+            <div class="match-event">
+              <div class="event-time">1:52</div>
+              <div class="event-icon try-icon">
+                <i class="fa-solid fa-football"></i>
+              </div>
+              <div class="event-details">
+                <div class="event-type">Try</div>
+                <div class="event-description">Try by {{ match.homeTeam }}</div>
+                <div class="event-team">{{ match.homeTeam }}</div>
+              </div>
+            </div>
+
+            <div class="match-event">
+              <div class="event-time">1:50</div>
+              <div class="event-icon conversion-icon">
+                <i class="fa-solid fa-target"></i>
+              </div>
+              <div class="event-details">
+                <div class="event-type">Conversion</div>
+                <div class="event-description">Conversion by {{ match.homeTeam }}</div>
+                <div class="event-team">{{ match.homeTeam }}</div>
+              </div>
+            </div>
+
+            <div class="match-event">
+              <div class="event-time">1:48</div>
+              <div class="event-icon try-icon">
+                <i class="fa-solid fa-football"></i>
+              </div>
+              <div class="event-details">
+                <div class="event-type">Try</div>
+                <div class="event-description">Try by {{ match.homeTeam }}</div>
+                <div class="event-team">{{ match.homeTeam }}</div>
+              </div>
+            </div>
+
+            <div class="match-event">
+              <div class="event-time">1:34</div>
+              <div class="event-icon drop-goal-icon">
+                <i class="fa-solid fa-bullseye"></i>
+              </div>
+              <div class="event-details">
+                <div class="event-type">Drop Goal</div>
+                <div class="event-description">Drop Goal by {{ match.homeTeam }}</div>
+                <div class="event-team">{{ match.homeTeam }}</div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
 
     <!-- No matches message -->
     <div class="no-matches" *ngIf="upcomingMatches.length === 0">
