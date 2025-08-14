@@ -59,21 +59,35 @@
         </mat-card-content>
       </mat-card>
 
+      <mat-card class="action-card" routerLink="/recent-matches">
+        <mat-card-content>
+          <i class="fa-solid fa-history action-icon"></i>
+          <h3>Recent Matches</h3>
+          <p>Review completed match results</p>
+        </mat-card-content>
+      </mat-card>
+
       <mat-card class="action-card" routerLink="/games-history">
         <mat-card-content>
           <i class="fa-solid fa-clock-rotate-left action-icon"></i>
           <h3>Game History</h3>
-          <p>Review past matches</p>
+          <p>Statistical analysis & trends</p>
         </mat-card-content>
       </mat-card>
     </div>
   </div>
 
-  <!-- Recent Games -->
+  <!-- Recent Games Summary -->
   <div class="recent-section" *ngIf="recentGames.length > 0">
-    <h2>Recent Games</h2>
+    <div class="section-header">
+      <h2>Latest Results</h2>
+      <button mat-button color="primary" routerLink="/recent-matches">
+        <span>View All</span>
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
     <div class="recent-games">
-      <mat-card class="game-card" *ngFor="let game of recentGames">
+      <mat-card class="game-card" *ngFor="let game of recentGames.slice(0, 3)">
         <mat-card-content>
           <div class="game-header">
             <span class="game-date">{{ game.timestamp | date:'MMM dd' }}</span>
@@ -92,6 +106,12 @@
           </div>
         </mat-card-content>
       </mat-card>
+    </div>
+    <div class="section-footer" *ngIf="recentGames.length > 3">
+      <button mat-stroked-button color="primary" routerLink="/recent-matches">
+        <mat-icon>history</mat-icon>
+        View All {{ recentGames.length }} Recent Matches
+      </button>
     </div>
   </div>
 
