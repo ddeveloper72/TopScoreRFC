@@ -1,18 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from '../material/material.module';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { RouterModule, Router } from '@angular/router';
+import { MaterialModule } from '../material/material.module';
 import {
+  MatchStorageService,
   Match,
   MatchEvent,
-  MatchStorageService,
 } from '../services/match-storage.service';
 import { MatchApiService } from '../services/match-api.service';
-import { EventManagerDialogComponent } from '../shared/event-manager-dialog/event-manager-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-recent-matches',
@@ -20,72 +19,74 @@ import { EventManagerDialogComponent } from '../shared/event-manager-dialog/even
   imports: [CommonModule, MaterialModule, FormsModule, RouterModule],
   template: `
     <div class="recent-matches-container">
-      <!-- Header -->
       <div class="page-header">
         <h1>
           <mat-icon>history</mat-icon>
-          Recent Match Results
+          Recent Matches
         </h1>
-        <p class="subtitle">
-          Review past matches, events, and team performance
-        </p>
+        <p>Review your past game results and statistics</p>
       </div>
 
-      <!-- Filters -->
+      <!-- Filters Section -->
       <div class="filters-section">
-        <mat-button-toggle-group
-          #filterGroup="matButtonToggleGroup"
-          value="all"
-          (change)="onFilterChange($event.value)"
-        >
-          <mat-button-toggle value="all">All Matches</mat-button-toggle>
-          <mat-button-toggle value="wins">Wins</mat-button-toggle>
-          <mat-button-toggle value="losses">Losses</mat-button-toggle>
-          <mat-button-toggle value="draws">Draws</mat-button-toggle>
-        </mat-button-toggle-group>
+        <div class="search-field">
+          <mat-form-field appearance="outline">
+            <mat-icon matPrefix>search</mat-icon>
+            <mat-label>Search matches...</mat-label>
+            <input
+              matInput
+              [(ngModel)]="searchTerm"
+              (input)="applyFilters()"
+              placeholder="Team name, competition..."
+            />
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline" class="search-field">
-          <mat-label>Search matches</mat-label>
-          <input
-            matInput
-            [(ngModel)]="searchTerm"
-            (input)="onSearchChange()"
-            placeholder="Team name, competition..."
-          />
-          <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
+        <div class="filter-buttons">
+          <button
+            mat-raised-button
+            [class.active]="filterType === 'all'"
+            (click)="setFilter('all')"
+          >
+            All
+          </button>
+          <button
+            mat-raised-button
+            [class.active]="filterType === 'wins'"
+            (click)="setFilter('wins')"
+          >
+            Wins
+          </button>
+          <button
+            mat-raised-button
+            [class.active]="filterType === 'losses'"
+            (click)="setFilter('losses')"
+          >
+            Losses
+          </button>
+          <button
+            mat-raised-button
+            [class.active]="filterType === 'draws'"
+            (click)="setFilter('draws')"
+          >
+            Draws
+          </button>
+        </div>
       </div>
 
-      <!-- Stats Summary -->
-      <div class="stats-summary" *ngIf="filteredMatches.length > 0">
-        <div class="stat-card wins">
-          <div class="stat-value">{{ getWinsCount() }}</div>
-          <div class="stat-label">Wins</div>
-        </div>
-        <div class="stat-card losses">
-          <div class="stat-value">{{ getLossesCount() }}</div>
-          <div class="stat-label">Losses</div>
-        </div>
-        <div class="stat-card draws">
-          <div class="stat-value">{{ getDrawsCount() }}</div>
-          <div class="stat-label">Draws</div>
-        </div>
-        <div class="stat-card total">
-          <div class="stat-value">{{ filteredMatches.length }}</div>
-          <div class="stat-label">Total Matches</div>
-        </div>
-      </div>
-
-      <!-- Recent Matches List -->
-      <div class="matches-grid" *ngIf="filteredMatches.length > 0">
+      <!-- Matches Grid -->
+      <div
+        class="matches-grid"
+        *ngIf="!isLoading && filteredMatches.length > 0"
+      >
         <div
           class="match-card"
           *ngFor="let match of filteredMatches"
           [attr.data-result]="getMatchResult(match)"
         >
-          <!-- Top Section - Always Visible -->
+          <!-- Always Visible Top Section -->
           <div class="match-top-section">
-            <!-- Teams and Score -->
+            <!-- Teams and Scores -->
             <div class="match-teams-header">
               <div class="team home-team">
                 <span class="team-name">{{ match.homeTeam }}</span>
@@ -93,9 +94,12 @@ import { EventManagerDialogComponent } from '../shared/event-manager-dialog/even
               </div>
 
               <div class="score-separator">
-                <span class="vs-text">-</span>
-                <div class="result-badge" [ngClass]="getResultClass(match)">
-                  {{ getMatchResult(match) }}
+                <span class="vs-text">vs</span>
+                <div
+                  class="result-badge"
+                  [ngClass]="getMatchResult(match).toLowerCase()"
+                >
+                  {{ getResultText(match) }}
                 </div>
               </div>
 
@@ -125,37 +129,35 @@ import { EventManagerDialogComponent } from '../shared/event-manager-dialog/even
             <!-- Date and Actions -->
             <div class="match-date-actions">
               <div class="match-date">
-                {{ match.date | date : 'EEEE, MMM dd, yyyy' }}
+                {{ formatDate(match.date) }}
               </div>
               <button
                 mat-button
-                (click)="viewMatchReport(match)"
                 class="match-action-btn"
+                (click)="viewMatchDetails(match)"
               >
-                <mat-icon>description</mat-icon>
-                Report
+                <mat-icon>visibility</mat-icon>
+                Details
               </button>
             </div>
           </div>
 
-          <!-- Bottom Section - Accordion for Match Events -->
-          <mat-accordion class="match-events-accordion">
+          <!-- Expandable Events Section (Accordion) -->
+          <div class="match-events-accordion">
             <mat-expansion-panel
-              [expanded]="isAccordionExpanded(match._id || match.id)"
-              (opened)="onAccordionOpened(match._id || match.id)"
-              (closed)="onAccordionClosed(match._id || match.id)"
               class="match-events-panel"
+              [expanded]="isAccordionExpanded(match.id)"
+              (opened)="onAccordionOpened(match.id)"
+              (closed)="onAccordionClosed(match.id)"
             >
               <mat-expansion-panel-header class="events-header">
                 <mat-panel-title>
-                  <mat-icon>timeline</mat-icon>
-                  <span>Match Events ({{ match.events?.length || 0 }})</span>
+                  <mat-icon>sports</mat-icon>
+                  Match Events ({{ getEventCount(match.events || [], 'all') }})
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
-              <!-- Match Events Content -->
               <div class="match-events-content">
-                <!-- Events Timeline -->
                 <div
                   class="events-timeline"
                   *ngIf="match.events && match.events.length > 0"
@@ -163,29 +165,34 @@ import { EventManagerDialogComponent } from '../shared/event-manager-dialog/even
                   <div class="timeline">
                     <div
                       class="timeline-event"
-                      *ngFor="let event of getSortedEvents(match.events)"
+                      *ngFor="let event of match.events"
                       [ngClass]="'event-' + event.eventType"
                     >
                       <div class="event-time">{{ event.time }}</div>
+
                       <div
                         class="event-icon"
                         [ngClass]="event.eventType + '-icon'"
                       >
-                        <mat-icon>{{ getEventIcon(event.eventType) }}</mat-icon>
+                        <span class="rugby-icon">{{
+                          getEventIcon(event.eventType)
+                        }}</span>
                       </div>
+
                       <div class="event-details">
-                        <div class="event-type">
-                          {{ getEventTypeDisplay(event.eventType) }}
+                        <div class="event-primary">
+                          <span class="event-type">{{
+                            formatEventType(event.eventType)
+                          }}</span>
+                          <span class="event-team-name" *ngIf="event.team">{{
+                            event.team
+                          }}</span>
                         </div>
-                        <div class="event-description">
+                        <div
+                          class="event-description"
+                          *ngIf="event.description"
+                        >
                           {{ event.description }}
-                        </div>
-                        <div class="event-team">
-                          {{
-                            event.team === 'home'
-                              ? match.homeTeam
-                              : match.awayTeam
-                          }}
                         </div>
                         <div class="event-player" *ngIf="event.ourPlayer">
                           {{ event.ourPlayer }}
@@ -195,13 +202,12 @@ import { EventManagerDialogComponent } from '../shared/event-manager-dialog/even
                   </div>
                 </div>
 
-                <!-- No Events State -->
                 <div
                   class="no-events"
                   *ngIf="!match.events || match.events.length === 0"
                 >
-                  <mat-icon>event_note</mat-icon>
-                  <p>No match events recorded</p>
+                  <mat-icon>event_busy</mat-icon>
+                  <p>No events recorded for this match</p>
                 </div>
 
                 <!-- Match Statistics -->
@@ -210,64 +216,63 @@ import { EventManagerDialogComponent } from '../shared/event-manager-dialog/even
                   *ngIf="match.events && match.events.length > 0"
                 >
                   <div class="stat-item">
-                    <span class="stat-label">Tries</span>
-                    <span class="stat-value">{{
-                      getEventCount(match.events, 'try')
-                    }}</span>
+                    <div class="stat-label">Tries</div>
+                    <div class="stat-value">
+                      {{ getEventCount(match.events, 'try') }}
+                    </div>
                   </div>
                   <div class="stat-item">
-                    <span class="stat-label">Conversions</span>
-                    <span class="stat-value">{{
-                      getEventCount(match.events, 'conversion')
-                    }}</span>
+                    <div class="stat-label">Penalties</div>
+                    <div class="stat-value">
+                      {{ getEventCount(match.events, 'penalty') }}
+                    </div>
                   </div>
                   <div class="stat-item">
-                    <span class="stat-label">Penalties</span>
-                    <span class="stat-value">{{
-                      getEventCount(match.events, 'penalty')
-                    }}</span>
+                    <div class="stat-label">Cards</div>
+                    <div class="stat-value">
+                      {{ getEventCount(match.events, 'card') }}
+                    </div>
                   </div>
                 </div>
 
-                <!-- Action Buttons -->
+                <!-- Event Actions -->
                 <div class="event-actions">
                   <button
                     mat-raised-button
                     color="primary"
-                    (click)="openEventManager(match)"
+                    (click)="addEvent(match)"
                   >
-                    <mat-icon>edit</mat-icon>
-                    Manage Events
+                    <mat-icon>add</mat-icon>
+                    Add Event
                   </button>
                 </div>
               </div>
             </mat-expansion-panel>
-          </mat-accordion>
+          </div>
         </div>
       </div>
 
       <!-- No Matches State -->
       <div
         class="no-matches"
-        *ngIf="filteredMatches.length === 0 && !isLoading"
+        *ngIf="!isLoading && filteredMatches.length === 0"
       >
         <mat-icon>sports_rugby</mat-icon>
-        <h3>
+        <h3>No Recent Matches</h3>
+        <p>
           {{
             searchTerm || filterType !== 'all'
-              ? 'No matches found'
-              : 'No recent matches'
+              ? 'No matches found with your current filters'
+              : "You haven't played any matches yet"
           }}
-        </h3>
-        <p *ngIf="searchTerm || filterType !== 'all'">
-          Try adjusting your search or filter criteria
         </p>
-        <p *ngIf="!searchTerm && filterType === 'all'">
-          Recent match results will appear here after matches are completed
-        </p>
-        <button mat-raised-button color="primary" routerLink="/calendar">
-          <mat-icon>calendar_today</mat-icon>
-          View Calendar
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="startNewMatch()"
+          *ngIf="!searchTerm && filterType === 'all'"
+        >
+          Start Your First Match
         </button>
       </div>
 
@@ -300,576 +305,491 @@ import { EventManagerDialogComponent } from '../shared/event-manager-dialog/even
 
       .page-header {
         text-align: center;
-        margin-bottom: 3rem;
         color: white;
+        margin-bottom: 3rem;
+      }
 
-        h1 {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 1rem;
-          font-size: 2.5rem;
-          font-weight: 700;
-          margin: 0 0 0.5rem 0;
+      .page-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+      }
 
-          mat-icon {
-            font-size: 2.5rem;
-            width: 2.5rem;
-            height: 2.5rem;
-          }
-        }
+      .page-header h1 mat-icon {
+        font-size: 2.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        color: #ffd700;
+      }
 
-        .subtitle {
-          font-size: 1.1rem;
-          opacity: 0.9;
-          margin: 0;
-        }
+      .page-header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin: 0;
       }
 
       .filters-section {
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
-        gap: 2rem;
         margin-bottom: 2rem;
-        flex-wrap: wrap;
-
-        mat-button-toggle-group {
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 25px;
-          overflow: hidden;
-
-          mat-button-toggle {
-            color: white;
-            border: none;
-
-            &.mat-button-toggle-checked {
-              background: rgba(255, 255, 255, 0.2);
-              color: white;
-            }
-          }
-        }
-
-        .search-field {
-          min-width: 300px;
-
-          ::ng-deep {
-            .mat-mdc-text-field-wrapper {
-              background-color: rgba(255, 255, 255, 0.1);
-              border-radius: 25px;
-            }
-
-            .mat-mdc-form-field-label {
-              color: rgba(255, 255, 255, 0.8);
-            }
-
-            .mat-mdc-input-element {
-              color: white;
-            }
-
-            .mat-mdc-form-field-icon-suffix {
-              color: rgba(255, 255, 255, 0.6);
-            }
-          }
-        }
+        gap: 1rem;
       }
 
-      .stats-summary {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 3rem;
+      .search-field {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 25px;
+        min-width: 300px;
+      }
 
-        .stat-card {
-          background: rgba(255, 255, 255, 0.15);
-          border-radius: 16px;
-          padding: 2rem;
-          text-align: center;
-          backdrop-filter: blur(10px);
-          transition: transform 0.3s ease;
+      .search-field mat-form-field {
+        width: 100%;
+      }
 
-          &:hover {
-            transform: translateY(-4px);
-          }
+      .search-field .mat-mdc-form-field-subscript-wrapper {
+        display: none;
+      }
 
-          .stat-value {
-            font-size: 3rem;
-            font-weight: 800;
-            color: white;
-            line-height: 1;
-          }
+      .search-field .mat-mdc-text-field-wrapper {
+        background: transparent !important;
+        border-radius: 25px;
+      }
 
-          .stat-label {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-top: 0.5rem;
-          }
+      .search-field input {
+        color: white;
+      }
 
-          &.wins .stat-value {
-            color: #4caf50;
-          }
+      .search-field .mat-mdc-form-field-label {
+        color: rgba(255, 255, 255, 0.8) !important;
+      }
 
-          &.losses .stat-value {
-            color: #f44336;
-          }
+      .search-field .mat-mdc-form-field-icon-prefix mat-icon {
+        color: rgba(255, 255, 255, 0.8);
+      }
 
-          &.draws .stat-value {
-            color: #ff9800;
-          }
+      .filter-buttons {
+        display: flex;
+        gap: 0.5rem;
+      }
 
-          &.total .stat-value {
-            color: #2196f3;
-          }
-        }
+      .filter-buttons button {
+        border-radius: 20px;
+        font-weight: 600;
+        min-width: 80px;
+      }
+
+      .filter-buttons button.active {
+        background-color: #ffd700;
+        color: #2c3e50;
       }
 
       .matches-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-        gap: 2rem;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 1.5rem;
         margin-bottom: 2rem;
       }
 
-      // Split Card Styles for Recent Matches
       .match-card {
         background: white;
-        border-radius: 16px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-        &:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
-        }
-
-        &[data-result='W'] {
-          border-left: 5px solid #4caf50;
-        }
-
-        &[data-result='L'] {
-          border-left: 5px solid #f44336;
-        }
-
-        &[data-result='D'] {
-          border-left: 5px solid #ff9800;
-        }
+        position: relative;
       }
 
-      // Top Section (Always Visible)
+      .match-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      }
+
+      .match-card[data-result='W'] {
+        border-left: 5px solid #27ae60;
+      }
+
+      .match-card[data-result='L'] {
+        border-left: 5px solid #e74c3c;
+      }
+
+      .match-card[data-result='D'] {
+        border-left: 5px solid #ff9800;
+      }
+
       .match-top-section {
         padding: 1.5rem;
         background: white;
         border-bottom: 2px solid #f5f5f5;
-        
-        .match-teams-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 1rem;
-          
-          .team {
-            flex: 1;
-            text-align: center;
-            
-            &.home-team {
-              text-align: left;
-            }
-            
-            &.away-team {
-              text-align: right;
-            }
-            
-            .team-name {
-              display: block;
-              font-size: 1.1rem;
-              font-weight: 600;
-              color: #2c3e50;
-              margin-bottom: 0.25rem;
-            }
-            
-            .team-score {
-              font-size: 2rem;
-              font-weight: 700;
-              color: #3498db;
-            }
-          }
-          
-          .score-separator {
-            margin: 0 1rem;
-            text-align: center;
-            
-            .vs-text {
-              font-size: 1.2rem;
-              color: #7f8c8d;
-              font-weight: 500;
-              display: block;
-            }
-
-            .result-badge {
-              margin-top: 0.25rem;
-              padding: 0.25rem 0.5rem;
-              border-radius: 12px;
-              font-weight: 600;
-              font-size: 0.8rem;
-
-              &.win {
-                background: #e8f5e8;
-                color: #27ae60;
-              }
-
-              &.loss {
-                background: #ffebee;
-                color: #e74c3c;
-              }
-
-              &.draw {
-                background: #fff3cd;
-                color: #f39c12;
-              }
-            }
-          }
-        }
-        
-        .match-info-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 1rem;
-          
-          .match-type-info,
-          .competition-info {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #2c3e50;
-            font-size: 0.9rem;
-            
-            mat-icon {
-              font-size: 1.2rem;
-              width: 1.2rem;
-              height: 1.2rem;
-            }
-          }
-        }
-        
-        .match-date-actions {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          
-          .match-date {
-            color: #2c3e50;
-            font-weight: 500;
-          }
-          
-          .match-action-btn {
-            color: #3498db;
-            font-size: 0.9rem;
-            
-            mat-icon {
-              margin-right: 0.5rem;
-            }
-            
-            &:hover {
-              background-color: rgba(52, 152, 219, 0.1);
-            }
-          }
-        }
       }
 
-      // Bottom Section (Accordion)
-      .match-events-accordion {
-        .match-events-panel {
-          box-shadow: none;
-          border: none;
-          
-          .events-header {
-            background-color: #f8f9fa;
-            border-top: 1px solid #e9ecef;
-            
-            mat-panel-title {
-              display: flex;
-              align-items: center;
-              gap: 0.5rem;
-              color: #2c3e50;
-              font-weight: 500;
-              
-              mat-icon {
-                color: #3498db;
-              }
-            }
-          }
-          
-          .match-events-content {
-            padding: 1rem;
-            background: white;
-            
-            .events-timeline {
-              margin-bottom: 1rem;
-              
-              .timeline {
-                .timeline-event {
-                  display: flex;
-                  align-items: center;
-                  gap: 1rem;
-                  padding: 0.75rem 0;
-                  border-bottom: 1px solid #f0f0f0;
-                  
-                  &:last-child {
-                    border-bottom: none;
-                  }
-                  
-                  .event-time {
-                    font-weight: 600;
-                    color: #2c3e50;
-                    min-width: 3rem;
-                    text-align: center;
-                  }
-                  
-                  .event-icon {
-                    width: 2rem;
-                    height: 2rem;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    
-                    &.try-icon {
-                      background-color: rgba(76, 175, 80, 0.2);
-                      color: #4caf50;
-                    }
-                    
-                    &.conversion-icon {
-                      background-color: rgba(33, 150, 243, 0.2);
-                      color: #2196f3;
-                    }
-                    
-                    &.penalty-icon {
-                      background-color: rgba(255, 193, 7, 0.2);
-                      color: #ffc107;
-                    }
-                    
-                    mat-icon {
-                      font-size: 1rem;
-                      width: 1rem;
-                      height: 1rem;
-                    }
-                  }
-                  
-                  .event-details {
-                    flex: 1;
-                    
-                    .event-type {
-                      font-weight: 600;
-                      color: #2c3e50;
-                      margin-bottom: 0.25rem;
-                    }
-                    
-                    .event-description {
-                      font-size: 0.9rem;
-                      color: #666;
-                      margin-bottom: 0.25rem;
-                    }
-                    
-                    .event-team {
-                      font-size: 0.8rem;
-                      color: #3498db;
-                      font-weight: 500;
-                    }
-                    
-                    .event-player {
-                      font-size: 0.8rem;
-                      color: #7f8c8d;
-                      margin-top: 0.25rem;
-                    }
-                  }
-                }
-              }
-            }
-            
-            .no-events {
-              text-align: center;
-              padding: 2rem;
-              color: #7f8c8d;
-              
-              mat-icon {
-                font-size: 3rem;
-                width: 3rem;
-                height: 3rem;
-                margin-bottom: 1rem;
-              }
-            }
-            
-            .match-stats {
-              display: flex;
-              justify-content: space-around;
-              margin: 1rem 0;
-              padding: 1rem;
-              background: #f8f9fa;
-              border-radius: 8px;
-              
-              .stat-item {
-                text-align: center;
-                
-                .stat-label {
-                  font-size: 0.8rem;
-                  color: #7f8c8d;
-                  margin-bottom: 0.25rem;
-                }
-                
-                .stat-value {
-                  font-size: 1.5rem;
-                  font-weight: 700;
-                  color: #2c3e50;
-                }
-              }
-            }
-            
-            .event-actions {
-              text-align: center;
-              margin-top: 1rem;
-              
-              button {
-                mat-icon {
-                  margin-right: 0.5rem;
-                }
-              }
-            }
-          }
-        }
+      .match-teams-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
       }
 
-                .event-player {
-                  display: flex;
-                  align-items: center;
-                  gap: 0.5rem;
-                  color: #27ae60;
-                  font-weight: 600;
-                  font-size: 0.9rem;
-                }
+      .match-teams-header .team {
+        flex: 1;
+        text-align: center;
+      }
 
-                .event-notes {
-                  margin-top: 0.5rem;
-                  color: #7f8c8d;
-                  font-style: italic;
-                }
-              }
-            }
-          }
+      .match-teams-header .team.home-team {
+        text-align: left;
+      }
 
-          .show-more-events,
-          .add-event-btn {
-            margin-top: 1rem;
-            width: 100%;
-          }
-        }
+      .match-teams-header .team.away-team {
+        text-align: right;
+      }
 
-        .no-events {
-          text-align: center;
-          padding: 2rem;
+      .match-teams-header .team-name {
+        display: block;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+      }
 
-          .no-events-content {
-            color: #7f8c8d;
+      .match-teams-header .team-score {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #3498db;
+      }
 
-            mat-icon {
-              font-size: 3rem;
-              width: 3rem;
-              height: 3rem;
-              margin-bottom: 1rem;
-              opacity: 0.5;
-            }
+      .score-separator {
+        margin: 0 1rem;
+        text-align: center;
+      }
 
-            p {
-              margin-bottom: 1.5rem;
-              font-size: 1rem;
-            }
-          }
-        }
+      .score-separator .vs-text {
+        font-size: 1.2rem;
+        color: #7f8c8d;
+        font-weight: 500;
+        display: block;
+      }
 
-        .match-stats {
-          display: flex;
-          justify-content: space-around;
-          padding: 1rem 1.5rem;
-          background: rgba(52, 152, 219, 0.05);
-          border-top: 1px solid rgba(0, 0, 0, 0.05);
+      .score-separator .result-badge {
+        margin-top: 0.25rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.8rem;
+      }
 
-          .stat-item {
-            text-align: center;
+      .score-separator .result-badge.win {
+        background: #e8f5e8;
+        color: #27ae60;
+      }
 
-            .stat-label {
-              display: block;
-              font-size: 0.8rem;
-              color: #7f8c8d;
-              margin-bottom: 0.25rem;
-            }
+      .score-separator .result-badge.loss {
+        background: #ffebee;
+        color: #e74c3c;
+      }
 
-            .stat-value {
-              display: block;
-              font-size: 1.5rem;
-              font-weight: 700;
-              color: #2c3e50;
-            }
-          }
-        }
+      .score-separator .result-badge.draw {
+        background: #fff3cd;
+        color: #f39c12;
+      }
 
-        .match-id {
-          position: absolute;
-          bottom: 8px;
-          right: 8px;
-          font-size: 10px;
-          color: #bdc3c7;
-          opacity: 0.7;
-        }
+      .match-info-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+      }
 
-        mat-card-actions {
-          padding: 1rem 1.5rem;
-          background: #f8f9fa;
-          border-top: 1px solid rgba(0, 0, 0, 0.05);
+      .match-type-info,
+      .competition-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #2c3e50;
+        font-size: 0.9rem;
+      }
 
-          button {
-            border-radius: 8px;
-            font-weight: 500;
+      .match-type-info mat-icon,
+      .competition-info mat-icon {
+        font-size: 1.2rem;
+        width: 1.2rem;
+        height: 1.2rem;
+      }
 
-            &:not(:last-child) {
-              margin-right: 0.5rem;
-            }
+      .match-date-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
 
-            &.danger {
-              color: #e74c3c;
-            }
-          }
-        }
+      .match-date-actions .match-date {
+        color: #2c3e50;
+        font-weight: 500;
+      }
+
+      .match-date-actions .match-action-btn {
+        color: #3498db;
+        font-size: 0.9rem;
+      }
+
+      .match-date-actions .match-action-btn mat-icon {
+        margin-right: 0.5rem;
+      }
+
+      .match-date-actions .match-action-btn:hover {
+        background-color: rgba(52, 152, 219, 0.1);
+      }
+
+      .match-events-accordion .match-events-panel {
+        box-shadow: none;
+        border: none;
+      }
+
+      .match-events-accordion .events-header {
+        background-color: #f8f9fa;
+        border-top: 1px solid #e9ecef;
+      }
+
+      .match-events-accordion .events-header mat-panel-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #2c3e50;
+        font-weight: 500;
+      }
+
+      .match-events-accordion .events-header mat-panel-title mat-icon {
+        color: #3498db;
+      }
+
+      .match-events-content {
+        padding: 1rem;
+        background: white;
+      }
+
+      .events-timeline {
+        margin-bottom: 1rem;
+      }
+
+      .timeline-event {
+        display: flex;
+        align-items: flex-start;
+        padding: 1rem 0;
+        border-bottom: 1px solid #f0f0f0;
+        position: relative;
+      }
+
+      .timeline-event:last-child {
+        border-bottom: none;
+      }
+
+      .timeline-event.event-try {
+        border-left: 4px solid #4caf50;
+        padding-left: 1rem;
+      }
+
+      .timeline-event.event-conversion {
+        border-left: 4px solid #2196f3;
+        padding-left: 1rem;
+      }
+
+      .timeline-event.event-penalty {
+        border-left: 4px solid #ff9800;
+        padding-left: 1rem;
+      }
+
+      .timeline-event.event-drop_goal {
+        border-left: 4px solid #9c27b0;
+        padding-left: 1rem;
+      }
+
+      .timeline-event.event-card {
+        border-left: 4px solid #f44336;
+        padding-left: 1rem;
+      }
+
+      .timeline-event.event-substitution {
+        border-left: 4px solid #607d8b;
+        padding-left: 1rem;
+      }
+
+      .timeline-event.event-injury {
+        border-left: 4px solid #795548;
+        padding-left: 1rem;
+      }
+
+      .event-time {
+        position: absolute;
+        top: 1rem;
+        right: 0;
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 0.9rem;
+      }
+
+      .event-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        flex-shrink: 0;
+      }
+
+      .event-icon .rugby-icon {
+        font-size: 1.2rem;
+      }
+
+      .event-icon.try-icon {
+        background-color: rgba(76, 175, 80, 0.15);
+      }
+
+      .event-icon.conversion-icon {
+        background-color: rgba(33, 150, 243, 0.15);
+      }
+
+      .event-icon.penalty-icon {
+        background-color: rgba(255, 152, 0, 0.15);
+      }
+
+      .event-icon.drop_goal-icon {
+        background-color: rgba(156, 39, 176, 0.15);
+      }
+
+      .event-icon.card-icon {
+        background-color: rgba(244, 67, 54, 0.15);
+      }
+
+      .event-icon.substitution-icon {
+        background-color: rgba(96, 125, 139, 0.15);
+      }
+
+      .event-icon.injury-icon {
+        background-color: rgba(121, 85, 72, 0.15);
+      }
+
+      .event-details {
+        flex: 1;
+        padding-right: 4rem;
+      }
+
+      .event-primary {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .event-type {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 0.95rem;
+      }
+
+      .event-team-name {
+        color: #4caf50;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .event-description {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.25rem;
+        line-height: 1.4;
+      }
+
+      .event-player {
+        font-size: 0.85rem;
+        color: #7f8c8d;
+      }
+
+      .no-events {
+        text-align: center;
+        padding: 2rem;
+        color: #7f8c8d;
+      }
+
+      .no-events mat-icon {
+        font-size: 3rem;
+        width: 3rem;
+        height: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .match-stats {
+        display: flex;
+        justify-content: space-around;
+        margin: 1rem 0;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      .stat-item {
+        text-align: center;
+      }
+
+      .stat-label {
+        font-size: 0.8rem;
+        color: #7f8c8d;
+        margin-bottom: 0.25rem;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+      }
+
+      .event-actions {
+        text-align: center;
+        margin-top: 1rem;
+      }
+
+      .event-actions button mat-icon {
+        margin-right: 0.5rem;
+      }
+
+      .floating-action-btn {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
       }
 
       .no-matches {
         text-align: center;
         color: white;
         padding: 4rem 2rem;
+      }
 
-        mat-icon {
-          font-size: 5rem;
-          width: 5rem;
-          height: 5rem;
-          margin-bottom: 2rem;
-          opacity: 0.7;
-        }
+      .no-matches mat-icon {
+        font-size: 5rem;
+        width: 5rem;
+        height: 5rem;
+        margin-bottom: 2rem;
+        opacity: 0.7;
+      }
 
-        h3 {
-          font-size: 1.8rem;
-          margin-bottom: 1rem;
-        }
+      .no-matches h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+      }
 
-        p {
-          opacity: 0.8;
-          margin-bottom: 2rem;
-          font-size: 1.1rem;
-        }
+      .no-matches p {
+        opacity: 0.8;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+      }
 
-        button {
-          border-radius: 25px;
-          font-weight: 600;
-        }
+      .no-matches button {
+        border-radius: 25px;
+        font-weight: 600;
       }
 
       .loading-container {
@@ -879,18 +799,17 @@ import { EventManagerDialogComponent } from '../shared/event-manager-dialog/even
         justify-content: center;
         height: 50vh;
         color: white;
-
-        mat-spinner {
-          margin-bottom: 1rem;
-        }
-
-        p {
-          font-size: 1.1rem;
-          opacity: 0.8;
-        }
       }
 
-      // Mobile responsiveness
+      .loading-container mat-spinner {
+        margin-bottom: 1rem;
+      }
+
+      .loading-container p {
+        font-size: 1.1rem;
+        opacity: 0.8;
+      }
+
       @media (max-width: 768px) {
         .recent-matches-container {
           padding: 1rem;
@@ -898,63 +817,57 @@ import { EventManagerDialogComponent } from '../shared/event-manager-dialog/even
 
         .page-header h1 {
           font-size: 2rem;
+        }
 
-          mat-icon {
-            font-size: 2rem;
-            width: 2rem;
-            height: 2rem;
-          }
+        .page-header h1 mat-icon {
+          font-size: 2rem;
+          width: 2rem;
+          height: 2rem;
         }
 
         .filters-section {
           flex-direction: column;
           gap: 1rem;
+        }
 
-          .search-field {
-            min-width: 250px;
-          }
+        .search-field {
+          min-width: 250px;
         }
 
         .matches-grid {
           grid-template-columns: 1fr;
         }
-        
+
         .match-top-section {
           padding: 1rem;
-          
-          .match-teams-header {
-            .team {
-              .team-name {
-                font-size: 1rem;
-              }
-              
-              .team-score {
-                font-size: 1.5rem;
-              }
-            }
-          }
-          
-          .match-info-row {
-            flex-direction: column;
-            gap: 0.5rem;
-            align-items: flex-start;
-          }
         }
-        
-        .match-events-content {
-          .events-timeline .timeline .timeline-event {
-            gap: 0.75rem;
-            
-            .event-time {
-              min-width: 2.5rem;
-              font-size: 0.9rem;
-            }
-            
-            .event-icon {
-              width: 1.75rem;
-              height: 1.75rem;
-            }
-          }
+
+        .match-teams-header .team-name {
+          font-size: 1rem;
+        }
+
+        .match-teams-header .team-score {
+          font-size: 1.5rem;
+        }
+
+        .match-info-row {
+          flex-direction: column;
+          gap: 0.5rem;
+          align-items: flex-start;
+        }
+
+        .match-events-content .timeline-event {
+          gap: 0.75rem;
+        }
+
+        .event-time {
+          min-width: 2.5rem;
+          font-size: 0.9rem;
+        }
+
+        .event-icon {
+          width: 1.75rem;
+          height: 1.75rem;
         }
       }
     `,
@@ -1007,66 +920,94 @@ export class RecentMatchesComponent implements OnInit, OnDestroy {
     this.applyFilters();
     this.isLoading = false;
 
-    // Try to refresh from API
-    this.matchApi.getAllMatches().subscribe({
-      next: (apiMatches) => {
-        const completedApiMatches = apiMatches.filter(
-          (match) =>
-            match.status === 'completed' &&
-            (match.homeScore !== undefined || match.awayScore !== undefined)
-        );
+    // Optional: Try to sync with API in background
+    this.syncWithAPI();
+  }
 
-        this.matches = completedApiMatches.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-        );
+  private syncWithAPI(): void {
+    this.subscription.add(
+      this.matchApi.getAllMatches().subscribe({
+        next: (apiMatches: Match[]) => {
+          // Merge API matches with local matches
+          const mergedMatches = this.mergeMatches(this.matches, apiMatches);
+          this.matches = mergedMatches.sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+          );
+          this.applyFilters();
+        },
+        error: (error: any) => {
+          console.warn('Failed to sync with API:', error);
+          // Continue with local data
+        },
+      })
+    );
+  }
 
-        this.applyFilters();
-      },
-      error: (error) => {
-        console.error('Error loading matches from API:', error);
-      },
+  private mergeMatches(localMatches: Match[], apiMatches: Match[]): Match[] {
+    const merged = [...localMatches];
+
+    apiMatches.forEach((apiMatch) => {
+      const existingIndex = merged.findIndex((m) => m.id === apiMatch.id);
+      if (existingIndex >= 0) {
+        // Update existing match
+        merged[existingIndex] = { ...merged[existingIndex], ...apiMatch };
+      } else {
+        // Add new match from API
+        merged.push(apiMatch);
+      }
     });
+
+    return merged;
   }
 
-  onFilterChange(filterType: 'all' | 'wins' | 'losses' | 'draws'): void {
-    this.filterType = filterType;
+  setFilter(filter: 'all' | 'wins' | 'losses' | 'draws'): void {
+    this.filterType = filter;
     this.applyFilters();
   }
 
-  onSearchChange(): void {
-    this.applyFilters();
-  }
-
-  private applyFilters(): void {
+  applyFilters(): void {
     let filtered = [...this.matches];
+
+    // Apply search filter
+    if (this.searchTerm.trim()) {
+      const searchLower = this.searchTerm.toLowerCase();
+      filtered = filtered.filter(
+        (match) =>
+          match.homeTeam.toLowerCase().includes(searchLower) ||
+          match.awayTeam.toLowerCase().includes(searchLower) ||
+          match.competition?.toLowerCase().includes(searchLower) ||
+          match.venue?.toLowerCase().includes(searchLower)
+      );
+    }
 
     // Apply result filter
     if (this.filterType !== 'all') {
       filtered = filtered.filter((match) => {
         const result = this.getMatchResult(match);
-        return result.toLowerCase() === this.filterType.slice(0, -1); // Remove 's' from 'wins', etc.
+        switch (this.filterType) {
+          case 'wins':
+            return result === 'W';
+          case 'losses':
+            return result === 'L';
+          case 'draws':
+            return result === 'D';
+          default:
+            return true;
+        }
       });
-    }
-
-    // Apply search filter
-    if (this.searchTerm.trim()) {
-      const searchTerm = this.searchTerm.toLowerCase().trim();
-      filtered = filtered.filter(
-        (match) =>
-          match.homeTeam.toLowerCase().includes(searchTerm) ||
-          match.awayTeam.toLowerCase().includes(searchTerm) ||
-          (match.competition &&
-            match.competition.toLowerCase().includes(searchTerm)) ||
-          (match.venue && match.venue.toLowerCase().includes(searchTerm))
-      );
     }
 
     this.filteredMatches = filtered;
   }
 
-  getMatchResult(match: Match): string {
-    if (match.homeScore === undefined || match.awayScore === undefined) {
-      return 'N/A';
+  getMatchResult(match: Match): 'W' | 'L' | 'D' {
+    if (
+      match.homeScore === undefined ||
+      match.awayScore === undefined ||
+      match.homeScore === null ||
+      match.awayScore === null
+    ) {
+      return 'D'; // Default for incomplete matches
     }
 
     if (match.homeScore > match.awayScore) {
@@ -1078,143 +1019,135 @@ export class RecentMatchesComponent implements OnInit, OnDestroy {
     }
   }
 
-  getResultClass(match: Match): string {
+  getResultText(match: Match): string {
     const result = this.getMatchResult(match);
     switch (result) {
       case 'W':
-        return 'win';
+        return 'WIN';
       case 'L':
-        return 'loss';
+        return 'LOSS';
       case 'D':
-        return 'draw';
+        return 'DRAW';
       default:
-        return '';
+        return 'TBD';
     }
   }
 
-  getWinsCount(): number {
-    return this.filteredMatches.filter((m) => this.getMatchResult(m) === 'W')
-      .length;
-  }
-
-  getLossesCount(): number {
-    return this.filteredMatches.filter((m) => this.getMatchResult(m) === 'L')
-      .length;
-  }
-
-  getDrawsCount(): number {
-    return this.filteredMatches.filter((m) => this.getMatchResult(m) === 'D')
-      .length;
-  }
-
-  // Event management methods
-  openEventManager(match: Match): void {
-    const dialogRef = this.dialog.open(EventManagerDialogComponent, {
-      width: '90vw',
-      maxWidth: '800px',
-      data: { match } as any, // EventManagerDialogData
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result && result.events) {
-        // Update match with new events
-        const updatedMatch = { ...match, events: result.events };
-        this.matchStorageService.updateMatch(match.id, updatedMatch);
-
-        // Sync with API
-        this.matchApi
-          .updateMatch(match._id || match.id, updatedMatch)
-          .subscribe({
-            next: () => {
-              this.snackBar.open('Events updated successfully', 'Close', {
-                duration: 2000,
-              });
-              this.loadRecentMatches(); // Refresh data
-            },
-            error: (error) => {
-              console.error('Error updating events:', error);
-              this.snackBar.open(
-                'Events saved locally (API sync failed)',
-                'Close',
-                { duration: 3000 }
-              );
-            },
-          });
-      }
+  formatDate(dateString: string | Date): string {
+    const date =
+      typeof dateString === 'string' ? new Date(dateString) : dateString;
+    return date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
     });
   }
 
-  getSortedEvents(events: MatchEvent[]): MatchEvent[] {
-    return events.sort((a, b) => {
-      // Sort by time descending (most recent first)
-      return b.time.localeCompare(a.time);
-    });
+  formatMatchType(matchType: string): string {
+    const typeMap: { [key: string]: string } = {
+      friendly: 'Friendly Match',
+      league: 'League Game',
+      tournament: 'Tournament',
+      playoff: 'Playoff',
+      championship: 'Championship',
+      boys: "Boys' Team",
+      girls: "Girls' Team",
+      mixed: 'Mixed Team',
+    };
+    return typeMap[matchType] || matchType;
   }
 
-  getEventCount(events: MatchEvent[], eventType: string): number {
-    return events.filter((event) => event.eventType === eventType).length;
+  getMatchTypeColor(matchType: string): string {
+    const colorMap: { [key: string]: string } = {
+      friendly: '#3498db',
+      league: '#e74c3c',
+      tournament: '#f39c12',
+      playoff: '#9b59b6',
+      championship: '#f1c40f',
+      boys: '#3498db',
+      girls: '#e91e63',
+      mixed: '#4caf50',
+    };
+    return colorMap[matchType] || '#95a5a6';
+  }
+
+  getMatchTypeIcon(matchType: string): string {
+    const iconMap: { [key: string]: string } = {
+      friendly: 'handshake',
+      league: 'emoji_events',
+      tournament: 'military_tech',
+      playoff: 'workspace_premium',
+      championship: 'stars',
+      boys: 'sports_rugby',
+      girls: 'sports_handball',
+      mixed: 'groups',
+    };
+    return iconMap[matchType] || 'sports';
   }
 
   getEventIcon(eventType: string): string {
-    const icons: { [key: string]: string } = {
-      try: '🏉',
-      conversion: '⚽',
-      penalty: '🚨',
+    const iconMap: { [key: string]: string } = {
+      try: '🏈',
+      conversion: '🥅',
+      penalty: '⚽',
       drop_goal: '🎯',
       card: '🟨',
-      injury: '🏥',
       substitution: '🔄',
-      other: '📝',
+      injury: '🩹',
     };
-    return icons[eventType] || '📝';
+    return iconMap[eventType] || '⚽';
   }
 
-  getEventTypeDisplay(eventType: string): string {
-    const displays: { [key: string]: string } = {
+  formatEventType(eventType: string): string {
+    const typeMap: { [key: string]: string } = {
       try: 'Try',
       conversion: 'Conversion',
       penalty: 'Penalty',
       drop_goal: 'Drop Goal',
       card: 'Card',
-      injury: 'Injury',
       substitution: 'Substitution',
-      other: 'Other',
+      injury: 'Injury',
     };
-    return displays[eventType] || 'Event';
+    return typeMap[eventType] || eventType;
   }
 
-  showAllEvents(match: Match): void {
-    // Navigate to a detailed match view or show in dialog
-    this.snackBar.open('Full match details coming soon', 'Close', {
-      duration: 2000,
-    });
+  getEventCount(events: MatchEvent[], eventType: string): number {
+    if (eventType === 'all') {
+      return events.length;
+    }
+    return events.filter((event) => event.eventType === eventType).length;
   }
 
-  viewMatchReport(match: Match): void {
-    // Generate and show match report
-    this.snackBar.open('Match report feature coming soon', 'Close', {
-      duration: 2000,
-    });
+  viewMatchDetails(match: Match): void {
+    this.router.navigate(['/match-details', match.id]);
   }
 
-  duplicateMatch(match: Match): void {
-    this.snackBar.open('Duplicate match feature coming soon', 'Close', {
-      duration: 2000,
-    });
+  addEvent(match: Match): void {
+    // TODO: Implement add event dialog
+    console.log('Add event for match:', match.id);
   }
 
-  exportMatch(match: Match): void {
-    // Export match data
+  startNewMatch(): void {
+    this.router.navigate(['/score-tracker']);
+  }
+
+  exportMatchData(match: Match): void {
     const matchData = JSON.stringify(match, null, 2);
     const blob = new Blob([matchData], { type: 'application/json' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `match-${match.homeTeam}-vs-${match.awayTeam}-${
-      new Date(match.date).toISOString().split('T')[0]
-    }.json`;
-    link.click();
-    window.URL.revokeObjectURL(url);
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `match-${match.homeTeam}-vs-${match.awayTeam}-${match.date}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    this.snackBar.open('Match data exported successfully!', 'Close', {
+      duration: 3000,
+    });
   }
 
   deleteMatch(match: Match): void {
@@ -1223,81 +1156,11 @@ export class RecentMatchesComponent implements OnInit, OnDestroy {
         `Are you sure you want to delete the match between ${match.homeTeam} and ${match.awayTeam}?`
       )
     ) {
-      // Delete from both API and local storage
-      const matchId = match._id || match.id;
-
-      this.matchApi.deleteMatch(matchId).subscribe({
-        next: () => {
-          this.matchStorageService.deleteMatch(match.id);
-          this.snackBar.open('Match deleted successfully', 'Close', {
-            duration: 2000,
-          });
-          this.loadRecentMatches(); // Refresh data
-        },
-        error: (error) => {
-          console.error('Error deleting match:', error);
-          this.matchStorageService.deleteMatch(match.id);
-          this.snackBar.open('Match deleted locally (API error)', 'Close', {
-            duration: 3000,
-          });
-          this.loadRecentMatches(); // Refresh data
-        },
+      this.matchStorageService.deleteMatch(match.id);
+      this.loadRecentMatches();
+      this.snackBar.open('Match deleted successfully!', 'Close', {
+        duration: 3000,
       });
-    }
-  }
-
-  // Match type formatting (shared with calendar)
-  formatMatchType(matchType: string | undefined): string {
-    if (!matchType) return '';
-
-    switch (matchType) {
-      case 'boys':
-        return "Boys' Teams";
-      case 'girls':
-        return "Girls' Teams";
-      case 'mixed':
-        return 'Mixed/Adults';
-      default:
-        return matchType;
-    }
-  }
-
-  getMatchTypeColor(matchType: string | undefined): string {
-    switch (matchType) {
-      case 'boys':
-        return '#2196f3';
-      case 'girls':
-        return '#e91e63';
-      case 'mixed':
-        return '#4caf50';
-      default:
-        return '#757575';
-    }
-  }
-
-  getMatchTypeClass(matchType: string | undefined): string {
-    switch (matchType) {
-      case 'boys':
-        return 'boys-teams';
-      case 'girls':
-        return 'girls-teams';
-      case 'mixed':
-        return 'mixed-adults';
-      default:
-        return '';
-    }
-  }
-
-  getMatchTypeIcon(matchType: string | undefined): string {
-    switch (matchType) {
-      case 'boys':
-        return 'sports_rugby';
-      case 'girls':
-        return 'sports_handball';
-      case 'mixed':
-        return 'groups';
-      default:
-        return 'sports';
     }
   }
 
