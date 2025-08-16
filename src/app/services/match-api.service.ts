@@ -19,6 +19,7 @@ export class MatchApiService {
     this.httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.apiKey}`,
         'X-API-Key': this.apiKey,
       }),
     };
