@@ -341,9 +341,8 @@ import { Subscription } from 'rxjs';
       }
 
       .search-field {
-        background: rgba(255, 255, 255, 0.15);
-        border-radius: 25px;
         min-width: 300px;
+        transition: all 0.3s ease;
       }
 
       .search-field mat-form-field {
@@ -355,20 +354,44 @@ import { Subscription } from 'rxjs';
       }
 
       .search-field .mat-mdc-text-field-wrapper {
-        background: transparent !important;
-        border-radius: 25px;
+        background: rgba(255, 255, 255, 0.95) !important;
+        border-radius: 25px !important;
+        border: 2px solid rgba(255, 255, 255, 0.3) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+      }
+
+      .search-field:hover .mat-mdc-text-field-wrapper {
+        background: rgba(255, 255, 255, 1) !important;
+        border: 2px solid rgba(255, 215, 0, 0.6) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .search-field .mdc-notched-outline {
+        display: none !important;
+      }
+
+      .search-field .mdc-line-ripple {
+        display: none !important;
       }
 
       .search-field input {
-        color: white;
+        color: #2c3e50 !important;
+        font-weight: 500;
+      }
+
+      .search-field input::placeholder {
+        color: rgba(44, 62, 80, 0.6) !important;
       }
 
       .search-field .mat-mdc-form-field-label {
-        color: rgba(255, 255, 255, 0.8) !important;
+        color: rgba(44, 62, 80, 0.7) !important;
       }
 
       .search-field .mat-mdc-form-field-icon-prefix mat-icon {
-        color: rgba(255, 255, 255, 0.8);
+        color: #667eea !important;
       }
 
       .filter-buttons {
