@@ -1,4 +1,26 @@
 // Mobile-first responsive design
+
+// Ensure Font Awesome icons work on all devices
+i.fa-solid, i.fa-regular, i.fa-light {
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+  font-style: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1 !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+}
+
+// Specific Font Awesome icon fixes for mobile
+i.fa-play::before { content: "\f04b" !important; }
+i.fa-stop::before { content: "\f04d" !important; }
+i.fa-rotate-right::before { content: "\f01e" !important; }
+i.fa-rotate-left::before { content: "\f0e2" !important; }
+i.fa-pen::before { content: "\f304" !important; }
+
 .game-header {
   position: sticky;
   top: 0;
@@ -34,8 +56,19 @@
     flex-shrink: 0;
     min-width: 100px;
 
-    mat-icon {
+    i, mat-icon {
       margin-right: 4px;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* Ensure Font Awesome icons display correctly */
+    i.fa-solid {
+      margin-right: 6px;
+      font-size: 1rem !important;
+      vertical-align: middle;
+      line-height: 1;
     }
   }
 }
