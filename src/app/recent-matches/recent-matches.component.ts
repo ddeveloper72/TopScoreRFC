@@ -340,21 +340,9 @@ import { Subscription } from 'rxjs';
 
       .search-field {
         min-width: 350px;
-        background: white;
-        border-radius: 25px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        border-left: 4px solid #ff9800;
-        transition: all 0.3s ease;
       }
 
-      .search-field:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        border-left: 4px solid #ffd700;
-      }
-
-      /* Override Material Design outline */
+      /* Override Material Design outline completely */
       .search-field .mdc-notched-outline {
         border: none !important;
       }
@@ -366,14 +354,23 @@ import { Subscription } from 'rxjs';
         border-color: transparent !important;
       }
 
-      /* Style the form field container */
+      /* Style the form field wrapper to look like a clean search bar */
       .search-field .mat-mdc-text-field-wrapper {
-        background: transparent !important;
+        background: white !important;
         padding: 0.75rem 1.25rem;
         border-radius: 25px;
         height: 56px;
         display: flex;
         align-items: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #ff9800;
+        transition: all 0.3s ease;
+      }
+
+      .search-field:hover .mat-mdc-text-field-wrapper {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        border-left: 4px solid #ffd700;
       }
 
       /* Input styling */
