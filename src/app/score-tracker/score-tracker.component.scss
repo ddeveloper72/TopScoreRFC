@@ -1,7 +1,9 @@
 // Mobile-first responsive design
 
 // Ensure Font Awesome icons work on all devices
-i.fa-solid, i.fa-regular, i.fa-light {
+i.fa-solid,
+i.fa-regular,
+i.fa-light {
   font-family: "Font Awesome 6 Free" !important;
   font-weight: 900 !important;
   font-style: normal !important;
@@ -15,11 +17,21 @@ i.fa-solid, i.fa-regular, i.fa-light {
 }
 
 // Specific Font Awesome icon fixes for mobile
-i.fa-play::before { content: "\f04b" !important; }
-i.fa-stop::before { content: "\f04d" !important; }
-i.fa-rotate-right::before { content: "\f01e" !important; }
-i.fa-rotate-left::before { content: "\f0e2" !important; }
-i.fa-pen::before { content: "\f304" !important; }
+i.fa-play::before {
+  content: "\f04b" !important;
+}
+i.fa-stop::before {
+  content: "\f04d" !important;
+}
+i.fa-rotate-right::before {
+  content: "\f01e" !important;
+}
+i.fa-rotate-left::before {
+  content: "\f0e2" !important;
+}
+i.fa-pen::before {
+  content: "\f304" !important;
+}
 
 .game-header {
   position: sticky;
@@ -56,7 +68,8 @@ i.fa-pen::before { content: "\f304" !important; }
     flex-shrink: 0;
     min-width: 100px;
 
-    i, mat-icon {
+    i,
+    mat-icon {
       margin-right: 4px;
       font-size: 1rem;
       display: inline-flex;
