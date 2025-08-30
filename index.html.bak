@@ -32,7 +32,7 @@
   </script>
 
   <!-- Runtime config: populated by GH Actions into /assets/env.js on Pages -->
-  <script src="assets/env.js?v=42a9038283ec3986af02e054776d8e9b856526cc"></script>
+  <script src="assets/env.js"></script>
   <!-- Optional local overrides for development (gitignored): create src/assets/env.local.js locally -->
   <script src="assets/env.local.js"></script>
 
