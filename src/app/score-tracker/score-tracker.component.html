@@ -8,19 +8,19 @@
 <!-- Game Controls -->
 <div class="game-controls">
   <button mat-raised-button color="primary" (click)="startGame()" [disabled]="gameStarted">
-    <i class="fa-solid fa-play"></i>
+    <mat-icon>play_arrow</mat-icon>
     Start Game
   </button>
   <button mat-raised-button color="warn" (click)="endGame()" [disabled]="!gameStarted">
-    <i class="fa-solid fa-stop"></i>
+    <mat-icon>stop</mat-icon>
     End Game
   </button>
   <button mat-raised-button (click)="resetGame()">
-    <i class="fa-solid fa-rotate-right"></i>
+    <mat-icon>refresh</mat-icon>
     Reset
   </button>
   <button mat-raised-button color="accent" (click)="undoLastScore()" [disabled]="scoreHistory.length === 0">
-    <i class="fa-solid fa-rotate-left"></i>
+    <mat-icon>undo</mat-icon>
     Undo
   </button>
 </div>
@@ -32,7 +32,7 @@
     <mat-card-header>
       <mat-card-title class="team-name" (click)="editTeamName('home')">
         {{ homeTeam.name }}
-        <i class="fa-solid fa-pen edit-icon"></i>
+        <mat-icon class="edit-icon">edit</mat-icon>
       </mat-card-title>
     </mat-card-header>
 
@@ -96,7 +96,7 @@
     <mat-card-header>
       <mat-card-title class="team-name" (click)="editTeamName('away')">
         {{ awayTeam.name }}
-        <i class="fa-solid fa-pen edit-icon"></i>
+        <mat-icon class="edit-icon">edit</mat-icon>
       </mat-card-title>
     </mat-card-header>
 
@@ -153,7 +153,7 @@
   <mat-card class="status-card">
     <mat-card-content>
       <div class="winning-team">
-        <i class="fa-solid fa-trophy"></i>
+        <mat-icon>trophy</mat-icon>
         {{ getWinningTeam()?.name }} is leading by {{ getScoreDifference() }} points
       </div>
     </mat-card-content>
@@ -165,7 +165,7 @@
   <mat-card>
     <mat-card-header>
       <mat-card-title>
-        <i class="fa-solid fa-clock-rotate-left"></i>
+        <mat-icon>history</mat-icon>
         Score History
       </mat-card-title>
     </mat-card-header>
@@ -191,7 +191,7 @@
   <mat-card>
     <mat-card-header>
       <mat-card-title>
-        <i class="fa-solid fa-circle-info"></i>
+        <mat-icon>info</mat-icon>
         Rugby Scoring Rules
       </mat-card-title>
     </mat-card-header>
