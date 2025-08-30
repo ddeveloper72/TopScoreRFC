@@ -343,6 +343,18 @@ import { Subscription } from 'rxjs';
       .search-field {
         min-width: 300px;
         transition: all 0.3s ease;
+        position: relative;
+        border-radius: 25px;
+        overflow: hidden;
+        background: white;
+        border-left: 5px solid #ff9800;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .search-field:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+        border-left: 5px solid #ffd700;
       }
 
       .search-field mat-form-field {
@@ -354,19 +366,10 @@ import { Subscription } from 'rxjs';
       }
 
       .search-field .mat-mdc-text-field-wrapper {
-        background: rgba(255, 255, 255, 0.95) !important;
+        background: transparent !important;
         border-radius: 25px !important;
-        border: 2px solid rgba(255, 255, 255, 0.3) !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
-      }
-
-      .search-field:hover .mat-mdc-text-field-wrapper {
-        background: rgba(255, 255, 255, 1) !important;
-        border: 2px solid rgba(255, 215, 0, 0.6) !important;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        border: none !important;
+        padding: 0.5rem 1rem !important;
       }
 
       .search-field .mdc-notched-outline {
@@ -380,6 +383,8 @@ import { Subscription } from 'rxjs';
       .search-field input {
         color: #2c3e50 !important;
         font-weight: 500;
+        font-size: 1rem !important;
+        padding: 0.75rem 0 !important;
       }
 
       .search-field input::placeholder {
@@ -388,10 +393,13 @@ import { Subscription } from 'rxjs';
 
       .search-field .mat-mdc-form-field-label {
         color: rgba(44, 62, 80, 0.7) !important;
+        font-weight: 500 !important;
       }
 
       .search-field .mat-mdc-form-field-icon-prefix mat-icon {
-        color: #667eea !important;
+        color: #ff9800 !important;
+        font-size: 1.5rem !important;
+        margin-right: 0.75rem !important;
       }
 
       .filter-buttons {
