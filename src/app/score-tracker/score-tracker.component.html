@@ -11,8 +11,9 @@
     <mat-icon>play_arrow</mat-icon>
     Start Game
   </button>
+  <!-- Force change detection -->
   <button mat-raised-button color="warn" (click)="endGame()" [disabled]="!gameStarted">
-    <mat-icon style="color: white !important;">stop</mat-icon>
+    <mat-icon [style.color]="gameStarted ? 'white' : 'rgba(0,0,0,0.6)'">stop</mat-icon>
     End Game
   </button>
   <button mat-raised-button (click)="resetGame()">

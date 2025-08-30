@@ -13,18 +13,10 @@ export const routes: Routes = [
   {
     path: 'score-tracker',
     loadComponent: () =>
-      import('./score-tracker/simple-score-tracker.component').then(
-        (m) => m.SimpleScoreTrackerComponent
-      ),
-    data: { animation: 'ScoreTracker' },
-  },
-  {
-    path: 'score-tracker-advanced',
-    loadComponent: () =>
       import('./score-tracker/score-tracker.component').then(
         (m) => m.ScoreTrackerComponent
       ),
-    data: { animation: 'ScoreTrackerAdvanced' },
+    data: { animation: 'ScoreTracker' },
   },
   {
     path: 'calendar',

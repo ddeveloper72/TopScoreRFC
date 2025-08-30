@@ -84,22 +84,49 @@ i.fa-pen::before {
       line-height: 1;
     }
 
-    /* Make Material Design icons white on warn/red buttons */
-    &.mat-mdc-raised-button.mat-warn mat-icon {
+    /* Make Material Design icons white on enabled warn/red buttons */
+    &.mat-mdc-raised-button.mat-warn:not([disabled]) mat-icon {
       color: white !important;
+    }
+
+    /* Make Material Design icons dark on disabled buttons */
+    &.mat-mdc-raised-button[disabled] mat-icon {
+      color: rgba(0, 0, 0, 0.6) !important;
     }
   }
 }
 
-// Additional specific styling for warn button icons
-.game-controls button[color="warn"] mat-icon,
-.mat-mdc-raised-button.mat-warn mat-icon {
-  color: white !important;
+// Additional specific styling for button states
+.game-controls button.mat-mdc-raised-button {
+  // Enabled warn buttons - white icons on red background
+  &.mat-warn:not([disabled]) mat-icon {
+    color: white !important;
+  }
+
+  // Disabled buttons - dark icons for visibility
+  &[disabled] mat-icon {
+    color: rgba(0, 0, 0, 0.6) !important;
+  }
 }
 
-// Force Material Design icons to be white on warn buttons using ng-deep
-::ng-deep .mat-mdc-raised-button.mat-warn .mat-icon {
-  color: white !important;
+// Force Material Design icons to have proper contrast using ng-deep
+::ng-deep .mat-mdc-raised-button {
+  // White icons on colored buttons (primary, warn, accent)
+  &.mat-primary:not([disabled]) .mat-icon,
+  &.mat-warn:not([disabled]) .mat-icon,
+  &.mat-accent:not([disabled]) .mat-icon {
+    color: white !important;
+  }
+
+  // Dark icons on disabled buttons for visibility
+  &[disabled] .mat-icon {
+    color: rgba(0, 0, 0, 0.6) !important;
+  }
+
+  // Default buttons (no color attribute) - dark icons
+  &:not(.mat-primary):not(.mat-warn):not(.mat-accent) .mat-icon {
+    color: rgba(0, 0, 0, 0.87) !important;
+  }
 }
 
 .scoreboard {
