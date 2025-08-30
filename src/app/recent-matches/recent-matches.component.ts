@@ -29,18 +29,16 @@ import { Subscription } from 'rxjs';
 
       <!-- Filters Section -->
       <div class="filters-section">
-        <div class="search-field">
-          <mat-form-field appearance="fill">
-            <mat-icon matPrefix>search</mat-icon>
-            <mat-label>Search matches...</mat-label>
-            <input
-              matInput
-              [(ngModel)]="searchTerm"
-              (input)="applyFilters()"
-              placeholder="Team name, competition..."
-            />
-          </mat-form-field>
-        </div>
+        <mat-form-field class="search-field" appearance="outline">
+          <mat-icon matPrefix>search</mat-icon>
+          <mat-label>Search matches...</mat-label>
+          <input
+            matInput
+            [(ngModel)]="searchTerm"
+            (input)="applyFilters()"
+            placeholder="Team name, competition..."
+          />
+        </mat-form-field>
 
         <div class="filter-buttons">
           <button
@@ -341,157 +339,89 @@ import { Subscription } from 'rxjs';
       }
 
       .search-field {
-        min-width: 300px;
-        transition: all 0.3s ease;
-        position: relative;
+        min-width: 350px;
+        background: white;
         border-radius: 25px;
         overflow: hidden;
-        background: white;
-        border-left: 5px solid #ff9800;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #ff9800;
+        transition: all 0.3s ease;
       }
 
       .search-field:hover {
         transform: translateY(-2px);
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
-        border-left: 5px solid #ffd700;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        border-left: 4px solid #ffd700;
       }
 
-      .search-field mat-form-field {
-        width: 100%;
-        height: 60px;
+      /* Override Material Design outline */
+      .search-field .mdc-notched-outline {
+        border: none !important;
       }
 
-      .search-field .mat-mdc-form-field-subscript-wrapper {
-        display: none !important;
+      .search-field .mdc-notched-outline__leading,
+      .search-field .mdc-notched-outline__notch,
+      .search-field .mdc-notched-outline__trailing {
+        border: none !important;
+        border-color: transparent !important;
       }
 
+      /* Style the form field container */
       .search-field .mat-mdc-text-field-wrapper {
         background: transparent !important;
-        border-radius: 25px !important;
-        border: none !important;
-        outline: none !important;
-        padding: 0.75rem 1.25rem !important;
-        height: 60px !important;
-        display: flex !important;
-        align-items: center !important;
+        padding: 0.75rem 1.25rem;
+        border-radius: 25px;
+        height: 56px;
+        display: flex;
+        align-items: center;
       }
 
-      .search-field .mat-mdc-form-field-flex {
-        height: 100% !important;
-        align-items: center !important;
-        padding: 0 !important;
-      }
-
-      .search-field .mat-mdc-form-field-infix {
-        padding: 0 !important;
-        border-top: none !important;
-        border: none !important;
-        outline: none !important;
-        min-height: auto !important;
-        display: flex !important;
-        align-items: center !important;
-      }
-
-      /* Completely remove all outline and border elements */
-      .search-field .mdc-notched-outline,
-      .search-field .mdc-notched-outline__leading,
-      .search-field .mdc-notched-outline__trailing,
-      .search-field .mdc-notched-outline__notch {
-        display: none !important;
-        border: none !important;
-        outline: none !important;
-      }
-
-      .search-field .mdc-line-ripple {
-        display: none !important;
-      }
-
+      /* Input styling */
       .search-field input {
         color: #2c3e50 !important;
+        font-size: 1rem;
         font-weight: 500;
-        font-size: 1rem !important;
-        padding: 0 !important;
-        height: auto !important;
-        line-height: 1.5 !important;
-        margin: 0 !important;
-        border: none !important;
-        outline: none !important;
-        background: transparent !important;
-      }
-
-      .search-field input:focus {
-        border: none !important;
-        outline: none !important;
-        box-shadow: none !important;
+        background: transparent;
+        border: none;
+        outline: none;
       }
 
       .search-field input::placeholder {
-        color: rgba(44, 62, 80, 0.6) !important;
+        color: rgba(44, 62, 80, 0.6);
       }
 
-      /* Label positioning - keep it inside the field when focused */
-      .search-field .mat-mdc-form-field-label-wrapper {
-        overflow: visible !important;
-        position: relative !important;
-      }
-
-      .search-field .mat-mdc-form-field-label {
-        color: rgba(44, 62, 80, 0.7) !important;
-        font-weight: 500 !important;
-        top: 50% !important;
-        transform: translateY(-50%) !important;
-        left: 3rem !important;
-        transition: all 0.2s ease !important;
-        position: absolute !important;
-      }
-
-      /* Focused state - move label up but keep it visible within the container */
-      .search-field.mat-focused .mat-mdc-form-field-label,
-      .search-field .mat-mdc-form-field-label.mdc-floating-label--float-above {
-        transform: translateY(-200%) scale(0.85) !important;
-        color: #ff9800 !important;
-        left: 1rem !important;
-        background: white !important;
-        padding: 0 0.5rem !important;
-        z-index: 10 !important;
-        border-radius: 4px !important;
-      }
-
-      /* Additional overrides for fill appearance */
-      .search-field .mat-mdc-form-field-bottom-align::before {
-        display: none !important;
-      }
-
-      .search-field .mat-mdc-form-field-focus-overlay {
-        display: none !important;
-      }
-
-      .search-field .mat-mdc-form-field-ripple {
-        display: none !important;
-      }
-
-      .search-field .mdc-text-field--filled::before {
-        display: none !important;
-      }
-
-      .search-field .mdc-text-field--filled {
-        background: transparent !important;
-        border-radius: 25px !important;
-      }
-
+      /* Icon styling */
       .search-field .mat-mdc-form-field-icon-prefix {
-        padding-right: 0.75rem !important;
-        display: flex !important;
-        align-items: center !important;
+        padding-right: 0.75rem;
+        color: #ff9800;
       }
 
       .search-field .mat-mdc-form-field-icon-prefix mat-icon {
+        color: #ff9800;
+        font-size: 1.25rem;
+      }
+
+      /* Label styling */
+      .search-field .mat-mdc-form-field-label {
+        color: rgba(44, 62, 80, 0.7) !important;
+        font-weight: 500;
+      }
+
+      .search-field.mat-focused .mat-mdc-form-field-label {
         color: #ff9800 !important;
-        font-size: 1.5rem !important;
-        width: 1.5rem !important;
-        height: 1.5rem !important;
-        margin: 0 !important;
+      }
+
+      /* Remove underline and focus indicators */
+      .search-field .mdc-line-ripple {
+        display: none;
+      }
+
+      .search-field .mat-mdc-form-field-focus-overlay {
+        display: none;
+      }
+
+      .search-field .mat-mdc-form-field-subscript-wrapper {
+        display: none;
       }
 
       .filter-buttons {
