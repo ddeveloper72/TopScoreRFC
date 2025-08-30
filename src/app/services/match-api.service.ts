@@ -43,6 +43,32 @@ export class MatchApiService {
     return this.http.post(`${this.apiUrl}/matches`, match, this.httpOptions);
   }
 
+  /**
+   * Upload a local match to the database (for offline sync)
+   * Creates a new match in the database and returns the MongoDB _id
+   */
+  syncLocalMatch(localMatch: Match): Observable<any> {
+    // Remove local-only fields before sending to API
+    const apiMatch = {
+      homeTeam: localMatch.homeTeam,
+      awayTeam: localMatch.awayTeam,
+      date: localMatch.date,
+      venue: localMatch.venue,
+      venueDetails: localMatch.venueDetails,
+      competition: localMatch.competition,
+      status: localMatch.status,
+      homeScore: localMatch.homeScore,
+      awayScore: localMatch.awayScore,
+      matchType: localMatch.matchType,
+      homeTeamCategory: localMatch.homeTeamCategory,
+      homeTeamAgeLevel: localMatch.homeTeamAgeLevel,
+      awayTeamAgeLevel: localMatch.awayTeamAgeLevel,
+      events: localMatch.events,
+    };
+
+    return this.http.post(`${this.apiUrl}/matches`, apiMatch, this.httpOptions);
+  }
+
   updateMatch(id: string, match: Partial<Match>): Observable<any> {
     return this.http.put(
       `${this.apiUrl}/matches/${id}`,

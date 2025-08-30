@@ -2,10 +2,26 @@
 <div class="calendar-container">
   <div class="calendar-header">
     <h1><i class="fa-solid fa-calendar-days"></i> Match Calendar</h1>
-    <button mat-raised-button color="primary" (click)="addNewMatch()">
-      <i class="fa-solid fa-plus"></i>
-      Schedule Match
-    </button>
+    <div class="header-buttons">
+      <!-- Sync Button (shown only if there are unsynced matches) -->
+      <button
+        mat-raised-button
+        color="accent"
+        (click)="syncOfflineMatches()"
+        *ngIf="hasUnsyncedMatches()"
+        [disabled]="isSyncing"
+        class="sync-button"
+        matTooltip="Sync offline matches to database">
+        <mat-spinner *ngIf="isSyncing" diameter="20" class="sync-spinner"></mat-spinner>
+        <i class="fa-solid fa-sync" *ngIf="!isSyncing"></i>
+        {{ isSyncing ? 'Syncing...' : 'Sync (' + unsyncedMatchesCount + ')' }}
+      </button>
+
+      <button mat-raised-button color="primary" (click)="addNewMatch()">
+        <i class="fa-solid fa-plus"></i>
+        Schedule Match
+      </button>
+    </div>
   </div>
 
   <!-- Quick Date Navigation -->

@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatchApiService } from '../services/match-api.service';
+import { MatchSyncService } from '../services/match-sync.service';
 import {
   MatchBookingDialogComponent,
   MatchBookingData,
@@ -54,15 +55,23 @@ export class CalendarComponent implements OnInit, OnDestroy {
   expandedAccordionPanels: Set<string> = new Set<string>();
   private subscription = new Subscription();
 
+  // Sync-related properties
+  unsyncedMatchesCount = 0;
+  isSyncing = false;
+
   constructor(
     private router: Router,
     private dialog: MatDialog,
     private matchStorageService: MatchStorageService,
     private matchApi: MatchApiService,
+    private matchSync: MatchSyncService,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
+    // Check for unsynced matches
+    this.updateUnsyncedCount();
+
     // Subscribe to matches changes
     this.subscription.add(
       this.matchStorageService.matches$.subscribe((matches) => {
@@ -76,6 +85,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
           (match) => match.date >= now
         );
         this.generateCalendar();
+        this.updateUnsyncedCount();
       })
     );
     this.generateCalendar();
@@ -619,5 +629,66 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   onAccordionClosed(matchId: string): void {
     this.expandedAccordionPanels.delete(matchId);
+  }
+
+  // ===============================================
+  // SYNC FUNCTIONALITY
+  // ===============================================
+
+  /**
+   * Update the count of unsynced matches
+   */
+  updateUnsyncedCount(): void {
+    this.unsyncedMatchesCount = this.matchSync.getUnsyncedCount();
+  }
+
+  /**
+   * Check if there are unsynced matches
+   */
+  hasUnsyncedMatches(): boolean {
+    return this.unsyncedMatchesCount > 0;
+  }
+
+  /**
+   * Sync all offline matches to the database
+   */
+  syncOfflineMatches(): void {
+    if (this.isSyncing) return;
+
+    this.isSyncing = true;
+    this.snackBar.open('Syncing offline matches...', '', { duration: 2000 });
+
+    this.subscription.add(
+      this.matchSync.syncAllUnsyncedMatches().subscribe({
+        next: (result) => {
+          this.isSyncing = false;
+
+          if (result.success) {
+            this.snackBar.open(
+              `Successfully synced ${result.syncedMatches} matches to database!`,
+              'Close',
+              { duration: 5000 }
+            );
+          } else {
+            this.snackBar.open(
+              `Synced ${result.syncedMatches} matches. ${result.failedMatches} failed.`,
+              'Close',
+              { duration: 7000 }
+            );
+          }
+
+          this.updateUnsyncedCount();
+        },
+        error: (error) => {
+          this.isSyncing = false;
+          this.snackBar.open(
+            'Failed to sync matches. Please try again.',
+            'Close',
+            { duration: 5000 }
+          );
+          console.error('Sync error:', error);
+        }
+      })
+    );
   }
 }
