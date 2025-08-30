@@ -30,7 +30,7 @@ import { Subscription } from 'rxjs';
       <!-- Filters Section -->
       <div class="filters-section">
         <div class="search-field">
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="fill">
             <mat-icon matPrefix>search</mat-icon>
             <mat-label>Search matches...</mat-label>
             <input
@@ -370,6 +370,7 @@ import { Subscription } from 'rxjs';
         background: transparent !important;
         border-radius: 25px !important;
         border: none !important;
+        outline: none !important;
         padding: 0.75rem 1.25rem !important;
         height: 60px !important;
         display: flex !important;
@@ -385,13 +386,21 @@ import { Subscription } from 'rxjs';
       .search-field .mat-mdc-form-field-infix {
         padding: 0 !important;
         border-top: none !important;
+        border: none !important;
+        outline: none !important;
         min-height: auto !important;
         display: flex !important;
         align-items: center !important;
       }
 
-      .search-field .mdc-notched-outline {
+      /* Completely remove all outline and border elements */
+      .search-field .mdc-notched-outline,
+      .search-field .mdc-notched-outline__leading,
+      .search-field .mdc-notched-outline__trailing,
+      .search-field .mdc-notched-outline__notch {
         display: none !important;
+        border: none !important;
+        outline: none !important;
       }
 
       .search-field .mdc-line-ripple {
@@ -406,10 +415,25 @@ import { Subscription } from 'rxjs';
         height: auto !important;
         line-height: 1.5 !important;
         margin: 0 !important;
+        border: none !important;
+        outline: none !important;
+        background: transparent !important;
+      }
+
+      .search-field input:focus {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
       }
 
       .search-field input::placeholder {
         color: rgba(44, 62, 80, 0.6) !important;
+      }
+
+      /* Label positioning - keep it inside the field when focused */
+      .search-field .mat-mdc-form-field-label-wrapper {
+        overflow: visible !important;
+        position: relative !important;
       }
 
       .search-field .mat-mdc-form-field-label {
@@ -417,6 +441,43 @@ import { Subscription } from 'rxjs';
         font-weight: 500 !important;
         top: 50% !important;
         transform: translateY(-50%) !important;
+        left: 3rem !important;
+        transition: all 0.2s ease !important;
+        position: absolute !important;
+      }
+
+      /* Focused state - move label up but keep it visible within the container */
+      .search-field.mat-focused .mat-mdc-form-field-label,
+      .search-field .mat-mdc-form-field-label.mdc-floating-label--float-above {
+        transform: translateY(-200%) scale(0.85) !important;
+        color: #ff9800 !important;
+        left: 1rem !important;
+        background: white !important;
+        padding: 0 0.5rem !important;
+        z-index: 10 !important;
+        border-radius: 4px !important;
+      }
+
+      /* Additional overrides for fill appearance */
+      .search-field .mat-mdc-form-field-bottom-align::before {
+        display: none !important;
+      }
+
+      .search-field .mat-mdc-form-field-focus-overlay {
+        display: none !important;
+      }
+
+      .search-field .mat-mdc-form-field-ripple {
+        display: none !important;
+      }
+
+      .search-field .mdc-text-field--filled::before {
+        display: none !important;
+      }
+
+      .search-field .mdc-text-field--filled {
+        background: transparent !important;
+        border-radius: 25px !important;
       }
 
       .search-field .mat-mdc-form-field-icon-prefix {
