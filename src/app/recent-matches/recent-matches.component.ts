@@ -359,17 +359,35 @@ import { Subscription } from 'rxjs';
 
       .search-field mat-form-field {
         width: 100%;
+        height: 60px;
       }
 
       .search-field .mat-mdc-form-field-subscript-wrapper {
-        display: none;
+        display: none !important;
       }
 
       .search-field .mat-mdc-text-field-wrapper {
         background: transparent !important;
         border-radius: 25px !important;
         border: none !important;
-        padding: 0.5rem 1rem !important;
+        padding: 0.75rem 1.25rem !important;
+        height: 60px !important;
+        display: flex !important;
+        align-items: center !important;
+      }
+
+      .search-field .mat-mdc-form-field-flex {
+        height: 100% !important;
+        align-items: center !important;
+        padding: 0 !important;
+      }
+
+      .search-field .mat-mdc-form-field-infix {
+        padding: 0 !important;
+        border-top: none !important;
+        min-height: auto !important;
+        display: flex !important;
+        align-items: center !important;
       }
 
       .search-field .mdc-notched-outline {
@@ -384,7 +402,10 @@ import { Subscription } from 'rxjs';
         color: #2c3e50 !important;
         font-weight: 500;
         font-size: 1rem !important;
-        padding: 0.75rem 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+        line-height: 1.5 !important;
+        margin: 0 !important;
       }
 
       .search-field input::placeholder {
@@ -394,12 +415,22 @@ import { Subscription } from 'rxjs';
       .search-field .mat-mdc-form-field-label {
         color: rgba(44, 62, 80, 0.7) !important;
         font-weight: 500 !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+      }
+
+      .search-field .mat-mdc-form-field-icon-prefix {
+        padding-right: 0.75rem !important;
+        display: flex !important;
+        align-items: center !important;
       }
 
       .search-field .mat-mdc-form-field-icon-prefix mat-icon {
         color: #ff9800 !important;
         font-size: 1.5rem !important;
-        margin-right: 0.75rem !important;
+        width: 1.5rem !important;
+        height: 1.5rem !important;
+        margin: 0 !important;
       }
 
       .filter-buttons {
