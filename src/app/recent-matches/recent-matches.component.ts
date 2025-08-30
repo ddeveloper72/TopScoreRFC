@@ -340,85 +340,156 @@ import { Subscription } from 'rxjs';
 
       .search-field {
         min-width: 350px;
+        margin-bottom: 1rem;
       }
 
-      /* Override Material Design outline completely */
-      .search-field .mdc-notched-outline {
-        border: none !important;
-      }
+      /* Modern Material Form Field Styling */
+      .search-field.mat-mdc-form-field {
+        /* Remove default subscript spacing */
+        .mat-mdc-form-field-subscript-wrapper {
+          display: none !important;
+        }
 
-      .search-field .mdc-notched-outline__leading,
-      .search-field .mdc-notched-outline__notch,
-      .search-field .mdc-notched-outline__trailing {
-        border: none !important;
-        border-color: transparent !important;
-      }
+        /* Style the main wrapper */
+        .mat-mdc-text-field-wrapper {
+          background: white;
+          border-radius: 25px;
+          height: 56px;
+          padding: 0 1.25rem;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          border-left: 4px solid #ff9800;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+        }
 
-      /* Style the form field wrapper to look like a clean search bar */
-      .search-field .mat-mdc-text-field-wrapper {
-        background: white !important;
-        padding: 0.75rem 1.25rem;
-        border-radius: 25px;
-        height: 56px;
-        display: flex;
-        align-items: center;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        border-left: 4px solid #ff9800;
-        transition: all 0.3s ease;
-      }
+        /* Hover effect */
+        &:hover .mat-mdc-text-field-wrapper {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          border-left: 4px solid #ffd700;
+        }
 
-      .search-field:hover .mat-mdc-text-field-wrapper {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        border-left: 4px solid #ffd700;
-      }
+        /* Remove all outline elements */
+        .mdc-notched-outline,
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+          display: none !important;
+          border: none !important;
+        }
 
-      /* Input styling */
-      .search-field input {
-        color: #2c3e50 !important;
-        font-size: 1rem;
-        font-weight: 500;
-        background: transparent;
-        border: none;
-        outline: none;
-      }
+        /* Remove focus indicators */
+        .mdc-line-ripple,
+        .mat-mdc-form-field-focus-overlay,
+        .mat-mdc-form-field-ripple {
+          display: none !important;
+        }
 
-      .search-field input::placeholder {
-        color: rgba(44, 62, 80, 0.6);
-      }
+        /* Style the input field */
+        .mat-mdc-form-field-infix {
+          padding: 0 !important;
+          border: none !important;
+          min-height: auto !important;
 
-      /* Icon styling */
-      .search-field .mat-mdc-form-field-icon-prefix {
-        padding-right: 0.75rem;
-        color: #ff9800;
-      }
+          .mdc-text-field__input {
+            color: #2c3e50 !important;
+            font-size: 1rem;
+            font-weight: 500;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 0;
+            height: auto;
 
-      .search-field .mat-mdc-form-field-icon-prefix mat-icon {
-        color: #ff9800;
-        font-size: 1.25rem;
-      }
+            &::placeholder {
+              color: rgba(44, 62, 80, 0.6);
+              font-weight: 400;
+            }
 
-      /* Label styling */
-      .search-field .mat-mdc-form-field-label {
-        color: rgba(44, 62, 80, 0.7) !important;
-        font-weight: 500;
-      }
+            &:focus {
+              outline: none;
+              box-shadow: none;
+            }
+          }
+        }
 
-      .search-field.mat-focused .mat-mdc-form-field-label {
-        color: #ff9800 !important;
-      }
+        /* Style the floating label */
+        .mat-mdc-form-field-label-wrapper {
+          overflow: visible;
 
-      /* Remove underline and focus indicators */
-      .search-field .mdc-line-ripple {
-        display: none;
-      }
+          .mat-mdc-form-field-label {
+            color: rgba(44, 62, 80, 0.7);
+            font-weight: 500;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 
-      .search-field .mat-mdc-form-field-focus-overlay {
-        display: none;
-      }
+            /* Focused state */
+            &.mdc-floating-label--float-above {
+              transform: translateY(-150%) scale(0.85);
+              color: #ff9800;
+              background: white;
+              padding: 0 0.5rem;
+              border-radius: 4px;
+              z-index: 10;
+            }
+          }
+        }
 
-      .search-field .mat-mdc-form-field-subscript-wrapper {
-        display: none;
+        /* Style the prefix icon */
+        .mat-mdc-form-field-icon-prefix {
+          padding-right: 0.75rem;
+          display: flex;
+          align-items: center;
+
+          mat-icon {
+            color: #ff9800;
+            font-size: 1.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            transition: color 0.3s ease;
+          }
+        }
+
+        /* Focused state for the entire field */
+        &.mat-focused {
+          .mat-mdc-text-field-wrapper {
+            box-shadow: 0 8px 25px rgba(255, 152, 0, 0.2);
+            border-left: 4px solid #ff9800;
+          }
+
+          .mat-mdc-form-field-icon-prefix mat-icon {
+            color: #ff9800;
+          }
+        }
+
+        /* Error state styling */
+        &.mat-form-field-invalid {
+          .mat-mdc-text-field-wrapper {
+            border-left: 4px solid #f44336;
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.15);
+          }
+
+          .mat-mdc-form-field-label.mdc-floating-label--float-above {
+            color: #f44336;
+          }
+        }
+
+        /* Disabled state */
+        &.mat-form-field-disabled {
+          .mat-mdc-text-field-wrapper {
+            background: #f5f5f5;
+            border-left: 4px solid #e0e0e0;
+            box-shadow: none;
+
+            .mdc-text-field__input {
+              color: rgba(0, 0, 0, 0.38);
+            }
+          }
+
+          .mat-mdc-form-field-icon-prefix mat-icon {
+            color: rgba(0, 0, 0, 0.38);
+          }
+        }
       }
 
       .filter-buttons {
