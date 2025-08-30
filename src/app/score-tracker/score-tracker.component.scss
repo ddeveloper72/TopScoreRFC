@@ -83,6 +83,11 @@ i.fa-pen::before {
       vertical-align: middle;
       line-height: 1;
     }
+
+    /* Make Material Design icons white on warn/red buttons */
+    &.mat-mdc-raised-button.mat-warn mat-icon {
+      color: white !important;
+    }
   }
 }
 
