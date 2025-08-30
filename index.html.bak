@@ -18,7 +18,7 @@
   <style>@font-face{font-family:'Material Icons';font-style:normal;font-weight:400;src:url(https://fonts.gstatic.com/s/materialicons/v143/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');}.material-icons{font-family:'Material Icons';font-weight:normal;font-style:normal;font-size:24px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-feature-settings:'liga';-webkit-font-smoothing:antialiased;}</style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
   <!-- Runtime config: populated by GH Actions into /assets/env.js on Pages -->
-  <script src="assets/env.js?v=bbe05cf34c6499cc1a4aab3508741d7921bf15f7"></script>
+  <script src="assets/env.js"></script>
   <!-- Optional local overrides for development (gitignored): create src/assets/env.local.js locally -->
   <script src="assets/env.local.js"></script>
 
