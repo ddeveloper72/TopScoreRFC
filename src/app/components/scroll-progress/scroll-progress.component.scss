@@ -4,28 +4,26 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
+  height: 6px; /* Make it slightly thicker for better visibility */
   z-index: 1000;
   pointer-events: none;
 
   /* Glassmorphic gradient background matching the app theme */
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 
-  /* Scroll-driven animation keyframes - targeting the sidenav content */
-  animation: scaleProgress auto linear;
-  animation-timeline: scroll(nearest);
-
   /* Transform origin from left to right */
   transform-origin: left;
 
-  /* Initial state - hidden */
-  transform: scaleX(0);
+  /* Always start with some visibility */
+  transform: scaleX(0.1); /* Start with 10% visible */
+  opacity: 1;
 
-  /* Subtle glow effect */
-  box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+  /* Enhanced glow effect for better visibility */
+  box-shadow: 0 0 15px rgba(102, 126, 234, 0.6),
+    0 2px 4px rgba(102, 126, 234, 0.3);
 
-  /* Smooth transitions for any non-scroll animations */
-  transition: opacity 0.3s ease, box-shadow 0.3s ease;
+  /* Smooth transitions */
+  transition: transform 0.2s ease-out, opacity 0.3s ease;
 }
 
 /* Fallback for browsers that don't support scroll-timeline */
