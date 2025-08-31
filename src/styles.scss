@@ -1,5 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
+/* Import Custom Scrollbar Utilities */
+@use "./styles/scrollbar-utilities.scss";
+
 /* FontAwesome Icon Styling */
 .fa-solid,
 .fa-regular,
@@ -196,8 +199,17 @@ button .fa-football {
 html,
 body {
   height: 100%;
+  /* Hide outer scrollbar while maintaining functionality */
+  overflow: hidden;
 }
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* App container should handle all scrolling */
+app-root {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
 }
