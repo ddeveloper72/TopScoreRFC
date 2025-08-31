@@ -7,6 +7,7 @@ import { ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
 import { GlobalLoadingComponent } from './shared/global-loading/global-loading.component';
+import { ScrollProgressComponent } from './components/scroll-progress/scroll-progress.component';
 import { routeAnimations } from './animations/route-animations';
 
 @Component({
@@ -19,6 +20,7 @@ import { routeAnimations } from './animations/route-animations';
     MaterialModule,
     SidenavListComponent,
     GlobalLoadingComponent,
+    ScrollProgressComponent,
   ],
   styleUrl: './app.component.scss',
   animations: [routeAnimations],
