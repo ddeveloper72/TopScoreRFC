@@ -1,0 +1,317 @@
+/* Custom Scrollbar Utilities for Rugby Score Tracker */
+/* Glassmorphic design that matches the app's purple gradient theme */
+
+/*
+USAGE EXAMPLES:
+
+1. Default glassmorphic scrollbar (automatically applied to all elements):
+   - Beautiful gradient scrollbar with hover effects
+   - Matches your app's purple theme perfectly
+
+2. Thin scrollbar (add class="thin-scrollbar"):
+   <div class="content thin-scrollbar">...</div>
+   - Narrower scrollbar for compact areas
+   - Perfect for modals and cards
+
+3. Hidden scrollbar (add class="hidden-scrollbar"):
+   <div class="content hidden-scrollbar">...</div>
+   - Completely invisible but still scrollable
+   - Great for custom scroll implementations
+
+4. Overlay scrollbar (add class="overlay-scrollbar"):
+   <div class="content overlay-scrollbar">...</div>
+   - Only appears on hover
+   - Minimal visual interference
+
+5. Horizontal scroll (add class="horizontal-scroll"):
+   <div class="content horizontal-scroll">...</div>
+   - For horizontal scrolling content
+   - Styled to match vertical scrollbars
+
+6. Fancy scrollbar (add class="fancy-scrollbar"):
+   <div class="content fancy-scrollbar">...</div>
+   - Extra decorative scrollbar with gradient effects
+   - Perfect for hero sections or special content
+
+7. Smooth scrolling (add class="smooth-scroll"):
+   <div class="content smooth-scroll">...</div>
+   - Adds smooth scroll behavior
+   - Great for long pages
+
+8. Dark theme scrollbar (add class="dark-scrollbar"):
+   <div class="content dark-scrollbar">...</div>
+   - Alternative dark styling
+   - For different theme sections
+*/
+
+/* Modern Webkit Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+  transform: scale(1.05);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(135deg, #4e5bc6 0%, #5c377e 100%);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transform: scale(0.98);
+}
+
+::-webkit-scrollbar-corner {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Thin scrollbar variant - add class="thin-scrollbar" */
+.thin-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #ffd700 0%, #ff9800 100%);
+  box-shadow: 0 2px 6px rgba(255, 215, 0, 0.3);
+}
+
+/* Hidden scrollbar variant - add class="hidden-scrollbar" */
+.hidden-scrollbar::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  background: transparent;
+}
+
+.hidden-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Overlay scrollbar variant - add class="overlay-scrollbar" */
+.overlay-scrollbar {
+  overflow: overlay;
+}
+
+.overlay-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.overlay-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overlay-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.overlay-scrollbar:hover::-webkit-scrollbar-thumb {
+  opacity: 1;
+}
+
+.overlay-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 215, 0, 0.6);
+  border: 1px solid rgba(255, 215, 0, 0.4);
+}
+
+/* Horizontal scrollbar styling */
+.horizontal-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.horizontal-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+}
+
+.horizontal-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.horizontal-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #ffd700 0%, #ff9800 100%);
+}
+
+/* Firefox scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #667eea rgba(255, 255, 255, 0.1);
+}
+
+.thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #667eea rgba(255, 255, 255, 0.05);
+}
+
+.hidden-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Modal and container specific scrollbars */
+.modal-content::-webkit-scrollbar,
+.dialog-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track,
+.dialog-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+}
+
+.modal-content::-webkit-scrollbar-thumb,
+.dialog-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  backdrop-filter: blur(5px);
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover,
+.dialog-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 215, 0, 0.5);
+}
+
+/* Card content scrollbars */
+.mat-card-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mat-card-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.mat-card-content::-webkit-scrollbar-thumb {
+  background: rgba(102, 126, 234, 0.3);
+  border-radius: 4px;
+}
+
+.mat-card-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(102, 126, 234, 0.6);
+}
+
+/* Animation utility for smooth scrolling */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for dark themes */
+.dark-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #333 0%, #555 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #444 0%, #666 100%);
+}
+
+/* Responsive scrollbar adjustments */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .thin-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  .overlay-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .thin-scrollbar::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+  }
+}
+
+/* Scrollbar utilities for specific use cases */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.fancy-scrollbar::-webkit-scrollbar {
+  width: 14px;
+}
+
+.fancy-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+.fancy-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #ffd700 100%);
+  border-radius: 12px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.fancy-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #ffd700 0%, #ff9800 50%, #667eea 100%);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transform: scale(1.02);
+}
