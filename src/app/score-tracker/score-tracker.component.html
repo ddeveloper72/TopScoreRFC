@@ -1,225 +1,192 @@
-<!-- Game Header -->
-<mat-toolbar class="game-header" color="primary">
-  <span class="game-title">Rugby Score Tracker</span>
-  <span class="spacer"></span>
-  <span class="game-time">{{ gameTime }}</span>
-</mat-toolbar>
+<!-- Simple Rugby Score Tracker -->
+<div class="score-tracker-container">
 
-<!-- Game Controls -->
-<div class="game-controls">
-  <button mat-raised-button color="primary" (click)="startGame()" [disabled]="gameStarted">
-    <mat-icon>play_arrow</mat-icon>
-    Start Game
-  </button>
-  <!-- Force change detection -->
-  <button mat-raised-button color="warn" (click)="endGame()" [disabled]="!gameStarted">
-    <mat-icon [style.color]="gameStarted ? 'white' : 'rgba(0,0,0,0.6)'">stop</mat-icon>
-    End Game
-  </button>
-  <button mat-raised-button (click)="resetGame()">
-    <mat-icon>refresh</mat-icon>
-    Reset
-  </button>
-  <button mat-raised-button color="accent" (click)="undoLastScore()" [disabled]="scoreHistory.length === 0">
-    <mat-icon>undo</mat-icon>
-    Undo
-  </button>
-</div>
+  <!-- Header -->
+  <div class="header">
+    <h1>Rugby Score Tracker</h1>
+    <div class="game-time">{{ gameTime }}</div>
+  </div>
 
-<!-- Scoreboard -->
-<div class="scoreboard" [@fadeInOut]>
-  <!-- Home Team -->
-  <mat-card class="team-card home-team" [@slideInFromBottom]>
-    <mat-card-header>
-      <mat-card-title class="team-name" (click)="editTeamName('home')">
-        {{ homeTeam.name }}
-        <mat-icon class="edit-icon">edit</mat-icon>
-      </mat-card-title>
-    </mat-card-header>
+  <!-- Game Controls -->
+  <div class="controls">
+    <button class="btn primary btn-start" (click)="startGame()" [disabled]="gameStarted">
+      <mat-icon>play_arrow</mat-icon><span class="btn-text"></span>
+    </button>
+    <button class="btn danger btn-end" (click)="endGame()" [disabled]="!gameStarted">
+      <mat-icon [style.color]="gameStarted ? 'white' : 'rgba(0,0,0,0.6)'">stop</mat-icon><span class="btn-text"></span>
+    </button>
+    <button class="btn secondary btn-reset" (click)="resetGame()">
+      <mat-icon>refresh</mat-icon><span class="btn-text"></span>
+    </button>
+    <button class="btn accent btn-undo" (click)="undoLastScore()" [disabled]="scoreHistory.length === 0">
+      <mat-icon>undo</mat-icon><span class="btn-text"></span>
+    </button>
+  </div>
 
-    <mat-card-content>
+  <!-- Scoreboard -->
+  <div class="scoreboard">
+
+    <!-- Home Team -->
+    <div class="team-section home-team">
+      <div class="team-header" (click)="editTeamName('home')">
+        <h2>{{ homeTeam.name }}</h2>
+        <span class="edit-hint"><mat-icon>edit</mat-icon></span>
+      </div>
+
       <div class="team-score">{{ homeTeam.score }}</div>
 
       <div class="score-breakdown">
-        <div class="breakdown-item">
-          <span class="breakdown-label">Tries:</span>
-          <span class="breakdown-value">{{ homeTeam.tries }}</span>
+        <div class="breakdown-row">
+          <span>Tries:</span>
+          <span>{{ homeTeam.tries }}</span>
         </div>
-        <div class="breakdown-item">
-          <span class="breakdown-label">Conversions:</span>
-          <span class="breakdown-value">{{ homeTeam.conversions }}</span>
+        <div class="breakdown-row">
+          <span>Conversions:</span>
+          <span>{{ homeTeam.conversions }}</span>
         </div>
-        <div class="breakdown-item">
-          <span class="breakdown-label">Penalties:</span>
-          <span class="breakdown-value">{{ homeTeam.penalties }}</span>
+        <div class="breakdown-row">
+          <span>Penalties:</span>
+          <span>{{ homeTeam.penalties }}</span>
         </div>
-        <div class="breakdown-item">
-          <span class="breakdown-label">Drop Goals:</span>
-          <span class="breakdown-value">{{ homeTeam.dropGoals }}</span>
+        <div class="breakdown-row">
+          <span>Drop Goals:</span>
+          <span>{{ homeTeam.dropGoals }}</span>
         </div>
-        <div class="breakdown-item">
-          <span class="breakdown-label">Penalty Tries:</span>
-          <span class="breakdown-value">{{ homeTeam.penaltyTries }}</span>
+        <div class="breakdown-row">
+          <span>Penalty Tries:</span>
+          <span>{{ homeTeam.penaltyTries }}</span>
         </div>
       </div>
-    </mat-card-content>
 
-    <!-- Home Team Scoring Buttons -->
-    <mat-card-actions class="scoring-buttons">
-      <button mat-raised-button color="primary" (click)="addScore('home', 'try')" [disabled]="!gameStarted">
-        Try (+5)
-      </button>
-      <button mat-raised-button color="primary" (click)="addScore('home', 'conversion')" [disabled]="!gameStarted">
-        Conv (+2)
-      </button>
-      <button mat-raised-button color="primary" (click)="addScore('home', 'penalty')" [disabled]="!gameStarted">
-        Pen (+3)
-      </button>
-      <button mat-raised-button color="primary" (click)="addScore('home', 'dropGoal')" [disabled]="!gameStarted">
-        Drop (+3)
-      </button>
-      <button mat-raised-button color="primary" (click)="addScore('home', 'penaltyTry')" [disabled]="!gameStarted">
-        P.Try (+5)
-      </button>
-    </mat-card-actions>
-  </mat-card>
-
-  <!-- VS Divider -->
-  <div class="vs-divider">
-    <div class="rugby-ball">
-      <img src="assets/images/irish-rugby-ball.png" alt="Irish Rugby Ball" class="vs-rugby-ball" width="48" height="32">
+      <div class="scoring-buttons">
+        <button class="score-btn try" (click)="addScore('home', 'try')" [disabled]="!gameStarted">
+          Try (+5)
+        </button>
+        <button class="score-btn conversion" (click)="addScore('home', 'conversion')" [disabled]="!gameStarted">
+          Conv (+2)
+        </button>
+        <button class="score-btn penalty" (click)="addScore('home', 'penalty')" [disabled]="!gameStarted">
+          Pen (+3)
+        </button>
+        <button class="score-btn drop" (click)="addScore('home', 'dropGoal')" [disabled]="!gameStarted">
+          Drop (+3)
+        </button>
+        <button class="score-btn penalty-try" (click)="addScore('home', 'penaltyTry')" [disabled]="!gameStarted">
+          P.Try (+5)
+        </button>
+      </div>
     </div>
-    <div class="vs-text">VS</div>
-  </div>
 
-  <!-- Away Team -->
-  <mat-card class="team-card away-team" [@slideInFromBottom]>
-    <mat-card-header>
-      <mat-card-title class="team-name" (click)="editTeamName('away')">
-        {{ awayTeam.name }}
-        <mat-icon class="edit-icon">edit</mat-icon>
-      </mat-card-title>
-    </mat-card-header>
+    <!-- VS Divider -->
+    <div class="vs-section">
+      <div class="rugby-ball">
+        <img src="assets/images/irish-rugby-ball.png" alt="Irish Rugby Ball" class="vs-rugby-ball" width="48"
+          height="32">
+      </div>
+      <div class="vs-text">VS</div>
+    </div>
 
-    <mat-card-content>
+    <!-- Away Team -->
+    <div class="team-section away-team">
+      <div class="team-header" (click)="editTeamName('away')">
+        <h2>{{ awayTeam.name }}</h2>
+        <span class="edit-hint"><mat-icon>edit</mat-icon></span>
+      </div>
+
       <div class="team-score">{{ awayTeam.score }}</div>
 
       <div class="score-breakdown">
-        <div class="breakdown-item">
-          <span class="breakdown-label">Tries:</span>
-          <span class="breakdown-value">{{ awayTeam.tries }}</span>
+        <div class="breakdown-row">
+          <span>Tries:</span>
+          <span>{{ awayTeam.tries }}</span>
         </div>
-        <div class="breakdown-item">
-          <span class="breakdown-label">Conversions:</span>
-          <span class="breakdown-value">{{ awayTeam.conversions }}</span>
+        <div class="breakdown-row">
+          <span>Conversions:</span>
+          <span>{{ awayTeam.conversions }}</span>
         </div>
-        <div class="breakdown-item">
-          <span class="breakdown-label">Penalties:</span>
-          <span class="breakdown-value">{{ awayTeam.penalties }}</span>
+        <div class="breakdown-row">
+          <span>Penalties:</span>
+          <span>{{ awayTeam.penalties }}</span>
         </div>
-        <div class="breakdown-item">
-          <span class="breakdown-label">Drop Goals:</span>
-          <span class="breakdown-value">{{ awayTeam.dropGoals }}</span>
+        <div class="breakdown-row">
+          <span>Drop Goals:</span>
+          <span>{{ awayTeam.dropGoals }}</span>
         </div>
-        <div class="breakdown-item">
-          <span class="breakdown-label">Penalty Tries:</span>
-          <span class="breakdown-value">{{ awayTeam.penaltyTries }}</span>
+        <div class="breakdown-row">
+          <span>Penalty Tries:</span>
+          <span>{{ awayTeam.penaltyTries }}</span>
         </div>
       </div>
-    </mat-card-content>
 
-    <!-- Away Team Scoring Buttons -->
-    <mat-card-actions class="scoring-buttons">
-      <button mat-raised-button color="accent" (click)="addScore('away', 'try')" [disabled]="!gameStarted">
-        Try (+5)
-      </button>
-      <button mat-raised-button color="accent" (click)="addScore('away', 'conversion')" [disabled]="!gameStarted">
-        Conv (+2)
-      </button>
-      <button mat-raised-button color="accent" (click)="addScore('away', 'penalty')" [disabled]="!gameStarted">
-        Pen (+3)
-      </button>
-      <button mat-raised-button color="accent" (click)="addScore('away', 'dropGoal')" [disabled]="!gameStarted">
-        Drop (+3)
-      </button>
-      <button mat-raised-button color="accent" (click)="addScore('away', 'penaltyTry')" [disabled]="!gameStarted">
-        P.Try (+5)
-      </button>
-    </mat-card-actions>
-  </mat-card>
-</div>
+      <div class="scoring-buttons">
+        <button class="score-btn try" (click)="addScore('away', 'try')" [disabled]="!gameStarted">
+          Try (+5)
+        </button>
+        <button class="score-btn conversion" (click)="addScore('away', 'conversion')" [disabled]="!gameStarted">
+          Conv (+2)
+        </button>
+        <button class="score-btn penalty" (click)="addScore('away', 'penalty')" [disabled]="!gameStarted">
+          Pen (+3)
+        </button>
+        <button class="score-btn drop" (click)="addScore('away', 'dropGoal')" [disabled]="!gameStarted">
+          Drop (+3)
+        </button>
+        <button class="score-btn penalty-try" (click)="addScore('away', 'penaltyTry')" [disabled]="!gameStarted">
+          P.Try (+5)
+        </button>
+      </div>
+    </div>
+  </div>
 
-<!-- Game Status -->
-<div class="game-status" *ngIf="getWinningTeam()">
-  <mat-card class="status-card">
-    <mat-card-content>
-      <div class="winning-team">
-        <mat-icon>trophy</mat-icon>
+  <!-- Game Status -->
+  <div class="game-status" *ngIf="getWinningTeam()">
+    <div class="status-card">
+      <div class="trophy"><mat-icon>trophy</mat-icon></div>
+      <div class="status-text">
         {{ getWinningTeam()?.name }} is leading by {{ getScoreDifference() }} points
       </div>
-    </mat-card-content>
-  </mat-card>
-</div>
-
-<!-- Score History -->
-<div class="score-history" *ngIf="scoreHistory.length > 0">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>
-        <mat-icon>history</mat-icon>
-        Score History
-      </mat-card-title>
-    </mat-card-header>
-
-    <mat-card-content>
-      <div class="history-list">
-        <div class="history-item" *ngFor="let event of scoreHistory.slice(0, 10)">
-          <div class="history-time">{{ event.timestamp | date:'HH:mm:ss' }}</div>
-          <div class="history-description">{{ event.description }}</div>
-          <div class="history-points">+{{ event.points }}</div>
-        </div>
+    </div>
+  </div>
+  <!-- Score History -->
+  <div class="score-history" *ngIf="scoreHistory.length > 0">
+    <h3><mat-icon>history</mat-icon> Score History</h3>
+    <div class="history-list">
+      <div class="history-item" *ngFor="let event of scoreHistory.slice(0, 10)">
+        <span class="time">{{ event.timestamp | date:'HH:mm:ss' }}</span>
+        <span class="description">{{ event.description }}</span>
+        <span class="points">+{{ event.points }}</span>
       </div>
+    </div>
+    <div class="show-more" *ngIf="scoreHistory.length > 10">
+      Showing latest 10 of {{ scoreHistory.length }} events
+    </div>
+  </div>
 
-      <div class="show-more" *ngIf="scoreHistory.length > 10">
-        <small>Showing latest 10 of {{ scoreHistory.length }} events</small>
+  <!-- Rugby Rules -->
+  <div class="rules-section">
+    <h3>📋 Rugby Scoring Rules</h3>
+    <div class="rules-grid">
+      <div class="rule-card">
+        <div class="rule-title">Try - 5 points</div>
+        <div class="rule-description">Player touches ball down in opponent's in-goal area</div>
       </div>
-    </mat-card-content>
-  </mat-card>
-</div>
-
-<!-- Rugby Rules Info -->
-<div class="rules-info">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>
-        <mat-icon>info</mat-icon>
-        Rugby Scoring Rules
-      </mat-card-title>
-    </mat-card-header>
-
-    <mat-card-content>
-      <div class="rules-grid">
-        <div class="rule-item">
-          <strong>Try</strong> - 5 points<br>
-          <small>Player touches ball down in opponent's in-goal area</small>
-        </div>
-        <div class="rule-item">
-          <strong>Conversion</strong> - 2 points<br>
-          <small>Kick through posts after a try</small>
-        </div>
-        <div class="rule-item">
-          <strong>Penalty Kick</strong> - 3 points<br>
-          <small>Kick awarded for opponent infringement</small>
-        </div>
-        <div class="rule-item">
-          <strong>Drop Goal</strong> - 3 points<br>
-          <small>Drop kick through posts during play</small>
-        </div>
-        <div class="rule-item">
-          <strong>Penalty Try</strong> - 5 points<br>
-          <small>Awarded when foul prevents probable try</small>
-        </div>
+      <div class="rule-card">
+        <div class="rule-title">Conversion - 2 points</div>
+        <div class="rule-description">Kick through posts after a try</div>
       </div>
-    </mat-card-content>
-  </mat-card>
+      <div class="rule-card">
+        <div class="rule-title">Penalty Kick - 3 points</div>
+        <div class="rule-description">Kick awarded for opponent infringement</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-title">Drop Goal - 3 points</div>
+        <div class="rule-description">Drop kick through posts during play</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-title">Penalty Try - 5 points</div>
+        <div class="rule-description">Awarded when foul prevents probable try</div>
+      </div>
+    </div>
+  </div>
+
 </div>
