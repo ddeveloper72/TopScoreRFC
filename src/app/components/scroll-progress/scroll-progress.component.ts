@@ -20,10 +20,8 @@ export class ScrollProgressComponent implements OnInit, OnDestroy {
   private scrollListener?: () => void;
 
   ngOnInit() {
-    // Check if CSS scroll-timeline is supported
-    if (!CSS.supports('animation-timeline', 'scroll()')) {
-      this.initJavaScriptFallback();
-    }
+    // Always use JavaScript for better browser compatibility
+    this.initScrollProgress();
   }
 
   ngOnDestroy() {
@@ -33,7 +31,7 @@ export class ScrollProgressComponent implements OnInit, OnDestroy {
     }
   }
 
-  private initJavaScriptFallback() {
+  private initScrollProgress() {
     // Add class for JavaScript-controlled styling
     this.progressBar.nativeElement.classList.add('js-controlled');
 
@@ -48,12 +46,25 @@ export class ScrollProgressComponent implements OnInit, OnDestroy {
         const progress = scrollHeight > 0 ? scrollTop / scrollHeight : 0;
 
         // Update the progress bar width
-        this.progressBar.nativeElement.style.transform = `scaleX(${progress})`;
+        this.progressBar.nativeElement.style.transform = `scaleX(${Math.max(
+          0.05,
+          progress
+        )})`;
+
+        // Add some visual feedback
+        if (progress > 0.05) {
+          this.progressBar.nativeElement.style.opacity = '1';
+        } else {
+          this.progressBar.nativeElement.style.opacity = '0.7';
+        }
       };
 
       scrollContainer.addEventListener('scroll', this.scrollListener, {
         passive: true,
       });
+
+      // Initial call to set initial state
+      this.scrollListener();
     }
   }
 }
