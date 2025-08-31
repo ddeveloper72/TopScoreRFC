@@ -154,17 +154,25 @@ import { CommonModule } from '@angular/common';
           font-weight: 600;
 
           .rugby-ball-icon {
-            width: 30px;
-            height: 24px;
+            width: 42px;
+            height: 30px;
             margin-right: 0.5rem;
             vertical-align: middle;
             flex-shrink: 0;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-            transition: transform 0.3s ease;
+            filter: brightness(1.1) contrast(1.1) saturate(1.2)
+              drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
+            transition: all 0.3s ease-in-out;
+            rotate: -25deg; /* Slightly less rotation than hero for header */
+            background: transparent !important;
+            mix-blend-mode: normal;
+            border: none;
+            outline: none;
           }
 
           .rugby-ball-icon:hover {
-            transform: scale(1.1);
+            scale: 1.1;
+            filter: brightness(1.2) contrast(1.2) saturate(1.3)
+              drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
           }
         }
 
