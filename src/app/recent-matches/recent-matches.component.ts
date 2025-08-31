@@ -29,16 +29,18 @@ import { Subscription } from 'rxjs';
 
       <!-- Filters Section -->
       <div class="filters-section">
-        <mat-form-field class="search-field" appearance="outline">
-          <mat-icon matPrefix>search</mat-icon>
-          <mat-label>Search matches...</mat-label>
+        <div class="custom-search-field">
+          <mat-icon class="search-icon">search</mat-icon>
           <input
-            matInput
+            type="text"
+            class="search-input"
             [(ngModel)]="searchTerm"
             (input)="applyFilters()"
-            placeholder="Team name, competition..."
+            placeholder="Search matches..."
+            [attr.aria-label]="'Search matches'"
           />
-        </mat-form-field>
+          <div class="search-underline"></div>
+        </div>
 
         <div class="filter-buttons">
           <button
@@ -338,197 +340,122 @@ import { Subscription } from 'rxjs';
         gap: 1rem;
       }
 
-      .search-field {
+      /* Custom Glassmorphic Search Field */
+      .custom-search-field {
+        position: relative;
         min-width: 350px;
         margin-bottom: 1rem;
       }
 
-      /* Modern Material Form Field Styling - Glassmorphic Design */
-      .search-field.mat-mdc-form-field {
-        /* Remove default subscript spacing */
-        .mat-mdc-form-field-subscript-wrapper {
-          display: none !important;
-        }
+      .custom-search-field {
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        padding: 0 1.25rem;
+        height: 56px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #ff9800;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+        position: relative;
+      }
 
-        /* Style the main wrapper with glassmorphic effect */
-        .mat-mdc-text-field-wrapper {
-          background: rgba(255, 255, 255, 0.15) !important;
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.2) !important;
-          border-radius: 25px !important;
-          height: 56px;
-          padding: 0 1.25rem;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-          border-left: 4px solid #ff9800 !important;
-          transition: all 0.3s ease;
-          display: flex;
-          align-items: center;
-        }
+      .custom-search-field::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 50%,
+          rgba(255, 255, 255, 0.1) 100%
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
 
-        /* Enhanced hover effect */
-        &:hover .mat-mdc-text-field-wrapper {
-          transform: translateY(-2px);
-          background: rgba(255, 255, 255, 0.2) !important;
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-          border: 1px solid rgba(255, 255, 255, 0.3) !important;
-          border-left: 4px solid #ffd700 !important;
-        }
+      .custom-search-field:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-left: 4px solid #ffd700;
+      }
 
-        /* Remove all outline elements */
-        .mdc-notched-outline,
-        .mdc-notched-outline__leading,
-        .mdc-notched-outline__notch,
-        .mdc-notched-outline__trailing {
-          display: none !important;
-          border: none !important;
-        }
+      .custom-search-field:hover::before {
+        opacity: 1;
+      }
 
-        /* Remove focus indicators */
-        .mdc-line-ripple,
-        .mat-mdc-form-field-focus-overlay,
-        .mat-mdc-form-field-ripple {
-          display: none !important;
-        }
+      .custom-search-field:focus-within {
+        background: rgba(255, 255, 255, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-left: 4px solid #ffd700;
+        box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+        transform: translateY(-2px);
+      }
 
-        /* Style the input field with white text */
-        .mat-mdc-form-field-infix {
-          padding: 0 !important;
-          border: none !important;
-          min-height: auto !important;
+      .custom-search-field:focus-within .search-icon {
+        color: #ffd700;
+        transform: scale(1.1);
+      }
 
-          .mdc-text-field__input,
-          .mat-mdc-input-element {
-            color: white !important;
-            font-size: 1rem;
-            font-weight: 500;
-            background: transparent !important;
-            border: none !important;
-            outline: none !important;
-            padding: 0;
-            height: auto;
-            caret-color: white !important;
+      .custom-search-field:focus-within .search-underline {
+        transform: scaleX(1);
+        background: linear-gradient(90deg, #ff9800, #ffd700, #ff9800);
+      }
 
-            &::placeholder {
-              color: rgba(255, 255, 255, 0.7) !important;
-              font-weight: 400;
-            }
+      .search-icon {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.25rem;
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-right: 0.75rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 2;
+      }
 
-            &:focus {
-              outline: none !important;
-              box-shadow: none !important;
-              color: white !important;
-            }
-          }
-        }
+      .search-input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: white;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1.5;
+        padding: 0;
+        z-index: 2;
+        caret-color: #ffd700;
+      }
 
-        /* Style ALL floating label variants with white color */
-        .mat-mdc-form-field-label-wrapper,
-        .mdc-notched-outline__notch {
-          overflow: visible;
+      .search-input::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 400;
+        transition: color 0.3s ease;
+      }
 
-          .mat-mdc-form-field-label,
-          .mdc-floating-label,
-          .mat-mdc-floating-label,
-          mat-label {
-            color: rgba(255, 255, 255, 0.8) !important;
-            font-weight: 500;
-            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+      .search-input:focus::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
 
-            /* Focused state */
-            &.mdc-floating-label--float-above {
-              color: #ffd700 !important;
-              background: rgba(255, 255, 255, 0.1);
-              backdrop-filter: blur(10px);
-              padding: 0 0.5rem;
-              border-radius: 4px;
-              border: 1px solid rgba(255, 255, 255, 0.2);
-              z-index: 10;
-            }
-          }
-        }
-
-        /* Target the actual rendered label element */
-        label.mdc-floating-label,
-        .mdc-floating-label {
-          color: rgba(255, 255, 255, 0.8) !important;
-
-          &.mdc-floating-label--float-above {
-            color: #ffd700 !important;
-          }
-        }
-
-        /* Style the prefix icon with white color */
-        .mat-mdc-form-field-icon-prefix {
-          padding-right: 0.75rem;
-          display: flex;
-          align-items: center;
-
-          mat-icon {
-            color: white !important;
-            font-size: 1.25rem;
-            width: 1.25rem;
-            height: 1.25rem;
-            transition: color 0.3s ease;
-          }
-        }
-
-        /* Focus state - enhance glassmorphic effect */
-        &.mat-focused .mat-mdc-text-field-wrapper {
-          background: rgba(255, 255, 255, 0.25) !important;
-          border: 1px solid rgba(255, 255, 255, 0.4) !important;
-          border-left: 4px solid #ffd700 !important;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Focused state for the entire field */
-        &.mat-focused {
-          .mat-mdc-text-field-wrapper {
-            box-shadow: 0 8px 25px rgba(255, 152, 0, 0.2);
-            border-left: 4px solid #ff9800 !important;
-          }
-
-          .mat-mdc-form-field-icon-prefix mat-icon {
-            color: #ff9800 !important;
-          }
-
-          /* Ensure focused label is gold */
-          .mdc-floating-label,
-          .mat-mdc-floating-label,
-          label.mdc-floating-label {
-            color: #ffd700 !important;
-          }
-        }
-
-        /* Error state styling */
-        &.mat-form-field-invalid {
-          .mat-mdc-text-field-wrapper {
-            border-left: 4px solid #f44336 !important;
-            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.15);
-          }
-
-          .mat-mdc-form-field-label.mdc-floating-label--float-above,
-          .mdc-floating-label {
-            color: #f44336 !important;
-          }
-        }
-
-        /* Disabled state */
-        &.mat-form-field-disabled {
-          .mat-mdc-text-field-wrapper {
-            background: #f5f5f5 !important;
-            border-left: 4px solid #e0e0e0 !important;
-            box-shadow: none;
-
-            .mdc-text-field__input,
-            .mat-mdc-input-element {
-              color: rgba(0, 0, 0, 0.38) !important;
-            }
-          }
-
-          .mat-mdc-form-field-icon-prefix mat-icon {
-            color: rgba(0, 0, 0, 0.38) !important;
-          }
-        }
+      .search-underline {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #ff9800;
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 0 0 25px 25px;
       }
 
       .filter-buttons {
@@ -990,7 +917,7 @@ import { Subscription } from 'rxjs';
           gap: 1rem;
         }
 
-        .search-field {
+        .custom-search-field {
           min-width: 250px;
         }
 
