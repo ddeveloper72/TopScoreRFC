@@ -343,16 +343,18 @@ import { Subscription } from 'rxjs';
         margin-bottom: 1rem;
       }
 
-      /* Modern Material Form Field Styling */
+      /* Modern Material Form Field Styling - Glassmorphic Design */
       .search-field.mat-mdc-form-field {
         /* Remove default subscript spacing */
         .mat-mdc-form-field-subscript-wrapper {
           display: none !important;
         }
 
-        /* Style the main wrapper */
+        /* Style the main wrapper with glassmorphic effect */
         .mat-mdc-text-field-wrapper {
-          background: white;
+          background: rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
           border-radius: 25px;
           height: 56px;
           padding: 0 1.25rem;
@@ -363,10 +365,12 @@ import { Subscription } from 'rxjs';
           align-items: center;
         }
 
-        /* Hover effect */
+        /* Enhanced hover effect */
         &:hover .mat-mdc-text-field-wrapper {
           transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          background: rgba(255, 255, 255, 0.2);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+          border: 1px solid rgba(255, 255, 255, 0.3);
           border-left: 4px solid #ffd700;
         }
 
@@ -386,14 +390,14 @@ import { Subscription } from 'rxjs';
           display: none !important;
         }
 
-        /* Style the input field */
+        /* Style the input field with white text */
         .mat-mdc-form-field-infix {
           padding: 0 !important;
           border: none !important;
           min-height: auto !important;
 
           .mdc-text-field__input {
-            color: #2c3e50 !important;
+            color: white !important;
             font-size: 1rem;
             font-weight: 500;
             background: transparent;
@@ -403,7 +407,7 @@ import { Subscription } from 'rxjs';
             height: auto;
 
             &::placeholder {
-              color: rgba(44, 62, 80, 0.6);
+              color: rgba(255, 255, 255, 0.7);
               font-weight: 400;
             }
 
@@ -414,40 +418,55 @@ import { Subscription } from 'rxjs';
           }
         }
 
-        /* Style the floating label */
+        /* Style the floating label with white color */
         .mat-mdc-form-field-label-wrapper {
           overflow: visible;
 
           .mat-mdc-form-field-label {
-            color: rgba(44, 62, 80, 0.7);
+            color: rgba(255, 255, 255, 0.8);
             font-weight: 500;
             transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 
             /* Focused state */
             &.mdc-floating-label--float-above {
               transform: translateY(-150%) scale(0.85);
-              color: #ff9800;
-              background: white;
+              color: #ffd700;
+              background: rgba(255, 255, 255, 0.1);
+              backdrop-filter: blur(10px);
               padding: 0 0.5rem;
               border-radius: 4px;
+              border: 1px solid rgba(255, 255, 255, 0.2);
               z-index: 10;
             }
           }
         }
 
-        /* Style the prefix icon */
+        /* Style the prefix icon with white color */
         .mat-mdc-form-field-icon-prefix {
           padding-right: 0.75rem;
           display: flex;
           align-items: center;
 
           mat-icon {
-            color: #ff9800;
+            color: white;
             font-size: 1.25rem;
             width: 1.25rem;
             height: 1.25rem;
             transition: color 0.3s ease;
           }
+        }
+
+        /* Focus state - enhance glassmorphic effect */
+        &.mat-focused .mat-mdc-text-field-wrapper {
+          background: rgba(255, 255, 255, 0.25);
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          border-left: 4px solid #ffd700;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+
+          .mat-mdc-form-field-icon-prefix mat-icon {
+            color: #ffd700;
+          }
+        }
         }
 
         /* Focused state for the entire field */
