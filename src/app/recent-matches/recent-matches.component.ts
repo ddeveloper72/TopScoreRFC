@@ -451,7 +451,7 @@ import { Subscription } from 'rxjs';
         label.mdc-floating-label,
         .mdc-floating-label {
           color: rgba(255, 255, 255, 0.8) !important;
-          
+
           &.mdc-floating-label--float-above {
             color: #ffd700 !important;
           }
