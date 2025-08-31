@@ -1,519 +1,508 @@
-// Mobile-first responsive design
+// Simple Rugby Score Tracker Styles - Mobile-first responsive design
 
-// Ensure Font Awesome icons work on all devices
-i.fa-solid,
-i.fa-regular,
-i.fa-light {
-  font-family: "Font Awesome 6 Free" !important;
-  font-weight: 900 !important;
-  font-style: normal !important;
-  font-variant: normal !important;
-  text-transform: none !important;
-  line-height: 1 !important;
-  -webkit-font-smoothing: antialiased !important;
-  -moz-osx-font-smoothing: grayscale !important;
-  display: inline-block !important;
-  vertical-align: middle !important;
+.score-tracker-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-family: "Roboto", sans-serif;
+  overflow-x: hidden;
 }
 
-// Specific Font Awesome icon fixes for mobile
-i.fa-play::before {
-  content: "\f04b" !important;
-}
-i.fa-stop::before {
-  content: "\f04d" !important;
-}
-i.fa-rotate-right::before {
-  content: "\f01e" !important;
-}
-i.fa-rotate-left::before {
-  content: "\f0e2" !important;
-}
-i.fa-pen::before {
-  content: "\f304" !important;
-}
+// Header
+.header {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
-.game-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  .game-title {
-    font-size: 1.2rem;
-    font-weight: 500;
-  }
-
-  .spacer {
-    flex: 1 1 auto;
+  h1 {
+    font-size: 2rem;
+    font-weight: 300;
+    margin: 0 0 1rem 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
   .game-time {
-    font-size: 1.4rem;
-    font-weight: bold;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 4px 12px;
+    font-size: 1.5rem;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    display: inline-block;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+// Controls - Mobile-first design
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.05);
+
+  @media (min-width: 480px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    padding: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .btn {
+    padding: 0.6rem 0.75rem;
+    border: none;
     border-radius: 20px;
-  }
-}
+    font-weight: 500;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    min-height: 44px; // Touch-friendly minimum
 
-.game-controls {
-  display: flex;
-  gap: 8px;
-  padding: 16px;
-  background: #f5f5f5;
-  overflow-x: auto;
+    // Mobile: Icon-only or minimal text
+    .btn-text {
+      display: none;
+    }
 
-  button {
-    flex-shrink: 0;
-    min-width: 100px;
-
-    i,
     mat-icon {
-      margin-right: 4px;
-      font-size: 1rem;
-      display: inline-flex;
-      align-items: center;
+      font-size: 1.2rem;
     }
 
-    /* Ensure Font Awesome icons display correctly */
-    i.fa-solid {
-      margin-right: 6px;
-      font-size: 1rem !important;
-      vertical-align: middle;
-      line-height: 1;
+    // Small phones (480px+): Show abbreviated text
+    @media (min-width: 480px) {
+      font-size: 0.8rem;
+      padding: 0.7rem 1rem;
+      gap: 0.4rem;
+
+      .btn-text {
+        display: inline;
+      }
+
+      &.btn-start .btn-text::after {
+        content: "Start";
+      }
+      &.btn-end .btn-text::after {
+        content: "End";
+      }
+      &.btn-reset .btn-text::after {
+        content: "Reset";
+      }
+      &.btn-undo .btn-text::after {
+        content: "Undo";
+      }
     }
 
-    /* Make Material Design icons white on enabled warn/red buttons */
-    &.mat-mdc-raised-button.mat-warn:not([disabled]) mat-icon {
-      color: white !important;
+    // Tablets (768px+): Full text
+    @media (min-width: 768px) {
+      padding: 0.75rem 1.5rem;
+      font-size: 0.9rem;
+      gap: 0.5rem;
+      min-width: 120px;
+      border-radius: 25px;
+
+      &.btn-start .btn-text::after {
+        content: "Start Game";
+      }
+      &.btn-end .btn-text::after {
+        content: "End Game";
+      }
+      &.btn-reset .btn-text::after {
+        content: "Reset";
+      }
+      &.btn-undo .btn-text::after {
+        content: "Undo";
+      }
     }
 
-    /* Make Material Design icons dark on disabled buttons */
-    &.mat-mdc-raised-button[disabled] mat-icon {
-      color: rgba(0, 0, 0, 0.6) !important;
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    &.primary {
+      background: rgba(76, 175, 80, 0.9);
+      color: white;
+      &:hover:not(:disabled) {
+        background: rgba(76, 175, 80, 1);
+      }
+    }
+
+    &.danger {
+      background: rgba(244, 67, 54, 0.9);
+      color: white;
+      &:hover:not(:disabled) {
+        background: rgba(244, 67, 54, 1);
+      }
+    }
+
+    &.secondary {
+      background: rgba(96, 125, 139, 0.9);
+      color: white;
+      &:hover:not(:disabled) {
+        background: rgba(96, 125, 139, 1);
+      }
+    }
+
+    &.accent {
+      background: rgba(255, 152, 0, 0.9);
+      color: white;
+      &:hover:not(:disabled) {
+        background: rgba(255, 152, 0, 1);
+      }
     }
   }
 }
 
-// Additional specific styling for button states
-.game-controls button.mat-mdc-raised-button {
-  // Enabled warn buttons - white icons on red background
-  &.mat-warn:not([disabled]) mat-icon {
-    color: white !important;
-  }
-
-  // Disabled buttons - dark icons for visibility
-  &[disabled] mat-icon {
-    color: rgba(0, 0, 0, 0.6) !important;
-  }
-}
-
-// Force Material Design icons to have proper contrast using ng-deep
-::ng-deep .mat-mdc-raised-button {
-  // White icons on colored buttons (primary, warn, accent)
-  &.mat-primary:not([disabled]) .mat-icon,
-  &.mat-warn:not([disabled]) .mat-icon,
-  &.mat-accent:not([disabled]) .mat-icon {
-    color: white !important;
-  }
-
-  // Dark icons on disabled buttons for visibility
-  &[disabled] .mat-icon {
-    color: rgba(0, 0, 0, 0.6) !important;
-  }
-
-  // Default buttons (no color attribute) - dark icons
-  &:not(.mat-primary):not(.mat-warn):not(.mat-accent) .mat-icon {
-    color: rgba(0, 0, 0, 0.87) !important;
-  }
-}
-
+// Scoreboard
 .scoreboard {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 16px;
+  gap: 1.5rem;
+  padding: 1.5rem;
 
-  .team-card {
-    border-radius: 16px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+// VS Section
+.vs-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  order: -1;
+
+  @media (min-width: 768px) {
+    order: 0;
+    padding: 2rem 1rem;
+  }
+
+  .rugby-ball {
+    margin-bottom: 0.5rem;
+  }
+
+  .vs-text {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Team Sections
+.team-section {
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex: 1;
+
+  &.home-team {
+    border-left: 5px solid #2196f3;
+  }
+
+  &.away-team {
+    border-left: 5px solid #4caf50;
+  }
+
+  .team-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
 
     &:hover {
-      transform: translateY(-2px);
+      background: rgba(0, 0, 0, 0.05);
     }
 
-    &.home-team {
-      border-left: 4px solid #1976d2;
+    h2 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 500;
     }
 
-    &.away-team {
-      border-left: 4px solid #388e3c;
-    }
+    .edit-hint {
+      opacity: 0.6;
+      font-size: 0.9rem;
 
-    mat-card-header {
-      padding-bottom: 8px;
-
-      .team-name {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        font-size: 1.3rem;
-        font-weight: 600;
-
-        &:hover {
-          color: #1976d2;
-        }
-
-        .edit-icon {
-          margin-left: 8px;
-          font-size: 18px;
-          opacity: 0.6;
-        }
-      }
-    }
-
-    .team-score {
-      font-size: 4rem;
-      font-weight: bold;
-      text-align: center;
-      color: #1976d2;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-      margin: 16px 0;
-    }
-
-    &.away-team .team-score {
-      color: #388e3c;
-    }
-
-    .score-breakdown {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin: 16px 0;
-
-      .breakdown-item {
-        display: flex;
-        justify-content: space-between;
-        padding: 8px;
-        background: #f9f9f9;
-        border-radius: 8px;
-
-        .breakdown-label {
-          font-size: 0.9rem;
-          color: #666;
-        }
-
-        .breakdown-value {
-          font-weight: bold;
-          color: #333;
-        }
-      }
-    }
-
-    .scoring-buttons {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-      padding: 16px;
-
-      button {
-        font-size: 0.9rem;
-        font-weight: 600;
-        padding: 12px 8px;
-        border-radius: 8px;
-
-        &:disabled {
-          opacity: 0.5;
-        }
+      mat-icon {
+        font-size: 1rem;
       }
     }
   }
 
-  .vs-divider {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 16px 0;
+  .team-score {
+    font-size: 4rem;
+    font-weight: 700;
+    text-align: center;
+    margin: 1rem 0;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 
-    .rugby-ball {
-      margin-bottom: 8px;
+  .score-breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.25rem 0;
+      font-size: 0.9rem;
+
+      &:nth-child(odd) {
+        border-right: 1px solid rgba(0, 0, 0, 0.1);
+        padding-right: 0.5rem;
+      }
+
+      &:nth-child(even) {
+        padding-left: 0.5rem;
+      }
+    }
+  }
+
+  .scoring-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+
+    .score-btn {
+      flex: 1;
+      min-width: calc(33% - 0.5rem);
+      padding: 0.75rem 0.5rem;
+      border: none;
+      border-radius: 10px;
+      font-weight: 500;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: white;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      &.try {
+        background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+      }
+
+      &.conversion {
+        background: linear-gradient(45deg, #4ecdc4, #44a08d);
+      }
+
+      &.penalty {
+        background: linear-gradient(45deg, #45b7d1, #2980b9);
+      }
+
+      &.drop {
+        background: linear-gradient(45deg, #f9ca24, #f0932b);
+      }
+
+      &.penalty-try {
+        background: linear-gradient(45deg, #eb4d4b, #c0392b);
+      }
+    }
+  }
+}
+
+// Game Status
+.game-status {
+  padding: 1.5rem;
+  text-align: center;
+
+  .status-card {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+    .trophy {
+      font-size: 2rem;
+      color: #ffd700;
     }
 
-    .vs-rugby-ball {
-      display: block;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-      transform: rotate(-15deg);
+    .status-text {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+  }
+}
+
+// Score History
+.score-history {
+  padding: 1.5rem;
+
+  h3 {
+    color: white;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    mat-icon {
+      font-size: 1.5rem;
+    }
+  }
+
+  .history-list {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      color: #333;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .time {
+        font-weight: 500;
+        color: #666;
+        min-width: 80px;
+      }
+
+      .description {
+        flex: 1;
+        margin: 0 1rem;
+      }
+
+      .points {
+        font-weight: 600;
+        color: #4caf50;
+        min-width: 50px;
+        text-align: right;
+      }
+    }
+  }
+
+  .show-more {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+  }
+}
+
+// Rules Section
+.rules-section {
+  padding: 1.5rem;
+
+  h3 {
+    color: white;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+
+    .rule-card {
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
+      border-radius: 15px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease;
 
       &:hover {
-        transform: rotate(-15deg) scale(1.1);
+        transform: translateY(-4px);
       }
-    }
 
-    .vs-icon {
-      font-size: 2rem;
-      color: #666;
-      margin-bottom: 8px;
-    }
+      .rule-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        color: #1976d2;
+      }
 
-    .vs-text {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #666;
-      background: #f5f5f5;
-      padding: 8px 16px;
-      border-radius: 20px;
-    }
-  }
-}
-
-.game-status {
-  padding: 0 16px 16px;
-
-  .status-card {
-    background: linear-gradient(45deg, #4caf50, #8bc34a);
-    color: white;
-    border-radius: 16px;
-
-    .winning-team {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      font-weight: 600;
-      text-align: center;
-
-      mat-icon {
-        margin-right: 8px;
-        font-size: 1.5rem;
+      .rule-description {
+        font-size: 0.9rem;
+        color: #666;
+        line-height: 1.4;
       }
     }
   }
 }
 
-.score-history {
-  padding: 0 16px 16px;
-
-  mat-card {
-    border-radius: 16px;
-
-    mat-card-header {
-      mat-card-title {
-        display: flex;
-        align-items: center;
-
-        mat-icon {
-          margin-right: 8px;
-        }
-      }
-    }
-
-    .history-list {
-      max-height: 300px;
-      overflow-y: auto;
-
-      .history-item {
-        display: flex;
-        align-items: center;
-        padding: 12px 0;
-        border-bottom: 1px solid #eee;
-
-        &:last-child {
-          border-bottom: none;
-        }
-
-        .history-time {
-          font-size: 0.8rem;
-          color: #666;
-          min-width: 60px;
-        }
-
-        .history-description {
-          flex: 1;
-          margin: 0 12px;
-          font-size: 0.9rem;
-        }
-
-        .history-points {
-          font-weight: bold;
-          color: #4caf50;
-          min-width: 40px;
-          text-align: right;
-        }
-      }
-    }
-
-    .show-more {
-      text-align: center;
-      padding: 8px;
-      color: #666;
-    }
-  }
-}
-
-.rules-info {
-  padding: 0 16px 16px;
-
-  mat-card {
-    border-radius: 16px;
-
-    mat-card-header {
-      mat-card-title {
-        display: flex;
-        align-items: center;
-
-        mat-icon {
-          margin-right: 8px;
-        }
-      }
-    }
-
-    .rules-grid {
-      display: grid;
-      gap: 16px;
-
-      .rule-item {
-        padding: 12px;
-        background: #f9f9f9;
-        border-radius: 8px;
-        border-left: 4px solid #1976d2;
-
-        strong {
-          color: #333;
-          font-size: 1rem;
-        }
-
-        small {
-          color: #666;
-          line-height: 1.4;
-        }
-      }
-    }
-  }
-}
-
-// Tablet styles (768px and up)
-@media (min-width: 768px) {
-  .game-controls {
-    justify-content: center;
-
-    button {
-      min-width: 120px;
-    }
-  }
-
+// Responsive Design
+@media (max-width: 768px) {
   .scoreboard {
-    flex-direction: row;
-    align-items: stretch;
-    max-width: 1200px;
-    margin: 0 auto;
-
-    .team-card {
-      flex: 1;
-
-      .scoring-buttons {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    .vs-divider {
-      margin: 0 16px;
-      justify-content: center;
-      min-width: 100px;
-    }
+    padding: 1rem;
   }
 
-  .score-history,
-  .rules-info {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
+  .team-section {
+    padding: 1rem;
 
-  .rules-info .rules-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-// Desktop styles (1024px and up)
-@media (min-width: 1024px) {
-  .game-header {
-    .game-title {
-      font-size: 1.5rem;
+    .team-score {
+      font-size: 3rem;
     }
 
-    .game-time {
-      font-size: 1.6rem;
-    }
-  }
-
-  .scoreboard {
-    .team-card {
-      .team-score {
-        font-size: 5rem;
-      }
-
-      .score-breakdown {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .scoring-buttons {
-        grid-template-columns: repeat(5, 1fr);
-
-        button {
-          font-size: 1rem;
-        }
+    .scoring-buttons {
+      .score-btn {
+        min-width: calc(50% - 0.25rem);
+        font-size: 0.8rem;
+        padding: 0.6rem 0.4rem;
       }
     }
   }
-
-  .rules-info .rules-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-// Large desktop styles (1400px and up)
-@media (min-width: 1400px) {
-  .scoreboard {
-    .team-card {
-      .team-score {
-        font-size: 6rem;
-      }
-    }
-  }
-
-  .rules-info .rules-grid {
-    grid-template-columns: repeat(5, 1fr);
-  }
-}
-
-// Utilities
-.text-center {
-  text-align: center;
-}
-
-.mt-16 {
-  margin-top: 16px;
-}
-
-.mb-16 {
-  margin-bottom: 16px;
-}
-
-// Animation for score changes
-@keyframes scoreChange {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.team-score.score-changed {
-  animation: scoreChange 0.5s ease;
 }
