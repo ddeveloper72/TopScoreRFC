@@ -12,9 +12,10 @@ import { CommonModule } from '@angular/common';
       <div class="modal-header">
         <h2>
           <img
-            src="assets/images/irish-rugby-ball.svg"
+            src="assets/images/irish-rugby-ball.png"
             alt="Irish Rugby Ball"
             class="rugby-ball-icon"
+            (error)="onImageError($event)"
           />
           Rugby Score Tracker
         </h2>
@@ -153,8 +154,11 @@ import { CommonModule } from '@angular/common';
           font-weight: 600;
 
           .rugby-ball-icon {
-            height: 1.8rem;
-            width: auto;
+            width: 30px;
+            height: 24px;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+            flex-shrink: 0;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
             transition: transform 0.3s ease;
           }
@@ -396,5 +400,17 @@ export class AboutModalComponent {
 
   closeModal(): void {
     this.dialogRef.close();
+  }
+
+  onImageError(event: any): void {
+    // Fallback to FontAwesome icon if SVG fails to load
+    const imgElement = event.target;
+    const iconElement = document.createElement('i');
+    iconElement.className = 'fa-solid fa-football fa-2x rugby-ball-fallback';
+    iconElement.style.color = '#8b4513'; // Brown rugby ball color
+    iconElement.style.marginRight = '0.75rem';
+
+    // Replace the img with the icon
+    imgElement.parentNode.replaceChild(iconElement, imgElement);
   }
 }
