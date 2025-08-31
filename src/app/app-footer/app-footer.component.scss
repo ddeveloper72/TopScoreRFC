@@ -1,0 +1,58 @@
+footer {
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 2rem;
+  /* Ensure footer stays at bottom of scrollable content */
+  margin-top: auto;
+  /* Add some space above footer when content is short */
+  min-height: 60px;
+  /* Prevent footer from shrinking */
+  flex-shrink: 0;
+
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+    }
+
+    .about-btn {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      /* Add smooth transitions */
+      transition: all 0.3s ease;
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+
+      mat-icon {
+        margin-right: 0.5rem;
+        font-size: 1.2rem;
+      }
+
+      &:hover {
+        color: #b794f6; /* Purple-ish color matching your gradient theme */
+        background-color: rgba(183, 148, 246, 0.15);
+        backdrop-filter: blur(5px);
+        border-radius: 4px;
+        transition: all 0.3s ease;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    .footer-content {
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: center;
+    }
+  }
+}
