@@ -1,11 +1,40 @@
-mat-sidenav-container, mat-sidenav-content, mat-sidenav {
-    height: 100%;
+mat-sidenav-container {
+  height: 100vh;
+  overflow: hidden;
 }
 
-mat-sidenav {
-    width: 250px;
+mat-sidenav-content {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Ensure proper scroll behavior for the progress bar */
+  scroll-behavior: smooth;
+  /* Add some padding to account for scroll progress bar */
+  padding-top: 4px;
+  /* Remove complex layouts, let content flow naturally */
+}
+
+.content-wrapper {
+  /* Ensure this wrapper takes up full viewport height minimum */
+  min-height: calc(100vh - 4px); /* Account for progress bar padding */
 }
 
 main {
-    padding: 10px;
+  padding: 10px;
+  /* Ensure main content area has substantial height */
+  min-height: calc(
+    100vh - 120px
+  ); /* Account for header and some footer space */
+}
+
+/* Footer will naturally appear after the content */
+
+/* Ensure router outlet content takes available space */
+router-outlet + * {
+  min-height: 300px;
+}
+
+mat-sidenav {
+  width: 250px;
+  height: 100%;
 }
