@@ -352,14 +352,14 @@ import { Subscription } from 'rxjs';
 
         /* Style the main wrapper with glassmorphic effect */
         .mat-mdc-text-field-wrapper {
-          background: rgba(255, 255, 255, 0.15);
+          background: rgba(255, 255, 255, 0.15) !important;
           backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          border-radius: 25px;
+          border: 1px solid rgba(255, 255, 255, 0.2) !important;
+          border-radius: 25px !important;
           height: 56px;
           padding: 0 1.25rem;
           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-          border-left: 4px solid #ff9800;
+          border-left: 4px solid #ff9800 !important;
           transition: all 0.3s ease;
           display: flex;
           align-items: center;
@@ -368,10 +368,10 @@ import { Subscription } from 'rxjs';
         /* Enhanced hover effect */
         &:hover .mat-mdc-text-field-wrapper {
           transform: translateY(-2px);
-          background: rgba(255, 255, 255, 0.2);
+          background: rgba(255, 255, 255, 0.2) !important;
           box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          border-left: 4px solid #ffd700;
+          border: 1px solid rgba(255, 255, 255, 0.3) !important;
+          border-left: 4px solid #ffd700 !important;
         }
 
         /* Remove all outline elements */
@@ -396,41 +396,47 @@ import { Subscription } from 'rxjs';
           border: none !important;
           min-height: auto !important;
 
-          .mdc-text-field__input {
+          .mdc-text-field__input,
+          .mat-mdc-input-element {
             color: white !important;
             font-size: 1rem;
             font-weight: 500;
-            background: transparent;
-            border: none;
-            outline: none;
+            background: transparent !important;
+            border: none !important;
+            outline: none !important;
             padding: 0;
             height: auto;
+            caret-color: white !important;
 
             &::placeholder {
-              color: rgba(255, 255, 255, 0.7);
+              color: rgba(255, 255, 255, 0.7) !important;
               font-weight: 400;
             }
 
             &:focus {
-              outline: none;
-              box-shadow: none;
+              outline: none !important;
+              box-shadow: none !important;
+              color: white !important;
             }
           }
         }
 
-        /* Style the floating label with white color */
-        .mat-mdc-form-field-label-wrapper {
+        /* Style ALL floating label variants with white color */
+        .mat-mdc-form-field-label-wrapper,
+        .mdc-notched-outline__notch {
           overflow: visible;
 
-          .mat-mdc-form-field-label {
-            color: rgba(255, 255, 255, 0.8);
+          .mat-mdc-form-field-label,
+          .mdc-floating-label,
+          .mat-mdc-floating-label,
+          mat-label {
+            color: rgba(255, 255, 255, 0.8) !important;
             font-weight: 500;
             transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 
             /* Focused state */
             &.mdc-floating-label--float-above {
-              transform: translateY(-150%) scale(0.85);
-              color: #ffd700;
+              color: #ffd700 !important;
               background: rgba(255, 255, 255, 0.1);
               backdrop-filter: blur(10px);
               padding: 0 0.5rem;
@@ -441,6 +447,16 @@ import { Subscription } from 'rxjs';
           }
         }
 
+        /* Target the actual rendered label element */
+        label.mdc-floating-label,
+        .mdc-floating-label {
+          color: rgba(255, 255, 255, 0.8) !important;
+          
+          &.mdc-floating-label--float-above {
+            color: #ffd700 !important;
+          }
+        }
+
         /* Style the prefix icon with white color */
         .mat-mdc-form-field-icon-prefix {
           padding-right: 0.75rem;
@@ -448,7 +464,7 @@ import { Subscription } from 'rxjs';
           align-items: center;
 
           mat-icon {
-            color: white;
+            color: white !important;
             font-size: 1.25rem;
             width: 1.25rem;
             height: 1.25rem;
@@ -458,54 +474,59 @@ import { Subscription } from 'rxjs';
 
         /* Focus state - enhance glassmorphic effect */
         &.mat-focused .mat-mdc-text-field-wrapper {
-          background: rgba(255, 255, 255, 0.25);
-          border: 1px solid rgba(255, 255, 255, 0.4);
-          border-left: 4px solid #ffd700;
+          background: rgba(255, 255, 255, 0.25) !important;
+          border: 1px solid rgba(255, 255, 255, 0.4) !important;
+          border-left: 4px solid #ffd700 !important;
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-
-          .mat-mdc-form-field-icon-prefix mat-icon {
-            color: #ffd700;
-          }
         }
 
         /* Focused state for the entire field */
         &.mat-focused {
           .mat-mdc-text-field-wrapper {
             box-shadow: 0 8px 25px rgba(255, 152, 0, 0.2);
-            border-left: 4px solid #ff9800;
+            border-left: 4px solid #ff9800 !important;
           }
 
           .mat-mdc-form-field-icon-prefix mat-icon {
-            color: #ff9800;
+            color: #ff9800 !important;
+          }
+
+          /* Ensure focused label is gold */
+          .mdc-floating-label,
+          .mat-mdc-floating-label,
+          label.mdc-floating-label {
+            color: #ffd700 !important;
           }
         }
 
         /* Error state styling */
         &.mat-form-field-invalid {
           .mat-mdc-text-field-wrapper {
-            border-left: 4px solid #f44336;
+            border-left: 4px solid #f44336 !important;
             box-shadow: 0 4px 15px rgba(244, 67, 54, 0.15);
           }
 
-          .mat-mdc-form-field-label.mdc-floating-label--float-above {
-            color: #f44336;
+          .mat-mdc-form-field-label.mdc-floating-label--float-above,
+          .mdc-floating-label {
+            color: #f44336 !important;
           }
         }
 
         /* Disabled state */
         &.mat-form-field-disabled {
           .mat-mdc-text-field-wrapper {
-            background: #f5f5f5;
-            border-left: 4px solid #e0e0e0;
+            background: #f5f5f5 !important;
+            border-left: 4px solid #e0e0e0 !important;
             box-shadow: none;
 
-            .mdc-text-field__input {
-              color: rgba(0, 0, 0, 0.38);
+            .mdc-text-field__input,
+            .mat-mdc-input-element {
+              color: rgba(0, 0, 0, 0.38) !important;
             }
           }
 
           .mat-mdc-form-field-icon-prefix mat-icon {
-            color: rgba(0, 0, 0, 0.38);
+            color: rgba(0, 0, 0, 0.38) !important;
           }
         }
       }
