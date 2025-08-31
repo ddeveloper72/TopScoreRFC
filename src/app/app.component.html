@@ -1,16 +1,19 @@
+<app-scroll-progress></app-scroll-progress>
 <mat-sidenav-container>
   <mat-sidenav #sidenav role="navigation">
     <app-sidenav-list (sidenavClose)="sidenav.close()"></app-sidenav-list>
   </mat-sidenav>
 
-  <mat-sidenav-content>
-    <app-header (sidenavToggle)="sidenav.toggle()"></app-header>
-    <main [@routeAnimations]="getRouteAnimationData()">
-      <router-outlet></router-outlet>
-    </main>
+  <mat-sidenav-content class="thin-scrollbar">
+    <div class="content-wrapper">
+      <app-header (sidenavToggle)="sidenav.toggle()"></app-header>
+      <main [@routeAnimations]="getRouteAnimationData()">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+    <app-footer></app-footer>
   </mat-sidenav-content>
 
 </mat-sidenav-container>
 
-<app-footer></app-footer>
 <app-global-loading></app-global-loading>
