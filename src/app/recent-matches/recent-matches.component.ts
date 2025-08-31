@@ -18,7 +18,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [CommonModule, MaterialModule, FormsModule, RouterModule],
   template: `
-    <div class="recent-matches-container">
+    <div class="recent-matches-container smooth-scroll">
       <div class="page-header">
         <h1>
           <mat-icon>history</mat-icon>
@@ -157,7 +157,7 @@ import { Subscription } from 'rxjs';
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
-              <div class="match-events-content">
+              <div class="match-events-content thin-scrollbar">
                 <div
                   class="events-timeline"
                   *ngIf="match.events && match.events.length > 0"
