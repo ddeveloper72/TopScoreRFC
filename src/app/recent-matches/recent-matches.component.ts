@@ -467,7 +467,6 @@ import { Subscription } from 'rxjs';
             color: #ffd700;
           }
         }
-        }
 
         /* Focused state for the entire field */
         &.mat-focused {
